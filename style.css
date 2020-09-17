@@ -1,0 +1,170 @@
+.wrapper {
+    min-width: 1600px;
+    margin: 0px auto;
+    background-image: url(/assets/bg-image.jpg);
+    /* height: 740px; */
+}
+
+.site-header {
+    font-family: "Roboto", sans-serif;
+    height: 95px;
+    padding-top: 25px;
+}
+
+.navbar-header {
+    /* margin-top: 25px; */
+}
+.navbar-header ul {
+    margin: 0px auto;
+    padding-right: 17px;
+    width: 582px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.navbar-header a {
+    display: block;
+    margin-top: 16px;
+    padding-bottom: 3px;
+    color: white;
+    font-family: "Roboto", sans-serif;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    opacity: 0.8;
+    text-decoration: none;
+}
+
+.logo {
+    margin: 0 15px;
+}
+
+.navbar-header .active {
+    /* text-decoration: underline; */
+    /* padding-bottom: -5px; */
+}
+
+.navbar-header .active a {
+    margin-bottom: 20px;
+    border-bottom: 1px solid white;
+    font-weight: 500;
+}
+
+.title {
+    text-transform: uppercase;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 64px;
+    line-height: 75px;
+    letter-spacing: 4.5px;
+    /* width: 730px; */
+}
+
+main {
+    min-height: 100vh;
+    margin-top: 110px;
+}
+
+.your-life {
+    font-family: Roboto;
+
+    font-style: normal;
+    width: max-content;
+    text-align: center;
+    color: white;
+    margin: 0px auto;
+}
+
+.your-life p {
+    /* font-family: Roboto; */
+    font-size: 18px;
+    line-height: 140%;
+    /* or 25px */
+    margin-top: 22px;
+}
+
+.your-life button {
+    font-family: Roboto;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 16px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    text-transform: uppercase;
+    background: #00afdb;
+    color: white;
+    margin: 30px auto 0px auto;
+    padding: 15px 47px;
+    border: none;
+}
+
+.social {
+    /* margin-top: 183px; */
+    width: 169px;
+    display: flex;
+    justify-content: space-between;
+    margin: 183px auto 0 auto;
+}
+
+.your-life button:hover {
+    background: #009cc2;
+}
+
+.rappresent {
+    margin-top: 90px;
+    padding-top: 30px;
+    background-color: white;
+}
+
+.rappresent-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 763px;
+    margin: 0px auto;
+    width: 1060px;
+    
+}
+
+.rappresent-text{
+    width: 407px;
+    
+}
+
+.rappresent h2 {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 28px;
+    align-items: flex-end;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.rappresent p {
+    font-family: Roboto;
+    font-style: normal;
+    font-size: 14px;
+    line-height: 140%; 
+}
+
+
+
+.rappresent button {
+    font-family: Roboto;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 16px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    text-transform: uppercase;
+    background: #00afdb;
+    color: white;
+    padding: 15px 47px;
+    border: none;
+}
+
+/* overflow-x:hidden */
