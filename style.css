@@ -1,12 +1,16 @@
 .wrapper {
-    min-width: 1600px;
     margin: 0px auto;
+    min-width: 1600px;
+    font-family: Roboto;
+    font-style: normal;
+    font-size: 14px;
     background-image: url(/assets/bg-image.jpg);
+    font-weight: normal;
     /* height: 740px; */
 }
 
+/* header */
 .site-header {
-    font-family: "Roboto", sans-serif;
     height: 95px;
     padding-top: 25px;
 }
@@ -24,21 +28,13 @@
     margin-top: 16px;
     padding-bottom: 3px;
     color: white;
-    font-family: "Roboto", sans-serif;
-    font-style: normal;
     font-weight: 300;
-    font-size: 14px;
     opacity: 0.8;
     text-decoration: none;
 }
 
 .logo {
     margin: 0 15px;
-}
-
-.navbar-header .active {
-    /* text-decoration: underline; */
-    /* padding-bottom: -5px; */
 }
 
 .navbar-header .active a {
@@ -49,7 +45,6 @@
 
 .title {
     text-transform: uppercase;
-    font-style: normal;
     font-weight: bold;
     font-size: 64px;
     line-height: 75px;
@@ -57,15 +52,13 @@
     /* width: 730px; */
 }
 
+
 main {
-    min-height: 100vh;
+    /* min-height: 100vh; */
     margin-top: 110px;
 }
 
-.your-life {
-    font-family: Roboto;
-
-    font-style: normal;
+.your-life {    
     width: max-content;
     text-align: center;
     color: white;
@@ -73,47 +66,28 @@ main {
 }
 
 .your-life p {
-    /* font-family: Roboto; */
     font-size: 18px;
     line-height: 140%;
     margin-top: 22px;
 }
 
 .your-life button {
-    font-family: Roboto;
-    font-weight: bold;
-    font-size: 14px;
-    line-height: 16px;
-    display: flex;
-    align-items: center;
-    text-align: center;
-    text-transform: uppercase;
-    background: #00afdb;
-    color: white;
     margin: 30px auto 0px auto;
-    padding: 15px 47px;
-    border: none;
 }
 
 .social {
-    /* margin-top: 183px; */
     width: 169px;
     display: flex;
     justify-content: space-between;
     margin: 183px auto 0 auto;
 }
 
-.your-life button:hover {
+.btn:hover {
     background: #009cc2;
 }
 
 .rappresent {
-    font-family: Roboto;
-
-    font-style: normal;
     margin-top: 89px;
-    padding-top: 30px;
-    padding-bottom: 50px;
     background-color: white;
 }
 
@@ -121,7 +95,8 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 762px;
+    padding-top: 120px;
+    padding-bottom: 140px;
     margin: 0px auto;
     width: 1060px;
 }
@@ -139,19 +114,16 @@ main {
 }
 
 .rappresent p {
-    font-size: 14px;
     line-height: 140%;
-    margin-top: 22px;
+    margin-top: 25px;
     margin-bottom: 30px;
 }
 
-.rappresent button {
+.btn {
     font-family: Roboto;
     font-weight: bold;
-    font-size: 14px;
     line-height: 16px;
     display: flex;
-    align-items: center;
     text-align: center;
     text-transform: uppercase;
     background: #00afdb;
@@ -168,19 +140,51 @@ strong {
 
 .our-community {
     background-color: #f5f6f7;
-    margin-top: 10px;
 }
 
-
-
-
-
 .our-community-wrap {
+    padding-top: 120px;
+    padding-bottom: 140px;
     display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
+.our-community-wrap h3 {
+    margin-top: 19px;
+    margin-bottom: 11px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    /* identical to box height, or 125% */
+    text-align: center;
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+    color: #373737;
 }
 
 .slider {
     display: flex;
+    width: 906px;
+    overflow-x: hidden;
 }
 
-/* overflow-x:hidden */
+.slider img:not(:last-child) {
+    margin-right: 30px;
+}
+
+.our-community-text {
+    margin-right: 141px;
+    margin-left: 271px;
+    width: 298px;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.our-community-wrap p {
+    line-height: 140%;
+    /* or 20px */
+    text-align: center;
+    color: #4e4e4e;
+}
