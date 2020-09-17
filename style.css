@@ -11,9 +11,6 @@
     padding-top: 25px;
 }
 
-.navbar-header {
-    /* margin-top: 25px; */
-}
 .navbar-header ul {
     margin: 0px auto;
     padding-right: 17px;
@@ -79,7 +76,6 @@ main {
     /* font-family: Roboto; */
     font-size: 18px;
     line-height: 140%;
-    /* or 25px */
     margin-top: 22px;
 }
 
@@ -112,8 +108,12 @@ main {
 }
 
 .rappresent {
-    margin-top: 90px;
+    font-family: Roboto;
+
+    font-style: normal;
+    margin-top: 89px;
     padding-top: 30px;
+    padding-bottom: 50px;
     background-color: white;
 }
 
@@ -121,36 +121,29 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 763px;
+    height: 762px;
     margin: 0px auto;
     width: 1060px;
-    
 }
 
-.rappresent-text{
+.rappresent-text {
     width: 407px;
-    
 }
 
 .rappresent h2 {
-    font-family: Roboto;
-    font-style: normal;
     font-weight: bold;
     font-size: 24px;
     line-height: 28px;
-    align-items: flex-end;
     letter-spacing: 1px;
     text-transform: uppercase;
 }
 
 .rappresent p {
-    font-family: Roboto;
-    font-style: normal;
     font-size: 14px;
-    line-height: 140%; 
+    line-height: 140%;
+    margin-top: 22px;
+    margin-bottom: 30px;
 }
-
-
 
 .rappresent button {
     font-family: Roboto;
@@ -165,6 +158,29 @@ main {
     color: white;
     padding: 15px 47px;
     border: none;
+}
+
+strong {
+    font-weight: bold;
+}
+
+/* our community section*/
+
+.our-community {
+    background-color: #f5f6f7;
+    margin-top: 10px;
+}
+
+
+
+
+
+.our-community-wrap {
+    display: flex;
+}
+
+.slider {
+    display: flex;
 }
 
 /* overflow-x:hidden */
