@@ -1,12 +1,17 @@
 .wrapper {
     margin: 0px auto;
-    min-width: 1600px;
+    width: 1600px;
     font-family: Roboto;
     font-style: normal;
     font-size: 14px;
     background-image: url(/assets/bg-image.jpg);
+    background-repeat: no-repeat;
     font-weight: normal;
     /* height: 740px; */
+}
+
+strong {
+    font-weight: bold;
 }
 
 /* header */
@@ -52,13 +57,14 @@
     /* width: 730px; */
 }
 
-
 main {
     /* min-height: 100vh; */
     margin-top: 110px;
 }
 
-.your-life {    
+/* your life section */
+
+.your-life {
     width: max-content;
     text-align: center;
     color: white;
@@ -82,12 +88,18 @@ main {
     margin: 183px auto 0 auto;
 }
 
+.social svg:hover circle {
+    stroke: #00afdb;
+}
+
 .btn:hover {
     background: #009cc2;
 }
 
+/* rappresent section */
+
 .rappresent {
-    margin-top: 89px;
+    margin-top: 87px;
     background-color: white;
 }
 
@@ -96,9 +108,9 @@ main {
     justify-content: space-between;
     align-items: center;
     padding-top: 120px;
-    padding-bottom: 140px;
+    padding-bottom: 141px;
     margin: 0px auto;
-    width: 1060px;
+    width: 1062px;
 }
 
 .rappresent-text {
@@ -111,18 +123,22 @@ main {
     line-height: 28px;
     letter-spacing: 1px;
     text-transform: uppercase;
+    color: #373737;
 }
 
 .rappresent p {
     line-height: 140%;
     margin-top: 25px;
     margin-bottom: 30px;
+    color: #4e4e4e;
 }
 
 .btn {
     font-family: Roboto;
     font-weight: bold;
+    font-style: normal;
     line-height: 16px;
+    font-size: 14px;
     display: flex;
     text-align: center;
     text-transform: uppercase;
@@ -130,10 +146,6 @@ main {
     color: white;
     padding: 15px 47px;
     border: none;
-}
-
-strong {
-    font-weight: bold;
 }
 
 /* our community section*/
@@ -164,13 +176,38 @@ strong {
 }
 
 .slider {
-    display: flex;
-    width: 906px;
-    overflow-x: hidden;
+    position: relative;
+    /* width: 906px; */
+    width: 894px;
 }
 
-.slider img:not(:last-child) {
+.slider .images {
+    overflow: hidden;
+
+    display: flex;
+    /* z-index: 99; */
+}
+
+.slider .images img:not(:last-child) {
     margin-right: 30px;
+}
+
+.arrows {
+    position: absolute;
+
+    margin-top: -43px;
+    margin-left: 543px;
+    font-size: 18px;
+    /* font-weight: bold; */
+    line-height: 140%;
+}
+
+.arrows .arrow-left {
+    margin-right: 11px;
+}
+
+.arrows .arrow-right {
+    margin-left: 11px;
 }
 
 .our-community-text {
@@ -187,4 +224,62 @@ strong {
     /* or 20px */
     text-align: center;
     color: #4e4e4e;
+}
+
+/* implement */
+
+.implement-wrap {
+    display: flex;
+    /* justify-content: ; */
+    align-items: center;
+    padding-top: 120px;
+    padding-bottom: 140px;
+    margin: 0px auto;
+    width: 1062px;
+}
+
+.implement-wrap img {
+    margin-right: 139px;
+}
+
+.implement p {
+    line-height: 140%;
+    font-size: 14px;
+    margin-top: 21px;
+    margin-bottom: 32px;
+    /* or 20px */
+    /* text-align: center; */
+    color: #4e4e4e;
+    /* margin-top: 25px;
+    margin-bottom: 30px; */
+}
+.implement h2 {
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 28px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #373737;
+}
+
+.implement-text {
+    width: 407px;
+}
+
+
+/* subscribe section */
+
+
+.subscribe {
+    background-image: url("./assets/background-subscribe.jpg");
+}
+
+
+.subscribe h2 {
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 28px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #FFFFFF;
 }
