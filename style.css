@@ -4,14 +4,43 @@
     font-family: Roboto;
     font-style: normal;
     font-size: 14px;
+    /* line-height: 140%; */
     background-image: url(/assets/bg-image.jpg);
     background-repeat: no-repeat;
     font-weight: normal;
     /* height: 740px; */
 }
 
+h2 {
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 28px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
 strong {
     font-weight: bold;
+}
+
+.btn {
+    font-family: Roboto;
+    font-weight: bold;
+    font-style: normal;
+    line-height: 16px;
+    font-size: 14px;
+    /* display: flex; */
+    text-align: center;
+    text-transform: uppercase;
+    background: #00afdb;
+    color: white;
+    padding: 15px 47px;
+    border: none;
+}
+
+.btn:hover {
+    background: #009cc2;
+    cursor: pointer;
 }
 
 /* header */
@@ -38,7 +67,7 @@ strong {
     text-decoration: none;
 }
 
-.logo {
+header .logo {
     margin: 0 15px;
 }
 
@@ -62,13 +91,11 @@ main {
     margin-top: 110px;
 }
 
-/* your life section */
+/* Your life section */
 
 .your-life {
-    width: max-content;
     text-align: center;
     color: white;
-    margin: 0px auto;
 }
 
 .your-life p {
@@ -92,21 +119,25 @@ main {
     stroke: #00afdb;
 }
 
-.btn:hover {
-    background: #009cc2;
+.social svg:hover path {
+    fill: #00afdb;
 }
 
-/* rappresent section */
+
+/* Rappresent section */
 
 .rappresent {
     margin-top: 87px;
+    /* height: 500px; */
     background-color: white;
+    /* overflow: auto; */
 }
 
 .rappresent-wrap {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: 120px;
     padding-top: 120px;
     padding-bottom: 141px;
     margin: 0px auto;
@@ -118,11 +149,6 @@ main {
 }
 
 .rappresent h2 {
-    font-weight: bold;
-    font-size: 24px;
-    line-height: 28px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
     color: #373737;
 }
 
@@ -133,33 +159,21 @@ main {
     color: #4e4e4e;
 }
 
-.btn {
-    font-family: Roboto;
-    font-weight: bold;
-    font-style: normal;
-    line-height: 16px;
-    font-size: 14px;
-    display: flex;
-    text-align: center;
-    text-transform: uppercase;
-    background: #00afdb;
-    color: white;
-    padding: 15px 47px;
-    border: none;
-}
-
-/* our community section*/
+/* Our community section*/
 
 .our-community {
     background-color: #f5f6f7;
+    height: 504px;
+    overflow: auto;
+    /* overflow: auto; */
 }
 
 .our-community-wrap {
-    padding-top: 120px;
-    padding-bottom: 140px;
     display: flex;
     align-items: center;
-    justify-content: end;
+    margin-top: 120px;
+
+    /* justify-content: end; */
 }
 
 .our-community-wrap h3 {
@@ -169,7 +183,6 @@ main {
     font-size: 16px;
     line-height: 20px;
     /* identical to box height, or 125% */
-    text-align: center;
     letter-spacing: 2.4px;
     text-transform: uppercase;
     color: #373737;
@@ -194,7 +207,6 @@ main {
 
 .arrows {
     position: absolute;
-
     margin-top: -43px;
     margin-left: 543px;
     font-size: 18px;
@@ -202,12 +214,19 @@ main {
     line-height: 140%;
 }
 
+.arrows svg:hover path {
+    stroke: #00afdb;
+}
+.arrows svg:hover {
+    cursor: pointer;
+}
+
 .arrows .arrow-left {
     margin-right: 11px;
 }
 
 .arrows .arrow-right {
-    margin-left: 11px;
+    margin-left: 9px;
 }
 
 .our-community-text {
@@ -228,14 +247,20 @@ main {
 
 /* implement */
 
+.implement {
+    height: 841px;
+    overflow: auto;
+}
+
 .implement-wrap {
     display: flex;
     /* justify-content: ; */
     align-items: center;
-    padding-top: 120px;
-    padding-bottom: 140px;
+    /* padding-top: 120px;
+    padding-bottom: 139px; */
     margin: 0px auto;
     width: 1062px;
+    margin-top: 120px;
 }
 
 .implement-wrap img {
@@ -254,11 +279,6 @@ main {
     margin-bottom: 30px; */
 }
 .implement h2 {
-    font-weight: bold;
-    font-size: 24px;
-    line-height: 28px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
     color: #373737;
 }
 
@@ -266,20 +286,185 @@ main {
     width: 407px;
 }
 
-
-/* subscribe section */
-
+/* Subscribe section */
 
 .subscribe {
     background-image: url("./assets/background-subscribe.jpg");
+    height: 599px;
+    overflow: auto;
 }
 
+.subscribe-wrap {
+    width: 406px;
+    margin: 0px auto;
+    text-align: center;
+    margin-top: 218px;
+}
 
 .subscribe h2 {
-    font-weight: bold;
-    font-size: 24px;
-    line-height: 28px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: #FFFFFF;
+    color: #ffffff;
 }
+
+.submit-email {
+    display: flex;
+    height: 47px;
+    margin-top: 29px;
+}
+
+.submit-email input {
+    line-height: 140%;
+    width: 340px;
+    padding-left: 24px;
+    padding-top: 4px;
+    box-sizing: border-box;
+    border: none;
+}
+
+.submit-email button {
+    padding-top: 5px;
+    width: 66px;
+    background-color: #00afdb;
+    border: none;
+}
+
+.submit-email button:hover {
+    background-color: #009cc2;
+    cursor: pointer;
+}
+
+/* Download section */
+
+.download {
+    text-align: center;
+    width: 483px;
+    height: 348px;
+    margin: 0px auto;
+    margin-top: 120px;
+}
+
+.buttons {
+    display: flex;
+    /* margin: 0 auto; */
+    justify-content: space-evenly;
+}
+
+.buttons button:first-child {
+margin-right: 30px;}
+
+.download button {
+    font-family: Roboto;
+    font-weight: bold;
+    font-style: normal;
+    line-height: 16px;
+    font-size: 14px;
+    /* display: flex; */
+    text-align: center;
+    text-transform: uppercase;
+    background: #00afdb;
+    color: white;
+    /* padding-right: 0px; */
+    /* padding: 18px 16px 17px 16px; */
+    height: 50px;
+    border: none;
+
+    display: flex;
+    padding: 0px;
+    width: 190px;
+    /* margin: 0 auto; */
+}
+
+.download button:hover {
+    background: #009cc2;
+    cursor: pointer;
+}
+.download h2 {
+    color: #373737;
+}
+
+.download p {
+    line-height: 140%;
+    font-size: 14px;
+    margin-top: 21px;
+    margin-bottom: 30px;
+    /* or 20px */
+    /* text-align: center; */
+    color: #4e4e4e;
+}
+
+.buttons span {
+    /* background-color: #00afdb; */
+}
+.buttons .apple-btn {
+    /* display: inline-block; */
+    padding: 19px 21px 15px 19px;
+    /* background-color: #00afdb; */
+}
+
+.buttons .apple-icon {
+    background-color: #009cc2;
+    padding: 14px 21px 13px 21px;
+}
+
+.buttons .android-icon {
+    background-color: #009cc2;
+    padding: 12px 19px 12px 22px;
+}
+
+.android-btn {
+    /* background-color: #00afdb; */
+    padding: 19px 17px 15px 18px;
+}
+
+
+
+
+footer {background-color: #000000;
+    height: 184px;
+    overflow: auto;
+    line-height: 140%;
+}
+
+.wrap-footer {
+    margin: 60px auto 0px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1280px;
+
+}
+
+.navbar-footer {
+    /* display: flex;
+   justify-content: center; */
+   margin-right: auto;
+
+
+}
+.navbar-footer ul{
+    display: flex;
+    justify-content: space-between;
+    opacity: 0.98;
+    width: 235px;
+}
+
+.navbar-footer ul a {
+    text-decoration: none;
+    
+    color: #ffffff;
+}
+
+.navbar-footer ul a:hover{
+    color: #00afdb;
+}
+
+.copyrights{
+    width: 235px;
+    color: #818181;
+    text-align: end;
+    margin-left: auto;
+
+}
+
+/* .wrap-footer .logo {
+    margin: 0px 16px;
+} */
