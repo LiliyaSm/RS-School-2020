@@ -1,14 +1,13 @@
 html,
 body {
-    margin: 0px auto;
-    min-width: 1600px;
-    font-family: Roboto;
-    font-style: normal;
-    font-size: 14px;
-    font-weight: normal;
     position: relative;
+    font-family: Roboto;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: normal;
 }
 
+/* h1 is hidden */
 h1 {
     position: absolute;
     white-space: nowrap;
@@ -36,17 +35,16 @@ strong {
 }
 
 .btn {
+    padding: 15px 47px;
     font-family: Roboto;
     font-weight: bold;
     font-style: normal;
     line-height: 16px;
     font-size: 14px;
-    /* display: flex; */
+    color: white;
     text-align: center;
     text-transform: uppercase;
     background: #00afdb;
-    color: white;
-    padding: 15px 47px;
     border: none;
 }
 
@@ -59,7 +57,7 @@ strong {
 .site-header {
     height: 95px;
     padding-top: 25px;
-    /* background-color: #000000; */
+    background-color: #000000;
     position: absolute;
     left: 0;
     right: 0;
@@ -81,8 +79,8 @@ strong {
     margin-top: 16px;
     color: white;
     font-weight: 300;
-    opacity: 0.8;
     text-decoration: none;
+    opacity: 0.8;
 }
 
 header .logo {
@@ -109,7 +107,6 @@ header .logo {
 /* Your life section */
 
 .your-life {
-    /* overflow-y: hidden; */
     height: 100vh;
     text-align: center;
     color: white;
@@ -139,14 +136,13 @@ header .logo {
 }
 
 .social {
-    width: 169px;
-    display: flex;
-    justify-content: space-between;
-    /* margin: 183px auto 0 auto; */
     position: absolute;
     left: 0;
     right: 0;
     bottom: 88px;
+    display: flex;
+    justify-content: space-between;
+    width: 169px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -163,14 +159,13 @@ header .logo {
 }
 
 .rappresent-wrap {
+    margin: 0px auto;
     display: flex;
     justify-content: space-between;
+    width: 1062px;
     align-items: center;
-    margin-top: 120px;
     padding-top: 120px;
     padding-bottom: 140px;
-    margin: 0px auto;
-    width: 1062px;
 }
 
 .rappresent-text {
@@ -180,48 +175,43 @@ header .logo {
 .rappresent h2 {
     color: #373737;
 }
+.rappresent button {
+    margin-top: 30px;
+}
 
 .rappresent p {
-    line-height: 140%;
     margin-top: 25px;
-    margin-bottom: 30px;
+    line-height: 140%;
     color: #4e4e4e;
 }
 
 /* Our community section*/
 
 .our-community {
-    background-color: #f5f6f7;
     height: 505px;
     overflow: auto;
-    /* overflow: auto; */
+    background-color: #f5f6f7;
 }
 
 .our-community-wrap {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    /* margin-top: 120px; */
+    margin: 120px auto 0 auto;    
     width: 1600px;
-    margin: 120px auto 0 auto;
-
-    /* justify-content: end; */
 }
 
 .our-community-wrap h3 {
-    margin-top: 19px;
-    margin-bottom: 11px;
+    margin-top: 20px;
     font-weight: 500;
     font-size: 16px;
     line-height: 20px;
-    /* identical to box height, or 125% */
     letter-spacing: 2.4px;
     text-transform: uppercase;
     color: #373737;
 }
 
 .our-community-text {
-    /* margin-right: 141px; */
     margin-left: 271px;
     width: 298px;
     align-items: center;
@@ -235,24 +225,19 @@ header .logo {
 
 .our-community-wrap p {
     line-height: 140%;
-    /* or 20px */
+    margin-top: 11px;
     text-align: center;
     color: #4e4e4e;
 }
 
 .slider {
     position: relative;
-    /* width: 906px; */
     width: 894px;
 }
 
 .slider .images {
     overflow: hidden;
     display: flex;
-
-
-        /* width: 894px */
-    /* z-index: 99; */
 }
 
 .slider .images img:not(:last-child) {
@@ -290,10 +275,7 @@ header .logo {
 
 .implement-wrap {
     display: flex;
-    /* justify-content: ; */
     align-items: center;
-    /* padding-top: 120px;
-    padding-bottom: 139px; */
     margin: 0px auto;
     width: 1062px;
     margin-top: 120px;
@@ -307,12 +289,15 @@ header .logo {
     line-height: 140%;
     font-size: 14px;
     margin-top: 21px;
-    margin-bottom: 32px;
-    /* or 20px */
     color: #4e4e4e;
 }
+
 .implement h2 {
     color: #373737;
+}
+
+.implement button {
+    margin-top: 32px;
 }
 
 .implement-text {
@@ -374,8 +359,7 @@ header .logo {
     text-align: center;
     width: 483px;
     height: 344px;
-    margin: 0px auto;
-    margin-top: 120px;
+    margin: 120px auto 0 auto;
 }
 
 .buttons {
@@ -383,43 +367,39 @@ header .logo {
     padding-right: 10px;
     padding-left: 10px;
     justify-content: space-evenly;
+    margin-top: 30px;
 }
 
 .download button {
+    display: flex;
+    height: 46px;
+    width: 186px;
+    padding: 0px;
     font-family: Roboto;
     font-weight: bold;
     font-style: normal;
     line-height: 16px;
     font-size: 14px;
-    /* display: flex; */
     text-align: center;
     text-transform: uppercase;
     background: #00afdb;
     color: white;
     border: none;
-    display: flex;
-    height: 46px;
-    box-sizing: border-box;
-    padding: 0px;
-    width: 186px;
-    /* margin: 0 auto; */
 }
 
 .download button:hover {
     background: #009cc2;
     cursor: pointer;
 }
+
 .download h2 {
     color: #373737;
 }
 
 .download p {
+    margin-top: 21px;
     line-height: 140%;
     font-size: 14px;
-    margin-top: 21px;
-    margin-bottom: 30px;
-    /* or 20px */
-    /* text-align: center; */
     color: #4e4e4e;
 }
 
@@ -463,11 +443,12 @@ footer {
 .navbar-footer {
     margin-right: auto;
 }
+
 .navbar-footer ul {
     display: flex;
     justify-content: space-between;
-    opacity: 0.98;
     width: 235px;
+    opacity: 0.98;
 }
 
 .navbar-footer ul a {
@@ -481,8 +462,7 @@ footer {
 
 .copyrights {
     width: 235px;
-    color: #818181;
     text-align: end;
     margin-left: auto;
+    color: #818181;
 }
-
