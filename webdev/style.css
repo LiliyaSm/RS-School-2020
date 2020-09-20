@@ -1,14 +1,18 @@
 .wrapper {
     margin: 0px auto;
-    width: 1600px;
+    min-width: 1600px;
     font-family: Roboto;
     font-style: normal;
     font-size: 14px;
-    /* line-height: 140%; */
     background-image: url(/assets/bg-image.jpg);
     background-repeat: no-repeat;
     font-weight: normal;
+    overflow-x: scroll;
     /* height: 740px; */
+}
+
+h1 {
+    visibility: hidden;
 }
 
 h2 {
@@ -60,7 +64,6 @@ strong {
 .navbar-header a {
     display: block;
     margin-top: 16px;
-    padding-bottom: 3px;
     color: white;
     font-weight: 300;
     opacity: 0.8;
@@ -72,6 +75,7 @@ header .logo {
 }
 
 .navbar-header .active a {
+    padding-bottom: 3px;
     margin-bottom: 20px;
     border-bottom: 1px solid white;
     font-weight: 500;
@@ -88,7 +92,7 @@ header .logo {
 
 main {
     /* min-height: 100vh; */
-    margin-top: 110px;
+    margin-top: 97px;
 }
 
 /* Your life section */
@@ -171,7 +175,10 @@ main {
 .our-community-wrap {
     display: flex;
     align-items: center;
-    margin-top: 120px;
+    justify-content: space-between;
+    /* margin-top: 120px; */
+    width: 1600px;
+    margin: 120px auto 0 auto;
 
     /* justify-content: end; */
 }
@@ -187,6 +194,23 @@ main {
     text-transform: uppercase;
     color: #373737;
 }
+
+.our-community-text {
+    /* margin-right: 141px; */
+    margin-left: 271px;
+    width: 298px;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.our-community-wrap p {
+    line-height: 140%;
+    /* or 20px */
+    text-align: center;
+    color: #4e4e4e;
+}
+
 
 .slider {
     position: relative;
@@ -229,21 +253,6 @@ main {
     margin-left: 9px;
 }
 
-.our-community-text {
-    margin-right: 141px;
-    margin-left: 271px;
-    width: 298px;
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-}
-
-.our-community-wrap p {
-    line-height: 140%;
-    /* or 20px */
-    text-align: center;
-    color: #4e4e4e;
-}
 
 /* implement */
 
@@ -289,8 +298,11 @@ main {
 /* Subscribe section */
 
 .subscribe {
-    background-image: url("./assets/background-subscribe.jpg");
-    height: 599px;
+    background-image: url("./assets/background-subscribe.png");
+    background-position: center;	
+    background-repeat: no-repeat;
+    background-color: #000000;
+    height: 524px;
     overflow: auto;
 }
 
@@ -298,7 +310,7 @@ main {
     width: 406px;
     margin: 0px auto;
     text-align: center;
-    margin-top: 218px;
+    margin-top: 201px;
 }
 
 .subscribe h2 {
@@ -337,7 +349,7 @@ main {
 .download {
     text-align: center;
     width: 483px;
-    height: 348px;
+    height: 344px;
     margin: 0px auto;
     margin-top: 120px;
 }
@@ -348,8 +360,8 @@ main {
     justify-content: space-evenly;
 }
 
-.buttons button:first-child {
-margin-right: 30px;}
+/* .buttons button:first-child {
+margin-right: 30px;} */
 
 .download button {
     font-family: Roboto;
@@ -362,14 +374,11 @@ margin-right: 30px;}
     text-transform: uppercase;
     background: #00afdb;
     color: white;
-    /* padding-right: 0px; */
-    /* padding: 18px 16px 17px 16px; */
-    height: 50px;
     border: none;
-
     display: flex;
+    height: 46px;
     padding: 0px;
-    width: 190px;
+    width: 182px;
     /* margin: 0 auto; */
 }
 
@@ -396,23 +405,23 @@ margin-right: 30px;}
 }
 .buttons .apple-btn {
     /* display: inline-block; */
-    padding: 19px 21px 15px 19px;
+    padding: 17px 20px 15px 17px
     /* background-color: #00afdb; */
 }
 
 .buttons .apple-icon {
     background-color: #009cc2;
-    padding: 14px 21px 13px 21px;
+    padding: 13px 19px 9px 19px;
 }
 
 .buttons .android-icon {
     background-color: #009cc2;
-    padding: 12px 19px 12px 22px;
+    padding: 11px 19px 8px 22px;
 }
 
 .android-btn {
     /* background-color: #00afdb; */
-    padding: 19px 17px 15px 18px;
+    padding: 15px 17px 15px 18px;
 }
 
 
