@@ -19,7 +19,6 @@ h1 {
     clip: rect(0, 0, 0, 0);
     clip-path: inset(50%);
     margin: -1px;
-
 }
 
 h2 {
@@ -103,15 +102,15 @@ header .logo {
     margin-left: 3px;
 }
 
-
 /* Your life section */
 
 .your-life {
-    height: 100vh;
+    /* 100hv for responsive */
+    height: 744px;
     text-align: center;
     color: white;
     background-image: url(/assets/bg-image.jpg);
-    background-size: 100% 100%;
+    /* background-size: 100% 100%; */
     background-repeat: no-repeat;
     background-position: center;
     background-color: #000000;
@@ -197,7 +196,7 @@ header .logo {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 120px auto 0 auto;    
+    margin: 120px auto 0 auto;
     width: 1600px;
 }
 
@@ -219,7 +218,7 @@ header .logo {
     flex-direction: column;
 }
 
-.our-community-text img{
+.our-community-text img {
     margin-right: 3px;
 }
 
