@@ -5,6 +5,7 @@ body {
     font-size: 14px;
     font-style: normal;
     font-weight: normal;
+    min-width: 1600px;
 }
 
 /* h1 is hidden */
