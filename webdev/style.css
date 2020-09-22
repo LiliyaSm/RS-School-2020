@@ -46,6 +46,7 @@ strong {
     text-transform: uppercase;
     background: #00afdb;
     border: none;
+    outline: none;
 }
 
 .btn:hover {
@@ -92,6 +93,10 @@ header .logo {
     margin-bottom: 20px;
     border-bottom: 1px solid white;
     font-weight: 500;
+}
+
+.navbar-header a:hover {
+    opacity: 1;
 }
 
 .title {
@@ -339,6 +344,7 @@ header .logo {
     padding-top: 4px;
     box-sizing: border-box;
     border: none;
+    outline: none;
 }
 
 .submit-email button {
@@ -346,6 +352,7 @@ header .logo {
     width: 66px;
     background-color: #00afdb;
     border: none;
+    outline: none;
 }
 
 .submit-email button:hover {
