@@ -6,6 +6,9 @@ class Calculator {
         this.clear();
         this.reset = false;
     }
+    static get MAXVALUE() {
+        return 99999999999;
+    }
 
     clear() {
         this.currentOperand = "";
@@ -13,20 +16,29 @@ class Calculator {
         this.operation = undefined;
     }
 
-    showError() {
-        // color = "#e03737";
+    showError(message) {
+        if (message === "Error") {
+            this.currentOperandTextElement.style.color = "#e03737";
+            document.body.style.background = "#535353";
+        }
         this.outputField.style.borderColor = "#e03737";
-        setTimeout(
-            () => (this.outputField.style.borderColor = "#000000"),
-            3000
-        );
+        this.clear();
+        this.currentOperandTextElement.innerText = message;
+        this.previousOperandTextElement.innerText = "";
+        setTimeout(() => {
+            this.outputField.style.borderColor = "#000000";
+            this.currentOperandTextElement.innerText = "";
+            this.currentOperandTextElement.style.color = "white";
+            document.body.style.background = null;
+        }, 3000);
+        
     }
     delete() {
         this.currentOperand = this.currentOperand.toString().slice(0, -1);
     }
 
     appendNumber(number) {
-        if (this.currentOperand.length > 6) {
+        if (this.currentOperand.length > 10) {
             return;
         }
         if (number === "." && this.currentOperand.includes(".")) return;
@@ -62,11 +74,12 @@ class Calculator {
             return;
         }
         this.reset = true;
-        let result = Math.sqrt(this.currentOperand);
-        if (isNaN(result)) {
-            result = "Error";
+        let computation = Number(Math.sqrt(this.currentOperand).toFixed(10));
+        if (isNaN(computation)) {
+            computation = "Error";
         }
-        this.currentOperand = result;
+        // let result = Number(computation.toFixed(10));
+        this.currentOperand = computation.toString().slice(0, 11);
     }
 
     compute() {
@@ -92,6 +105,9 @@ class Calculator {
 
             case "^":
                 computation = Math.pow(prev, current);
+                if (!isFinite(computation)) {
+                    computation = "Number too big!";
+                }
                 break;
 
             case "÷":
@@ -104,7 +120,17 @@ class Calculator {
                 return;
         }
 
-        this.currentOperand = computation;
+        if (parseFloat(computation) > Calculator.MAXVALUE) {
+            computation = "Number too big!";
+        }
+
+        if (typeof computation === "number") {
+            //toFixed used to fix js precision error and toString to rid of trailing zeros
+            let result = Number(computation.toFixed(10));
+            this.currentOperand = result.toString().slice(0, 12);
+        } else {
+            this.currentOperand = computation;
+        }
         this.operation = undefined;
         this.previousOperand = "";
         this.reset = false;
@@ -129,12 +155,6 @@ class Calculator {
     }
 
     getDisplayNumber(number) {
-        if (number === "Error") {
-            this.clear();
-            this.showError();
-            // return;
-        }
-
         const stringNumber = number.toString();
         const integerDigits = parseFloat(stringNumber.split(".")[0]);
         const decimalDigits = stringNumber.split(".")[1];
@@ -155,6 +175,16 @@ class Calculator {
     }
 
     updateDisplay() {
+        if (
+            this.currentOperand === "Error" ||
+            this.currentOperand === "Number too big!"
+        ) {
+            // this.clear();
+            this.showError(this.currentOperand);
+            // this.currentOperandTextElement.innerText = this.currentOperand;
+            return;
+        }
+
         this.currentOperandTextElement.innerText = this.getDisplayNumber(
             this.currentOperand
         );
@@ -182,7 +212,6 @@ const currentOperandTextElement = document.querySelector(
 const output = document.querySelector(".output");
 const sqrtButton = document.querySelector("[data-sqrt]");
 const switchButton = document.querySelector("[data-switch]");
-
 
 const calculator = new Calculator(
     previousOperandTextElement,
