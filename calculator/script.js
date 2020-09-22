@@ -5,7 +5,6 @@ class Calculator {
         this.outputField = output;
         this.clear();
         this.reset = false;
-        this.sqrt = false;
 
     }
 
@@ -31,22 +30,13 @@ class Calculator {
         if (this.currentOperand.length > 6) {
             return;
         }
-        if (this.reset && this.previousOperand === "") {
-            this.clear();
-            this.reset = false;
-        }
-
-        if (this.reset && (!(this.previousOperand === ""))) {
-            //case when we need to compute in-place and new number triggers computation with previous number: 1 + sqrt(4) + 9
-            this.currentOperand =
-                this.currentOperand.toString() + number.toString();
-            this.compute();
-            this.previousOperand = this.currentOperand;
-        }
-
-
-        this.reset = false;
         if (number === "." && this.currentOperand.includes(".")) return;
+
+        if (this.reset) {           
+            this.currentOperand = "";
+        }
+
+        this.reset = false;   
         this.currentOperand =
             this.currentOperand.toString() + number.toString();
     }
@@ -72,9 +62,12 @@ class Calculator {
         if (this.currentOperand === "") {
             return;
         }
-        this.currentOperand = Math.sqrt(this.currentOperand);
         this.reset = true;
-        this.sqrt = true;
+        let result = Math.sqrt(this.currentOperand);
+        if (isNaN(result)){
+            result= "Error"
+        }
+        this.currentOperand = result;
 
     }
 
@@ -99,13 +92,9 @@ class Calculator {
                 computation = prev * current;
                 break;
 
-            case "POW":
+            case "^":
                 computation = Math.pow(prev, current);
                 break;
-
-            // case "sqrt":
-            // computation = Math.sqrt(prev);
-            // break;
 
             case "÷":
                 computation = prev / current;
