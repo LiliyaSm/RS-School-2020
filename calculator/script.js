@@ -136,7 +136,7 @@ class Calculator {
         if (typeof computation === "number") {
             //toFixed used to fix js precision error and toString to rid of trailing zeros
             let result = Number(computation.toFixed(10));
-            this.currentOperand = result.toString().slice(0, 12);
+            this.currentOperand = result.toString().slice(0, 11);
         } else {
             this.currentOperand = computation;
         }
