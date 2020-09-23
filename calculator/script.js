@@ -9,6 +9,9 @@ class Calculator {
     static get MAXVALUE() {
         return 99999999999;
     }
+    static get MINVALUE() {
+        return -99999999999;
+    }
 
     clear() {
         this.currentOperand = "";
@@ -20,6 +23,9 @@ class Calculator {
         if (message === "Error") {
             this.currentOperandTextElement.style.color = "#e03737";
             document.body.style.background = "#535353";
+            document
+                .querySelectorAll("span")
+                .forEach((el) => (el.style.opacity = "1"));
         }
         this.outputField.style.borderColor = "#e03737";
         this.clear();
@@ -30,8 +36,10 @@ class Calculator {
             this.currentOperandTextElement.innerText = "";
             this.currentOperandTextElement.style.color = "white";
             document.body.style.background = null;
+            document
+                .querySelectorAll("span")
+                .forEach((el) => (el.style.opacity = "0"));
         }, 3000);
-        
     }
     delete() {
         this.currentOperand = this.currentOperand.toString().slice(0, -1);
@@ -78,7 +86,7 @@ class Calculator {
         if (isNaN(computation)) {
             computation = "Error";
         }
-        // let result = Number(computation.toFixed(10));
+
         this.currentOperand = computation.toString().slice(0, 11);
     }
 
@@ -86,9 +94,7 @@ class Calculator {
         let computation;
         let prev = parseFloat(this.previousOperand);
         let current = parseFloat(this.currentOperand);
-        // if (isNaN(prev)) {
-        //     return
-        // }
+
         if (isNaN(current)) {
             return;
         }
@@ -106,7 +112,7 @@ class Calculator {
             case "^":
                 computation = Math.pow(prev, current);
                 if (!isFinite(computation)) {
-                    computation = "Number too big!";
+                    computation = "Number too long!";
                 }
                 break;
 
@@ -120,8 +126,11 @@ class Calculator {
                 return;
         }
 
-        if (parseFloat(computation) > Calculator.MAXVALUE) {
-            computation = "Number too big!";
+        if (
+            parseFloat(computation) > Calculator.MAXVALUE ||
+            parseFloat(computation) < Calculator.MINVALUE
+        ) {
+            computation = "Number too long!";
         }
 
         if (typeof computation === "number") {
@@ -177,11 +186,9 @@ class Calculator {
     updateDisplay() {
         if (
             this.currentOperand === "Error" ||
-            this.currentOperand === "Number too big!"
+            this.currentOperand === "Number too long!"
         ) {
-            // this.clear();
             this.showError(this.currentOperand);
-            // this.currentOperandTextElement.innerText = this.currentOperand;
             return;
         }
 

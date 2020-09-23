@@ -13,42 +13,46 @@
         <script src="script.js" defer></script>
     </head>
     <body>
+        <h1>Math is fun until someone divides by zero</h1>
         <div class="wrapper">
-        <div class="calculator-grid">
-            <div class="output">
-                <div data-previous-operand class="previous-operand"></div>
-                <div data-current-operand class="current-operand"></div>
+            
+            <div class="calculator-grid">
+                <span>^</span>
+                <span>^</span>
+                <div class="output">
+                    <div data-previous-operand class="previous-operand"></div>
+                    <div data-current-operand class="current-operand"></div>
+                </div>
+                <button
+                    data-operation
+                    class="span-two round"
+                    title="Exponentiation"
+                >
+                    ^
+                </button>
+                <button data-sqrt class="span-two round" title="Square root">
+                    &Sqrt;
+                </button>
+                <button data-all-clear class="span-two">CLEAR</button>
+                <button data-delete>DEL</button>
+                <button data-operation>÷</button>
+                <button data-number class="grey-color">1</button>
+                <button data-number class="grey-color">2</button>
+                <button data-number class="grey-color">3</button>
+                <button data-operation>*</button>
+                <button data-number class="grey-color">4</button>
+                <button data-number class="grey-color">5</button>
+                <button data-number class="grey-color">6</button>
+                <button data-operation>+</button>
+                <button data-number class="grey-color">7</button>
+                <button data-number class="grey-color">8</button>
+                <button data-number class="grey-color">9</button>
+                <button data-operation>-</button>
+                <button data-switch class="grey-color">+/-</button>
+                <button data-number class="grey-color">0</button>
+                <button data-number class="grey-color">.</button>
+                <button data-equals class="span-two-row">=</button>
             </div>
-            <button
-                data-operation
-                class="span-two round"
-                title="Exponentiation"
-            >
-                ^
-            </button>
-            <button data-sqrt class="span-two round" title="Square root">
-                &Sqrt;
-            </button>
-            <button data-all-clear class="span-two">CLEAR</button>
-            <button data-delete>DEL</button>
-            <button data-operation>÷</button>
-            <button data-number class="grey-color">1</button>
-            <button data-number class="grey-color">2</button>
-            <button data-number class="grey-color">3</button>
-            <button data-operation>*</button>
-            <button data-number class="grey-color">4</button>
-            <button data-number class="grey-color">5</button>
-            <button data-number class="grey-color">6</button>
-            <button data-operation>+</button>
-            <button data-number class="grey-color">7</button>
-            <button data-number class="grey-color">8</button>
-            <button data-number class="grey-color">9</button>
-            <button data-operation>-</button>
-            <button data-switch class="grey-color">+/-</button>
-            <button data-number class="grey-color">0</button>
-            <button data-number class="grey-color">.</button>
-            <button data-equals class="span-two-row">=</button>
-        </div>
         </div>
     </body>
 </html>
