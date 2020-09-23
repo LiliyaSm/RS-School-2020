@@ -1,3 +1,7 @@
+html {
+    font-size: 14px;
+}
+
 *,
 *::before,
 *::after {
@@ -35,7 +39,7 @@ h1 {
 .wrapper span {
     position: absolute;
     left: 272px;
-    top: -113px;
+    top: -103px;
     font-size: 124px;
     font-weight: 400;
     color: red;
@@ -49,9 +53,9 @@ h1 {
 .calculator-grid {
     position: relative;
     display: grid;
-    grid-gap: 2px;
-    grid-template-columns: repeat(4, 83px);
-    grid-template-rows: minmax(120px, auto) 40px repeat(5, 80px);
+    grid-gap: 1px;
+    grid-template-columns: repeat(4, 75px);
+    grid-template-rows: minmax(120px, auto) 40px repeat(5, 70px);
     padding: 15px 20px 25px 20px;
     color: white;
     border: 1px solid black;
@@ -109,5 +113,5 @@ h1 {
 
 .output .current-operand {
     color: white;
-    font-size: 2.5rem;
+    font-size: 2.3rem;
 }
