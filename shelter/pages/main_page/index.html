@@ -11,6 +11,12 @@
             crossorigin="anonymous"
         />
         <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
+            integrity="sha512-NmLkDIU1C/C88wi324HBc+S2kLhi08PN5GDeUVVVC/BVt/9Izdsc9SVeVfA1UZbY3sHUlDSyRXhCzHfr6hmPPw=="
+            crossorigin="anonymous"
+        />
+        <link
             href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;800;900&display=swap"
             rel="stylesheet"
         />
@@ -22,14 +28,14 @@
     <body class="wrapper">
         <header class="site-header">
             <div class="logo">
-                <span class="logo-title">Cozy House</span> <br />
-                <span class="logo-subtitle">Shelter for pets in Boston</span>
+                <div class="logo-title">Cozy House</div>
+                <div class="logo-subtitle">Shelter for pets in Boston</div>
             </div>
             <nav class="navbar-header">
                 <ul>
-                    <li><a href="#">About the shelter</a></li>
-                    <li class="active"><a href="#">Our pets</a></li>
-                    <li><a href="#">To help the shelter</a></li>
+                    <li class="active"><a href="#">About the shelter</a></li>
+                    <li><a href="#">Our pets</a></li>
+                    <li><a href="#">Help the shelter</a></li>
                     <li><a href="#">Contacts</a></li>
                 </ul>
             </nav>
@@ -47,9 +53,9 @@
                         </h2>
                         <p class="">
                             We offer to give a chance to a little and nice puppy
-                            with extremely wide and open heart. He or her will
-                            love you more than anybody else in the world, you
-                            will see!
+                            with an extremely wide and open heart. He or she
+                            will love you more than anybody else in the world,
+                            you will see!
                         </p>
                         <button class="btn">Make a friend</button>
                     </div>
@@ -57,14 +63,23 @@
             </section>
             <section class="about">
                 <div class="about-wrap">
-                    <img src="../../assets/about-pets.png" width="300" height="408" alt="">
+                    <img
+                        src="../../assets/about-pets.png"
+                        width="300"
+                        height="408"
+                        alt=""
+                    />
                     <div class="about-text">
-                        <h2>About the shelter “Cozy House”</h2>
+                        <h3>
+                            About the shelter <br />
+                            “Cozy House”
+                        </h3>
                         <p>
-                            On our hands 121 dogs and 342 cats, and statistics
-                            shows that only 20% of them will find family. The
-                            others will continue to live with us and will be
-                            waiting for lucky chance to become beloved.
+                            Currently we have 121 dogs and 342 cats on our hands
+                            and statistics show that only 20% of them will find
+                            a family. The others will continue to live with us
+                            and will be waiting for a lucky chance to become
+                            dearly loved.
                         </p>
                         <p>
                             We feed our wards with the best food and make sure
@@ -72,11 +87,71 @@
                             (including psychologically) and well. We are
                             supported by 87 volunteers and 28 employees of
                             various skill levels. About 12% of the animals are
-                            taken by shelter staff. Taking care of animals, they
-                            become attached to the pets and couldn’t leave them
-                            alone.
+                            taken by the shelter staff. Taking care of the
+                            animals, they become attached to the pets and would
+                            hardly ever leave them alone.
                         </p>
                     </div>
+                </div>
+            </section>
+
+            <section class="pets">
+                <div class="pets-wrap">
+                    <h3>
+                        Our friends who <br />
+                        are looking for a house
+                    </h3>
+
+                    <div class="slider">
+                            <button class="left-arrow">
+                                <svg
+                                    width="14"
+                                    height="6"
+                                    viewBox="0 0 14 6"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M14 2V4H3V6L0 3L3 0V2H14Z"
+                                        fill="#292929"
+                                    />
+                                </svg>
+                            </button>
+                            <button class="right-arrow">
+                                <svg
+                                    width="14"
+                                    height="6"
+                                    viewBox="0 0 14 6"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M0 4V2L11 2V0L14 3L11 6V4L0 4Z"
+                                        fill="#292929"
+                                    />
+                                </svg>
+                            </button>
+                        <div class="card">
+                            <img src="../../assets/Katrine.png" alt="Katrine" />
+                            <div class="card-title">Katrine</div>
+                            <button>Learn more</button>
+                        </div>
+                        <div class="card">
+                            <img
+                                src="../../assets/Jennifer.png"
+                                alt="Jennifer"
+                            />
+                            <div class="card-title">Jennifer</div>
+                            <button>Learn more</button>
+                        </div>
+                        <div class="card">
+                            <img src="../../assets/Woody.png" alt="Woody" />
+                            <div class="card-title">Woody</div>
+                            <button>Learn more</button>
+                        </div>
+                    </div>
+
+                    <button class="btn pet-button">Get to know the rest</button>
                 </div>
             </section>
         </main>
