@@ -186,9 +186,13 @@ class Calculator {
     updateDisplay() {
         if (
             this.currentOperand === "Error" ||
-            this.currentOperand === "Number too long!"
+            this.currentOperand === "Number too long!" ||
+            this.previousOperand === "Number too long!"
         ) {
-            this.showError(this.currentOperand);
+            let error = this.currentOperand
+                ? this.currentOperand
+                : this.previousOperand;
+            this.showError(error);
             return;
         }
 
