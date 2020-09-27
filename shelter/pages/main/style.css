@@ -415,6 +415,7 @@ header .logo-subtitle {
     /* margin-left: 120px; */
 }
 
+
 .help-wrap ul li {
     margin-left: 120px;
     /* margin-right: 45px; */
@@ -591,3 +592,75 @@ footer img {
 /* .test {
     height: 300px;
 } */
+
+.help-wrap ul li:first-child {
+    /* margin-left: 87px; */
+}
+
+.help-wrap ul li:last-child {
+    /* margin-right: 171px; */
+}
+
+/* donation section */
+
+.donation {
+    background-color: #f6f6f6;
+    height: 464px;
+    display: flex;
+    align-items: center;
+    height: 464px;
+}
+
+.donation-wrap {
+    width: 1200px;
+    margin: 0px auto;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 20px;
+}
+
+h5 {
+    font-family: Georgia;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 15px;
+    line-height: 110%;
+    letter-spacing: 0.06em;
+    color: #545454;
+}
+
+h4 {
+    font-family: Georgia;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 115%;
+    letter-spacing: 0.06em;
+    color: #545454;
+}
+
+.donation-text {
+    /* width: 30%; */
+    flex: 0 0 30%;
+}
+
+.donation-text h4 {
+    background-color: #f1cdb3;
+    background-image: url("../../assets/credit-card.svg");
+    background-repeat: no-repeat;
+    background-position: 15px;
+    border-radius: 9px;
+    padding: 10px 15px 10px 55px;
+}
+
+.donation-description {
+    font-family: Arial;
+    font-style: italic;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 18px;
+    display: flex;
+    align-items: center;
+    color: #b2b2b2;
+}
+
