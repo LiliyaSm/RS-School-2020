@@ -3,18 +3,22 @@
     src: url("../../assets/fonts/Georgia.ttf");
 }
 
-* {
-    box-sizing: border-box;
-}
+/* *,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+} */
 
 html,
 body {
     position: relative;
-    font-size: 14px; 
+    font-size: 14px;
     font-style: normal;
     font-weight: normal;
-    width: 100%;
-    /* min-width: 1600px; */
+    /* max-width: calc(100vw - (100vw - 100%)); */
+    width: 100vw;
 }
 
 /* h1 is hidden */
@@ -37,9 +41,7 @@ h2 {
     font-weight: normal;
     font-size: 44px;
     line-height: 130%;
-    /* or 57px */
     align-items: center;
-    /* base-white */
     color: #ffffff;
 }
 
@@ -176,12 +178,14 @@ header .logo-subtitle {
 /* start-screen */
 
 .start-screen {
+    /* width: 100vw; */
+
     height: 908px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: center / cover no-repeat
-        url("../../assets/start-screen-puppy.png");
+    background: center no-repeat url("../../assets/start-screen-puppy.png");
+    /* margin: 0px auto; */
 }
 
 .start-screen-wrap {
@@ -383,7 +387,8 @@ header .logo-subtitle {
     text-align: center;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    /* justify-content: space-between; */
+    padding-right: 20px;
 }
 
 .help-wrap h3 {
@@ -393,28 +398,32 @@ header .logo-subtitle {
 .help-wrap ul {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 .help-wrap ul li {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    height: 10.5em;
+    height: 12em;
 }
 
-.help-wrap ul li img {
+.help-wrap ul {
 }
 
 .help-wrap ul li + li {
     /* margin-left: 120px; */
 }
 
-.help-wrap ul li:first-child {
-    /* margin-left: 87px; */
+.help-wrap ul li {
+    margin-left: 120px;
+    /* margin-right: 45px; */
+    /* margin-left: 87px;
+margin-right: 30px; */
 }
 
-.help-wrap ul li:last-child {
-    /* margin-right: 171px; */
+.help-wrap ul li:first-child {
+    /* margin-left: 0px; */
 }
 
 /* donation section */
@@ -422,6 +431,7 @@ header .logo-subtitle {
 .donation {
     background-color: #f6f6f6;
     height: 464px;
+    /* padding-top: 83px; */
     display: flex;
     align-items: center;
     height: 464px;
@@ -458,6 +468,12 @@ h4 {
 .donation-text {
     /* width: 30%; */
     flex: 0 0 30%;
+    display: flex;
+    flex-direction: column;
+    /* align-content: space-between; */
+    justify-content: space-between;
+    margin-left: 30px;
+    margin-right: 20px;
 }
 
 .donation-text h4 {
@@ -466,7 +482,8 @@ h4 {
     background-repeat: no-repeat;
     background-position: 15px;
     border-radius: 9px;
-    padding: 10px 15px 10px 55px;
+    padding: 10px 13px 9px 60px;
+    width: fit-content;
 }
 
 .donation-description {
@@ -479,3 +496,98 @@ h4 {
     align-items: center;
     color: #b2b2b2;
 }
+
+.donation-wrap img {
+    padding-top: 11px;
+    padding-bottom: 10px;
+}
+
+.donation-wrap a {
+    text-decoration: none;
+}
+
+/* footer */
+
+footer {
+    background: url(../../assets/noise_transparent@2x.png) repeat,
+        radial-gradient(110.67% 538.64% at 5.73% 50%, #513d2f 0%, #1a1a1c 100%),
+        #211f20;
+
+    height: 354px;
+    display: flex;
+
+    /* align-items: flex-end; */
+}
+/* background: url('../../assets/images/noise_transparent@2x.png') repeat, radial-gradient(100% 215.42% at 0% 0%, #5B483A 0%, #262425 100%), #211F20; */
+
+.footer-wrap {
+    width: 1200px;
+    margin: 0px auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* padding-top: 20px; */
+}
+
+footer h3 {
+    color: #ffffff;
+}
+
+footer h4 {
+    color: #f1cdb3;
+}
+
+.footer-column-s {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+}
+
+.footer-column-s .location-1 {
+    margin-top: 40px;
+}
+
+.footer-column-s .location-2 {
+    margin-top: 40px;
+}
+
+.footer-column-f {
+    /* display: flex; */
+    /* height: 234px; */
+    /* flex-direction: column; */
+    width: 30%;
+}
+
+.footer-column-f .email {
+    margin-top: 40px;
+}
+
+.footer-column-f .tel {
+    margin-top: 40px;
+}
+
+footer a {
+    text-decoration: none;
+    color: #f1cdb3;
+}
+
+footer svg {
+    padding-right: 20px;
+}
+
+.footer-column-f > div {
+    display: flex;
+    align-items: center;
+}
+.footer-column-s > div {
+    display: flex;
+    align-items: center;
+}
+
+footer img {
+    align-self: flex-end;
+}
+
+/* .test {
+    height: 300px;
+} */
