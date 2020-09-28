@@ -16,7 +16,7 @@ body {
     color: #000000;
     /* -webkit-text-stroke: 1px #000000; */
     text-shadow: 2px 2px 8px #000000;
-    transition: background-image 1s ease-in-out;
+    transition: background-image 0.7s ease-in-out;
     /* text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;  */
 }
 
@@ -39,10 +39,19 @@ h2 {
 }
 
 .btn {
-    width: 60px;
-    height: 60px;
-    border: 0;
+    border: none;
     outline: none;
+    padding: 16px 18px;
+    text-transform: uppercase;
+    border-radius: 14px;
+    box-shadow: 2px 2px 8px #000000;
+    font-size: 16px;
+    line-height: 100%;
+}
+
+.btn:hover {
+    background-color: rgb(224, 220, 220);
+    cursor: pointer;
 }
 
 @media (max-width: 700px) {

@@ -28,9 +28,11 @@ const time = document.querySelector(".time"),
     greeting = document.querySelector(".greeting"),
     name = document.querySelector(".name"),
     date = document.querySelector(".date"),
-    btn = document.querySelector(".btn"),
+    btnImage = document.querySelector(".btnImage"),
+    blockquote = document.querySelector("blockquote"),
+    figcaption = document.querySelector("figcaption"),
+    btnQuote = document.querySelector(".btnQuote"),
     focus = document.querySelector(".focus");
-
 
 // Show Time
 function showTime() {
@@ -76,6 +78,7 @@ function setBgGreet() {
         // Day
         document.body.style.backgroundImage = `url('./assets/images/day/${number}.jpg')`;
         greeting.textContent = "Good Afternoon, ";
+        document.body.style.color = "white";
     } else if (hour < 23) {
         // Evening
         document.body.style.backgroundImage = `url('./assets/images/evening/${number}.jpg')`;
@@ -89,7 +92,7 @@ function setBgGreet() {
 
 // Get Name
 function getName() {
-    //returns random image number 
+    //returns random image number
     if (localStorage.getItem("name") === null) {
         name.textContent = "[Enter Name]";
     } else {
@@ -131,28 +134,38 @@ function setFocus(e) {
         localStorage.setItem("focus", e.target.innerText);
     }
 }
-// get random
+// get number for image
+let i = 0;
 
-function getImageNumber (){
-    let number = Math.floor(Math.random() * (21 - 1) + 1);
+function getImageNumber() {
+    let number = (i % 20) + 1;
+    console.log(number);
+    i++;
     return (number < 10 ? "0" : "") + number;
-
-    
 }
 
+
+async function getQuote() {
+    const url = `http://quotes.stormconsultancy.co.uk/random.json`;
+    const res = await fetch(url);
+    const data = await res.json();
+    blockquote.textContent = data.quote;
+    figcaption.textContent = data.author;
+}
 
 name.addEventListener("keypress", setName);
 name.addEventListener("blur", setName);
 focus.addEventListener("keypress", setFocus);
 focus.addEventListener("blur", setFocus);
-btn.addEventListener("click", setBgGreet);
+btnImage.addEventListener("click", setBgGreet);
 
+document.addEventListener("DOMContentLoaded", getQuote);
+btnQuote.addEventListener("click", getQuote);
 
 // Run
 showTime();
 setBgGreet();
 getName();
 getFocus();
-
 
 // http://quotes.stormconsultancy.co.uk/random.json
