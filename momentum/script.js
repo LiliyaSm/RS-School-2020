@@ -28,7 +28,9 @@ const time = document.querySelector(".time"),
     greeting = document.querySelector(".greeting"),
     name = document.querySelector(".name"),
     date = document.querySelector(".date"),
+    btn = document.querySelector(".btn"),
     focus = document.querySelector(".focus");
+
 
 // Show Time
 function showTime() {
@@ -65,10 +67,11 @@ function setBgGreet() {
 
     let number = getImageNumber();
 
-    if (hour < 12) {
+    if (hour > 3 && hour < 12) {
         // Morning
         document.body.style.backgroundImage = `url('./assets/images/morning/${number}.jpg')`;
         greeting.textContent = "Good Morning, ";
+        document.body.style.color = "white";
     } else if (hour < 18) {
         // Day
         document.body.style.backgroundImage = `url('./assets/images/day/${number}.jpg')`;
@@ -81,12 +84,12 @@ function setBgGreet() {
         //night
     } else {
         document.body.style.backgroundImage = `url('./assets/images/night/${number}.jpg')`;
-
     }
 }
 
 // Get Name
 function getName() {
+    //returns random image number 
     if (localStorage.getItem("name") === null) {
         name.textContent = "[Enter Name]";
     } else {
@@ -142,9 +145,14 @@ name.addEventListener("keypress", setName);
 name.addEventListener("blur", setName);
 focus.addEventListener("keypress", setFocus);
 focus.addEventListener("blur", setFocus);
+btn.addEventListener("click", setBgGreet);
+
 
 // Run
 showTime();
 setBgGreet();
 getName();
 getFocus();
+
+
+// http://quotes.stormconsultancy.co.uk/random.json
