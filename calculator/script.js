@@ -39,7 +39,7 @@ class Calculator {
             document
                 .querySelectorAll("span")
                 .forEach((el) => (el.style.opacity = "0"));
-        }, 3000);
+        }, 2000);
     }
     delete() {
         this.currentOperand = this.currentOperand.toString().slice(0, -1);
