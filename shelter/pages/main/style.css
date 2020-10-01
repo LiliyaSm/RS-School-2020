@@ -1,15 +1,21 @@
 @font-face {
     font-family: "Georgia";
     src: url("../../assets/fonts/Georgia.ttf");
+    font-style: normal;
+    font-weight: normal;
+}
+
+:root {
+    font-size: 10px;
 }
 
 html,
 body {
     position: relative;
-    font-size: 14px;
+    font-size: 1.4rem;
     font-style: normal;
     font-weight: normal;
-    width: 100vw;
+    max-width: 100%;
 }
 
 /* h1 is hidden */
@@ -30,7 +36,7 @@ h2 {
     font-family: Georgia;
     font-style: normal;
     font-weight: normal;
-    font-size: 44px;
+    font-size: 4.4rem;
     line-height: 130%;
     align-items: center;
     color: #ffffff;
@@ -40,9 +46,9 @@ h3 {
     font-family: Georgia;
     font-style: normal;
     font-weight: normal;
-    font-size: 35px;
+    font-size: 3.5rem;
     line-height: 130%;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.2rem;
     color: #545454;
 }
 
@@ -50,9 +56,9 @@ h5 {
     font-family: Georgia;
     font-style: normal;
     font-weight: normal;
-    font-size: 15px;
+    font-size: 1.5rem;
     line-height: 110%;
-    letter-spacing: 0.06em;
+        letter-spacing: 0.09rem;
     color: #545454;
 }
 
@@ -107,7 +113,7 @@ p {
 }
 
 .header-wrap {
-    padding-top: 60px;
+    padding-top: 6rem;
     width: 1200px;
     margin: 0 auto;
 }
@@ -141,18 +147,18 @@ p {
 
 .navbar-header .active a {
     color: #fafafa;
-    border-bottom: 3px solid #f1cdb3;
+    border-bottom: 0.3rem solid #f1cdb3;
 }
 
 header .logo-title {
     font-family: Georgia;
     font-style: normal;
     font-weight: normal;
-    font-size: 32px;
-    line-height: 36px;
+    font-size: 3.2rem;
+    line-height: 110%;
     display: flex;
     align-items: center;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.2rem;
     color: #f1cdb3;
 }
 
@@ -160,27 +166,27 @@ header .logo-subtitle {
     font-family: Arial;
     font-style: normal;
     font-weight: 400;
-    font-size: 13px;
-    line-height: 15px;
-    letter-spacing: 0.1em;
+    font-size: 1.3rem;
+    /* line-height: 110%; */
+    letter-spacing: 0.13rem;
     color: #ffffff;
-    text-align: right;
-    margin-top: 0.7em;
+    text-align: center;
+    margin-top: 1rem;
 }
 
 /* start-screen */
 
 .start-screen {
-    height: 908px;
+    /* height: 908px; */
     display: flex;
     flex-direction: column;
-    align-items: center;
+    /* align-items: center; */
     background: center no-repeat url("../../assets/images/bg-start-screen.png");
 }
 
 .start-screen-wrap {
-    height: 93%;
-    width: 1200px;
+    padding-top: 6.2rem;
+    width: 120rem;
     display: flex;
     align-items: center;
     margin: 0px auto;
@@ -188,7 +194,7 @@ header .logo-subtitle {
 
 .start-screen-text {
     width: 39%;
-    padding-bottom: 20px;
+    padding-bottom: 8.2rem;
 }
 
 .start-screen-wrap img {
@@ -210,28 +216,44 @@ header .logo-subtitle {
 /* about section */
 
 .about {
-    height: 588px;
     display: flex;
-    align-items: center;
 }
 
 .about-wrap {
-    padding-bottom: 20px;
-    width: 1200px;
+    width: 120rem;
     margin: 0px auto;
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
+    justify-content: space-between;
+    padding: 8rem 17.5rem 10rem 17.5rem;
+    box-sizing: border-box;
+    
+}
+
+.about-image-wrapper {
+    display: flex;
+}
+
+.about-image-wrapper img {
+    width: 100%;
+}
+
+.about-wrap>div {
+    /* display: flex;
+    width: 100%; */
+
 }
 
 .about-text {
-    width: 432px;
+    max-width: 43rem;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: center;
+    /* justify-content: space-around; */
 }
 
-.about-wrap img {
-    margin-right: 10%;
+.about-text p {
+    margin-top: 2.5rem;
 }
 
 .about-text p {
@@ -242,7 +264,7 @@ header .logo-subtitle {
 
 .pets {
     background-color: #f6f6f6;
-    height: 877px;
+    /* height: 877px; */
     display: flex;
     align-items: center;
 }
@@ -255,46 +277,53 @@ header .logo-subtitle {
     display: flex;
     flex-direction: column;
     height: 95%;
-    padding-bottom: 20px;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding: 8rem 15px 10.1rem 15px;
     box-sizing: border-box;
+
 }
 
 .slider {
     color: #545454;
     display: flex;
     justify-content: space-evenly;
-    border-radius: 9px;
+    border-radius: 0.9rem;
     position: relative;
+    margin-top: 6rem;
 }
 
 .card {
     box-sizing: border-box;
-    padding: 30px 35px;
-    height: 435px;
+    /* padding: 30px 35px; */
+    height: 43.5rem;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     background-color: #fafafa;
     align-items: center;
 }
 
 .card:hover {
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    background-color: #ffffff;
+
 }
 .card-title {
+    
+    margin-top: 31px;
     font-family: Georgia;
     font-style: normal;
     font-weight: normal;
-    font-size: 20px;
-    line-height: 23px;
+    font-size: 2rem;
+    /* line-height: 2.3rem; */
+    /* line-height: 110%; */
     text-align: center;
     letter-spacing: 0.06em;
     color: #545454;
 }
 
 .slider .card button {
+    margin-top: 31px;
+
     padding: 13px 42px;
     font-family: Georgia;
     font-style: normal;
@@ -317,6 +346,8 @@ header .logo-subtitle {
 
 .pet-button {
     margin: 0px auto;
+    margin-top: 6rem;
+
 }
 
 .slider .left-arrow,
@@ -348,17 +379,17 @@ header .logo-subtitle {
 /* help section */
 
 .help {
-    height: 611px;
     color: #545454;
     display: flex;
     align-items: center;
 }
 
 .help-wrap {
-    width: 1200px;
+    width: 120rem;
     margin: 0px auto;
     text-align: center;
-    padding-top: 10px;
+    padding-top: 8.2rem;
+    padding-bottom: 7.2rem;
 }
 
 .help-wrap ul {
@@ -376,7 +407,7 @@ header .logo-subtitle {
 }
 
 .help-wrap ul li + li{
-    margin-left: 120px;
+    margin-left: 12rem;
 }
 
 
@@ -384,19 +415,20 @@ header .logo-subtitle {
 
 .donation {
     background-color: #f6f6f6;
-    height: 464px;
+    /* height: 464px; */
     display: flex;
     align-items: center;
-    height: 464px;
 }
 
 .donation-wrap {
-    width: 1200px;
+    width: 120rem;
     margin: 0px auto;
     display: flex;
     justify-content: center;
-    padding-bottom: 20px;
+    padding-bottom: 10.1rem;
+    padding-top: 8.1rem;
 }
+
 
 .donation-text {
     flex: 0 0 30%;
@@ -405,6 +437,8 @@ header .logo-subtitle {
     justify-content: space-between;
     margin-left: 30px;
     margin-right: 20px;
+    font-size: 14px;
+
 }
 
 .donation-text h4 {
@@ -443,7 +477,7 @@ footer {
     background: url(../../assets/images/noise_transparent@2x.png) repeat,
         radial-gradient(110.67% 538.64% at 5.73% 50%, #513d2f 0%, #1a1a1c 100%),
         #211f20;
-    height: 354px;
+    /* height: 354px; */
     display: flex;
 }
 
@@ -452,7 +486,7 @@ footer {
     margin: 0px auto;
     display: flex;
     justify-content: space-between;
-    padding-top: 62px;
+    padding-top: 40px;
 }
 
 footer h3 {
@@ -465,6 +499,7 @@ footer h4 {
 
 .footer-column-s {
     width: 25.5%;
+    padding-top: 17px;
 }
 
 .footer-column-s .location-1 {
@@ -476,12 +511,13 @@ footer h4 {
 }
 
 .footer-column-f {
-    width: 30%;
+    min-width: 30%;
+    padding-top: 17px;
 }
 
 .footer-column-f .email,
 .footer-column-f .tel {
-    margin-top: 40px;
+    margin-top: 4rem;
 }
 
 footer a {
