@@ -107,10 +107,12 @@ p {
 header {
     background-color: #ffffff;
     width: 100%;
-    position: fixed;
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 0;
     z-index: 2;
-    left: 50%;
-    transform: translateX(-50%);
+    /* left: 50%;
+    transform: translateX(-50%); */
 }
 .header-wrap {
     padding-top: 3rem;
@@ -188,9 +190,8 @@ header .logo-subtitle {
     width: 120rem;
     margin: 0 auto;
     text-align: center;
-    padding-top: 20rem;
-    padding-bottom: 15.2rem;
-    /* padding-bottom: 21.2rem; */
+    padding-top: 8rem;
+    padding-bottom: 18.2rem;
 }
 
 .pets h3 {
@@ -198,9 +199,9 @@ header .logo-subtitle {
 }
 
 .slider {
-    color: #545454;
+    /* color: #545454; */
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
     align-content: space-around;
     border-radius: 0.9rem;
     position: relative;
@@ -210,11 +211,13 @@ header .logo-subtitle {
 
 .card {
     box-sizing: border-box;
-    padding-bottom: 3rem;
+    /* margin: 15px; */
+    padding-bottom: 3.1rem;
     display: flex;
     flex-direction: column;
     background-color: #fafafa;
     align-items: center;
+    margin-bottom: 30px;
 }
 
 .card:hover {
@@ -234,7 +237,7 @@ header .logo-subtitle {
 
 .slider .card button {
     margin-top: 3.1rem;
-    padding: 1.3rem 4.2rem;
+    padding: 1.3rem 4.3rem;
     font-family: Georgia;
     font-style: normal;
     font-weight: normal;
@@ -257,6 +260,61 @@ header .logo-subtitle {
 .pet-button {
     margin: 0rem auto;
     margin-top: 6rem;
+}
+
+.slider .page-number {
+    position: absolute;
+    border-radius: 50%;
+    outline: none;
+    background-color: #f1cdb3;
+    border: 2px solid #f1cdb3;
+    cursor: pointer;
+    padding: 12px 19px 13px 19px;
+    bottom: -82px;
+    right: 574px;
+
+    color: #292929;
+}
+.slider .page-number:hover {
+    background: #fddcc4;
+    cursor: pointer;
+    border: 2px solid #fddcc4;
+}
+
+.slider .btn-pagination-right,
+.slider .btn-pagination-right-end,
+.slider .btn-pagination-left,
+.slider .btn-pagination-left-end {
+    position: absolute;
+    border-radius: 50%;
+    outline: none;
+    background-color: #f6f6f6;
+    border: 2px solid #f1cdb3;
+    /* padding: 1.7rem; */
+}
+
+.slider .btn-pagination-right {
+    bottom: -82px;
+    left: 646px;
+    padding: 19px 19px 15px 19px;
+}
+.slider .btn-pagination-right-end {
+    bottom: -82px;
+    left: 718px;
+    padding: 19px 12px 15px 11px;
+}
+
+.slider .btn-pagination-left {
+    bottom: -82px;
+    left: 502px;
+    padding: 19px 19px 15px 19px;
+    transform: scale(-1, -1);
+}
+.slider .btn-pagination-left-end {
+    bottom: -82px;
+    left: 430px;
+    padding: 19px 12px 15px 11px;
+    transform: scale(-1, -1);
 }
 
 /* footer */
