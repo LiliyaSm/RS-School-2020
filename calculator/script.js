@@ -223,6 +223,8 @@ const currentOperandTextElement = document.querySelector(
 const output = document.querySelector(".output");
 const sqrtButton = document.querySelector("[data-sqrt]");
 const switchButton = document.querySelector("[data-switch]");
+const instructionBtn = document.querySelector(".question-btn");
+const instructionContent = document.querySelector(".instruction-content");
 
 const calculator = new Calculator(
     previousOperandTextElement,
@@ -267,4 +269,12 @@ sqrtButton.addEventListener("click", (e) => {
 switchButton.addEventListener("click", (e) => {
     calculator.switch();
     calculator.updateDisplay();
+});
+
+instructionBtn.addEventListener("click", (e) => {
+    if (instructionContent.className === "instruction-content") {
+        instructionContent.className = "instruction-content show";
+    } else {
+        instructionContent.className = "instruction-content";
+    }
 });
