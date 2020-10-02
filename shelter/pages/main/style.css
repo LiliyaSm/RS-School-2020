@@ -142,6 +142,7 @@ p {
 
 .navbar-header a:hover {
     color: #fafafa;
+    cursor: pointer;
 }
 
 .navbar-header .active a {
@@ -166,7 +167,6 @@ header .logo-subtitle {
     font-style: normal;
     font-weight: 400;
     font-size: 1.3rem;
-    /* line-height: 110%; */
     letter-spacing: 0.13rem;
     color: #ffffff;
     text-align: center;
@@ -303,7 +303,9 @@ start-screen-img img {
 .card:hover {
     box-shadow: 0rem 0.4rem 0.4rem rgba(0, 0, 0, 0.25);
     background-color: #ffffff;
+    cursor: pointer;
 }
+
 .card-title {
     margin-top: 3.1rem;
     font-family: Georgia;
