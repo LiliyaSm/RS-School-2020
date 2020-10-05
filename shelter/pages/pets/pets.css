@@ -199,7 +199,7 @@ header .logo-subtitle {
 .card:hover {
     box-shadow: 0rem 0.4rem 0.4rem rgba(0, 0, 0, 0.25);
     background-color: #ffffff;
-    cursor: pointer;
+    /* cursor: pointer; */
 }
 
 .card-title {
