@@ -1,71 +1,61 @@
 const body = document.querySelector("body");
 
 const PUZZLE_DIFFICULTY = 4;
-const SIZE = 80;
+const SIZE = 80; //width, height
 const minShuffle = 100;
 const maxShuffle = 300;
 let winMap = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0];
 
-var tilePosition = {
+var startPosition = {
     x: 0,
     y: 0,
-    //number position
-    textx: 35,
-    texty: 45,
 };
 
 function shuffleTiles(winMap) {
     let shuffleArray = [...winMap];
     // let emptyTilePosition = shuffleArray.indexOf("0");
     let shifts = ["left", "right", "up", "down"];
-    let rand = Math.floor(Math.random() * (maxShuffle - minShuffle) + minShuffle); // get random number between 50 and 100
+    let rand = Math.floor(
+        Math.random() * (maxShuffle - minShuffle) + minShuffle
+    ); // get random number between 50 and 100
 
     //repeat rand times
-    Array.from(Array(rand)).forEach((x, i) => {
-        let randOperation = Math.floor(Math.random() * PUZZLE_DIFFICULTY); // get random number between 0 and 3
+    Array.from(Array(rand)).forEach(() => {
+        let randOperation = Math.floor(Math.random() * shifts.length); // get random number between 0 and 3
         let operation = shifts[randOperation];
         let emptyTilePosition = shuffleArray.indexOf(0);
-        let row = Math.floor(emptyTilePosition / 4);
-        let col = emptyTilePosition % 4;
+        let row = Math.floor(emptyTilePosition / PUZZLE_DIFFICULTY);
+        let col = emptyTilePosition % PUZZLE_DIFFICULTY;
         switch (operation) {
             case "left":
                 if (col !== 0) {
-                    // let temp = shuffleArray[emptyTilePosition - 1];
                     shuffleArray[emptyTilePosition] =
                         shuffleArray[emptyTilePosition - 1];
-                        
                     shuffleArray[emptyTilePosition - 1] = 0;
-                    break;
-                } else {
-                    break;
                 }
+                break;
+
             case "right":
                 if (col !== PUZZLE_DIFFICULTY - 1) {
                     shuffleArray[emptyTilePosition] =
                         shuffleArray[emptyTilePosition + 1];
                     shuffleArray[emptyTilePosition + 1] = 0;
-                    break;
-                } else {
-                    break;
                 }
+                break;
             case "up":
                 if (row !== 0) {
                     shuffleArray[emptyTilePosition] =
                         shuffleArray[emptyTilePosition - PUZZLE_DIFFICULTY];
                     shuffleArray[emptyTilePosition - PUZZLE_DIFFICULTY] = 0;
-                    break;
-                } else {
-                    break;
                 }
+                break;
             case "down":
                 if (row !== PUZZLE_DIFFICULTY - 1) {
                     shuffleArray[emptyTilePosition] =
                         shuffleArray[emptyTilePosition + PUZZLE_DIFFICULTY];
                     shuffleArray[emptyTilePosition + PUZZLE_DIFFICULTY] = 0;
-                    break;
-                } else {
-                    break;
                 }
+                break;
         }
     });
     return shuffleArray;
@@ -74,8 +64,8 @@ function shuffleTiles(winMap) {
 let myGameArea = {
     canvas: document.createElement("canvas"),
     start: function () {
-        this.canvas.width = 320;
-        this.canvas.height = 320;
+        this.canvas.width = SIZE * PUZZLE_DIFFICULTY;
+        this.canvas.height = SIZE * PUZZLE_DIFFICULTY;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         //updates every 20th millisecond (50 times per second)
@@ -90,7 +80,7 @@ let myGameArea = {
 function createTiles(array) {
     let pieces = [];
 
-    for (let i = 0; i < PUZZLE_DIFFICULTY * PUZZLE_DIFFICULTY; i++) {
+    for (let i = 0; i < array.length; i++) {
         pieces.push(array[i]);
         //empty tile
         if (array[i] === 0) {
@@ -99,15 +89,15 @@ function createTiles(array) {
         // i:         0 1 2 3 4 5 itc
         // i / 4      0 0 0 0
         //            1 1 1 1
-        let row = Math.floor(i / 4);
+        let row = Math.floor(i / PUZZLE_DIFFICULTY);
         // i % 4      0 1 2 3 0 1 2 3
-        let col = i % 4;
+        let col = i % PUZZLE_DIFFICULTY;
 
         myGamePiece = new component(
             SIZE,
             array[i],
-            tilePosition.x + col * 80,
-            tilePosition.y + row * 80
+            startPosition.x + col * SIZE,
+            startPosition.y + row * SIZE
         );
         console.log(pieces);
     }
@@ -146,5 +136,4 @@ document.body.onload = function () {
     myGameArea.start();
     // shuffleTiles();
     createTiles(shuffleTiles(winMap));
-
 };
