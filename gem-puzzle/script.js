@@ -1,23 +1,15 @@
 const body = document.querySelector("body");
 
 const PUZZLE_DIFFICULTY = 4;
+const SIZE = 80;
+let winMap = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0];
 
-let tile = {
-    width: 80,
-    height: 80,
-};
-
-
-
-var winMap = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0];
-
-//number position
-
-var pos = {
+var tilePosition = {
     x: 0,
     y: 0,
-    textx: 65,
-    texty: 55,
+    //number position
+    textx: 35,
+    texty: 45,
 };
 
 let myGameArea = {
@@ -35,22 +27,52 @@ let myGameArea = {
     },
 };
 
-function component(width, height, text, x, y, xNumber, yNumber) {
+function createTiles() {
+    let pieces = [];
+
+    for (let i = 0; i < PUZZLE_DIFFICULTY * PUZZLE_DIFFICULTY; i++) {
+        pieces.push(winMap[i]);
+        //empty tile
+        if (winMap[i] === 0) {
+            continue;
+        }
+        // i:         0 1 2 3 4 5 itc
+        // i / 4      0 0 0 0
+        //            1 1 1 1
+        let row = Math.floor(i / 4);
+        // i % 4      0 1 2 3 0 1 2 3
+        let col = i % 4;
+
+        myGamePiece = new component(
+            SIZE,
+            winMap[i],
+            tilePosition.x + col * 80,
+            tilePosition.y + row * 80
+        );
+        console.log(pieces);
+    }
+}
+
+function component(size, text, x, y) {
     ctx = myGameArea.context;
     ctx.fillStyle = "#EB5E55";
     ctx.shadowColor = "#000000";
     ctx.shadowBlur = 4;
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 2;
-    ctx.fillRect(x + 5, y + 5, width - 10, height - 10);
+    ctx.fillRect(x + 5, y + 5, size - 10, size - 10);
     ctx.shadowColor = "transparent";
     ctx.fillStyle = "#FFFFFF";
     ctx.font = "20px Arial";
-    this.width = width;
-    this.height = height;
+    this.width = size;
+    this.height = size;
     this.x = x;
     this.y = y;
+    //compute text position
+    xNumber = x + 35;
+    yNumber = y + 45;
     ctx.fillText(text, xNumber, yNumber);
+
     this.update = function () {};
 }
 
@@ -60,7 +82,8 @@ function updateGameArea() {
     // myGamePiece.update();
 }
 
+
 document.body.onload = function () {
     myGameArea.start();
-    myGamePiece = new component(tile.width, tile.height, "1", 0, 0, 35, 45);
+    createTiles(); 
 };
