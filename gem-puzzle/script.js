@@ -2,6 +2,8 @@ const body = document.querySelector("body");
 
 const PUZZLE_DIFFICULTY = 4;
 const SIZE = 80;
+const minShuffle = 100;
+const maxShuffle = 300;
 let winMap = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0];
 
 var tilePosition = {
@@ -11,6 +13,63 @@ var tilePosition = {
     textx: 35,
     texty: 45,
 };
+
+function shuffleTiles(winMap) {
+    let shuffleArray = [...winMap];
+    // let emptyTilePosition = shuffleArray.indexOf("0");
+    let shifts = ["left", "right", "up", "down"];
+    let rand = Math.floor(Math.random() * (maxShuffle - minShuffle) + minShuffle); // get random number between 50 and 100
+
+    //repeat rand times
+    Array.from(Array(rand)).forEach((x, i) => {
+        let randOperation = Math.floor(Math.random() * PUZZLE_DIFFICULTY); // get random number between 0 and 3
+        let operation = shifts[randOperation];
+        let emptyTilePosition = shuffleArray.indexOf(0);
+        let row = Math.floor(emptyTilePosition / 4);
+        let col = emptyTilePosition % 4;
+        switch (operation) {
+            case "left":
+                if (col !== 0) {
+                    // let temp = shuffleArray[emptyTilePosition - 1];
+                    shuffleArray[emptyTilePosition] =
+                        shuffleArray[emptyTilePosition - 1];
+                        
+                    shuffleArray[emptyTilePosition - 1] = 0;
+                    break;
+                } else {
+                    break;
+                }
+            case "right":
+                if (col !== PUZZLE_DIFFICULTY - 1) {
+                    shuffleArray[emptyTilePosition] =
+                        shuffleArray[emptyTilePosition + 1];
+                    shuffleArray[emptyTilePosition + 1] = 0;
+                    break;
+                } else {
+                    break;
+                }
+            case "up":
+                if (row !== 0) {
+                    shuffleArray[emptyTilePosition] =
+                        shuffleArray[emptyTilePosition - PUZZLE_DIFFICULTY];
+                    shuffleArray[emptyTilePosition - PUZZLE_DIFFICULTY] = 0;
+                    break;
+                } else {
+                    break;
+                }
+            case "down":
+                if (row !== PUZZLE_DIFFICULTY - 1) {
+                    shuffleArray[emptyTilePosition] =
+                        shuffleArray[emptyTilePosition + PUZZLE_DIFFICULTY];
+                    shuffleArray[emptyTilePosition + PUZZLE_DIFFICULTY] = 0;
+                    break;
+                } else {
+                    break;
+                }
+        }
+    });
+    return shuffleArray;
+}
 
 let myGameArea = {
     canvas: document.createElement("canvas"),
@@ -27,13 +86,14 @@ let myGameArea = {
     },
 };
 
-function createTiles() {
+//draws tiles for array [1, 3, 2, ...]
+function createTiles(array) {
     let pieces = [];
 
     for (let i = 0; i < PUZZLE_DIFFICULTY * PUZZLE_DIFFICULTY; i++) {
-        pieces.push(winMap[i]);
+        pieces.push(array[i]);
         //empty tile
-        if (winMap[i] === 0) {
+        if (array[i] === 0) {
             continue;
         }
         // i:         0 1 2 3 4 5 itc
@@ -45,7 +105,7 @@ function createTiles() {
 
         myGamePiece = new component(
             SIZE,
-            winMap[i],
+            array[i],
             tilePosition.x + col * 80,
             tilePosition.y + row * 80
         );
@@ -82,8 +142,9 @@ function updateGameArea() {
     // myGamePiece.update();
 }
 
-
 document.body.onload = function () {
     myGameArea.start();
-    createTiles(); 
+    // shuffleTiles();
+    createTiles(shuffleTiles(winMap));
+
 };
