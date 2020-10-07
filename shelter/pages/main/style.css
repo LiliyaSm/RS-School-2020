@@ -115,7 +115,10 @@ p {
     padding-top: 6rem;
     width: 120rem;
     margin: 0 auto;
+    padding-left: 3rem;
+    padding-right: 3rem;
 }
+
 .navbar-header {
     width: 37%;
 }
@@ -178,26 +181,32 @@ header .logo-subtitle {
 .start-screen {
     display: flex;
     flex-direction: column;
-    background: url('../../assets/images/noise_transparent@2x.png') repeat, radial-gradient(100% 215.42% at 0% 0%, #5B483A 0%, #262425 100%), #211F20;
+    background: url("../../assets/images/noise_transparent@2x.png") repeat,
+        radial-gradient(100% 215.42% at 0% 0%, #5b483a 0%, #262425 100%),
+        #211f20;
 }
 
 .start-screen-wrap {
     padding-top: 6.2rem;
     justify-content: space-around;
     width: 120rem;
+    margin: 0rem auto;
     display: flex;
     align-items: center;
-    margin: 0rem auto;
+    padding-left: 3rem;
+    padding-right: 3rem;
+    /* box-sizing: border-box; */
+
 }
 
 .start-screen-text {
-    width: 39%;
     padding-bottom: 8.2rem;
 }
 
 .start-screen-wrap img {
     align-self: flex-end;
     margin-left: 3.4rem;
+        /* justify-content: flex-end; */
 }
 
 .start-screen-text p {
@@ -209,11 +218,11 @@ header .logo-subtitle {
 
 .start-screen-img {
     display: flex;
+    width: 100%;
+    justify-content: flex-end;
 }
 
-start-screen-img img {
-    width: 100%;
-}
+
 .start-screen-text button {
     margin-top: 4.2rem;
 }
@@ -540,3 +549,40 @@ footer img {
 .footer-image-wrapper {
     display: flex;
 }
+
+@media screen and (max-width: 1279px) {
+    .header-wrap
+    {
+        width: 100%;
+        padding-top: 3rem;
+        box-sizing: border-box;
+
+    }
+    .navbar-header {
+        width: 62.5%;
+    }
+
+    .start-screen-wrap {
+        flex-direction: column;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .start-screen-text {
+        width: 65%;
+        padding-bottom: 10rem;
+    }
+
+    .start-screen-text button {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .start-screen img{
+            width: 80.5%;
+}
+}
+/* @media screen and (max-width: 786px) {
+    .header-wrap {
+    }
+} */
