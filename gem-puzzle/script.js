@@ -5,8 +5,9 @@ const SIZE = 80; //width, height
 const minShuffle = 100;
 const maxShuffle = 300;
 let winMap = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0];
+let shuffleMap = shuffleTiles(winMap);
 
-var startPosition = {
+const startPosition = {
     x: 0,
     y: 0,
 };
@@ -71,6 +72,7 @@ let myGameArea = {
         //updates every 20th millisecond (50 times per second)
         // this.interval = setInterval(updateGameArea, 20);
     },
+
     clear: function () {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
@@ -78,10 +80,8 @@ let myGameArea = {
 
 //draws tiles for array [1, 3, 2, ...]
 function createTiles(array) {
-    let pieces = [];
-
+    myGameArea.clear();
     for (let i = 0; i < array.length; i++) {
-        pieces.push(array[i]);
         //empty tile
         if (array[i] === 0) {
             continue;
@@ -99,7 +99,6 @@ function createTiles(array) {
             startPosition.x + col * SIZE,
             startPosition.y + row * SIZE
         );
-        console.log(pieces);
     }
 }
 
@@ -126,6 +125,50 @@ function component(size, text, x, y) {
     this.update = function () {};
 }
 
+//get mouse position
+function getMousePos(event) {
+    let rect = myGameArea.canvas.getBoundingClientRect(); // abs. size of element
+    //mouse position subtracted from the parent element's offset position, mouse position you are getting is relative to the client window
+    let x = event.clientX - rect.left;
+    let y = event.clientY - rect.top;
+    let col = Math.floor(x / SIZE);
+    let row = Math.floor(y / SIZE);
+
+    let emptyTilePosition = shuffleMap.indexOf(0);
+    let rowEmptyTile = Math.floor(emptyTilePosition / PUZZLE_DIFFICULTY);
+    let colEmptyTile = emptyTilePosition % PUZZLE_DIFFICULTY;
+
+    if (col === colEmptyTile && (rowEmptyTile + 1 === row || rowEmptyTile - 1 === row)){
+        // shift in column
+        if(rowEmptyTile + 1 === row ){
+            shuffleMap[emptyTilePosition] =
+                shuffleMap[emptyTilePosition + PUZZLE_DIFFICULTY];
+            shuffleMap[emptyTilePosition + PUZZLE_DIFFICULTY] = 0;
+        } else {
+            shuffleMap[emptyTilePosition] =
+                shuffleMap[emptyTilePosition - PUZZLE_DIFFICULTY];
+            shuffleMap[emptyTilePosition - PUZZLE_DIFFICULTY] = 0;
+        }
+
+        
+    } else if (row === rowEmptyTile && (colEmptyTile + 1 === col || colEmptyTile - 1 === col)){
+        // shift in row
+        if (colEmptyTile + 1 === col) {
+            shuffleMap[emptyTilePosition] =
+            shuffleMap[emptyTilePosition + 1];
+            shuffleMap[emptyTilePosition + 1] = 0;
+        } else {
+            shuffleMap[emptyTilePosition] =
+            shuffleMap[emptyTilePosition - 1];
+            shuffleMap[emptyTilePosition - 1] = 0;
+        }
+    }
+    
+    createTiles(shuffleMap);
+}
+
+
+
 function updateGameArea() {
     // myGameArea.clear();
     // myGamePiece.x += 1;
@@ -133,7 +176,7 @@ function updateGameArea() {
 }
 
 document.body.onload = function () {
-    myGameArea.start();
-    // shuffleTiles();
-    createTiles(shuffleTiles(winMap));
+    myGameArea.start();    
+    createTiles(shuffleMap);
+    myGameArea.canvas.addEventListener("mousedown", getMousePos);
 };
