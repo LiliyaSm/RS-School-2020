@@ -196,7 +196,6 @@ header .logo-subtitle {
     padding-left: 3rem;
     padding-right: 3rem;
     /* box-sizing: border-box; */
-
 }
 
 .start-screen-text {
@@ -206,7 +205,7 @@ header .logo-subtitle {
 .start-screen-wrap img {
     align-self: flex-end;
     margin-left: 3.4rem;
-        /* justify-content: flex-end; */
+    /* justify-content: flex-end; */
 }
 
 .start-screen-text p {
@@ -222,7 +221,6 @@ header .logo-subtitle {
     justify-content: flex-end;
 }
 
-
 .start-screen-text button {
     margin-top: 4.2rem;
 }
@@ -237,7 +235,6 @@ header .logo-subtitle {
     width: 120rem;
     margin: 0rem auto;
     display: flex;
-    /* justify-content: center; */
     justify-content: space-between;
     padding: 8rem 17.5rem 10rem 17.5rem;
     box-sizing: border-box;
@@ -248,7 +245,7 @@ header .logo-subtitle {
 }
 
 .about-image-wrapper img {
-    width: 100%;
+    /* width: 100%; */
 }
 
 .about-wrap > div {
@@ -287,17 +284,18 @@ header .logo-subtitle {
     display: flex;
     flex-direction: column;
     height: 95%;
-    padding: 8rem 1.5rem 10.2rem 1.5rem;
+    padding-top: 8rem;
+    padding-bottom: 10rem;
     box-sizing: border-box;
 }
 
 .slider {
     color: #545454;
     display: flex;
-    justify-content: space-evenly;
-    border-radius: 0.9rem;
-    position: relative;
+    justify-content: space-between;
+    /* position: relative; */
     margin-top: 6rem;
+    align-items: center;
 }
 
 .card {
@@ -307,6 +305,8 @@ header .logo-subtitle {
     flex-direction: column;
     background-color: #fafafa;
     align-items: center;
+    margin: 0 4.5rem;
+    border-radius: 0.9rem;
 }
 
 .card:hover {
@@ -350,26 +350,26 @@ header .logo-subtitle {
 
 .pet-button {
     margin: 0rem auto;
-    margin-top: 6rem;
+    margin-top: 6.2rem;
 }
 
 .slider .left-arrow,
 .slider .right-arrow {
-    position: absolute;
+    /* position: absolute; */
     border-radius: 50%;
     outline: none;
     background-color: #f6f6f6;
     border: 2px solid #f1cdb3;
     padding: 1.7rem;
-    top: 44%;
+    /* top: 44%; */
 }
 
 .slider .right-arrow {
-    right: -15px;
+    margin-left: 0.8rem;
 }
 
 .slider .left-arrow {
-    left: -15px;
+    margin-right: 0.8rem;
 }
 
 .slider .right-arrow:hover,
@@ -551,12 +551,10 @@ footer img {
 }
 
 @media screen and (max-width: 1279px) {
-    .header-wrap
-    {
+    .header-wrap {
         width: 100%;
         padding-top: 3rem;
         box-sizing: border-box;
-
     }
     .navbar-header {
         width: 62.5%;
@@ -578,9 +576,63 @@ footer img {
         margin-right: auto;
     }
 
-    .start-screen img{
-            width: 80.5%;
-}
+    .start-screen img {
+        width: 80.3%;
+    }
+
+    .about-wrap {
+        width: 100%;
+        flex-direction: column-reverse;
+        /* justify-content: center; */
+        padding: 8rem 16.5rem 10rem 16.7rem;
+    }
+
+    .about-image-wrapper {
+        margin-top: 8rem;
+        justify-content: center;
+    }
+    .about-text {
+        max-width: 100%;
+    }
+
+    .pets-wrap {
+        width: 100%;
+    }
+
+    .slider .card:nth-of-type(3n) {
+        display: none;
+    }
+
+    .slider .card {
+        margin: 0 4rem 0 0;
+    }
+    .slider .card ~ .card {
+        margin: 0;
+    }
+
+    .slider {
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+    .slider .left-arrow {
+        margin-right: 1.1rem;
+    }
+
+    .slider .right-arrow {
+        margin-left: 1rem;
+    }
+
+    /* help section */
+
+    .help-wrap ul li + li {
+        margin-left: 6rem;
+    }
+    .help-wrap ul li {
+        margin-left: 6rem;
+    }
+    .help-wrap {
+        width: 100%;
+    }
 }
 /* @media screen and (max-width: 786px) {
     .header-wrap {
