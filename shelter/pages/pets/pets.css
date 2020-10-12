@@ -15,7 +15,6 @@ body {
     font-size: 1.4rem;
     font-style: normal;
     font-weight: normal;
-    /* max-width: 100%; */
 }
 
 /* h1 is hidden */
@@ -181,7 +180,6 @@ header .logo-subtitle {
     justify-content: center;
     align-content: space-around;
     border-radius: 0.9rem;
-    /* position: relative; */
     margin-top: 6rem;
     flex-wrap: wrap;
 }
@@ -264,7 +262,6 @@ header .logo-subtitle {
 .slider .btn-pagination-right-end,
 .slider .btn-pagination-left,
 .slider .btn-pagination-left-end {
-    /* position: absolute; */
     border-radius: 50%;
     outline: none;
     background-color: #f6f6f6;
@@ -272,25 +269,17 @@ header .logo-subtitle {
 }
 
 .slider .btn-pagination-right {
-    /* bottom: -82px;
-    left: 646px; */
     padding: 19px 19px 15px 19px;
 }
 .slider .btn-pagination-right-end {
-    /* bottom: -82px;
-    left: 718px; */
     padding: 19px 12px 15px 11px;
 }
 
 .slider .btn-pagination-left {
-    /* bottom: -82px;
-    left: 502px; */
     padding: 19px 19px 15px 19px;
     transform: scale(-1, -1);
 }
 .slider .btn-pagination-left-end {
-    /* bottom: -82px;
-    left: 430px; */
     padding: 19px 12px 15px 11px;
     transform: scale(-1, -1);
 }
@@ -319,8 +308,6 @@ header .logo-subtitle {
     display: flex;
     justify-content: space-between;
     margin-top: 3rem;
-    /* margin-left: 100%;
-    margin-right: 100%; */
 }
 
 /* footer */
@@ -527,8 +514,6 @@ footer img {
         display: none;
     }
 
-    
-
     .pets-wrap {
         padding-bottom: 4.3rem;
     }
@@ -564,11 +549,9 @@ footer img {
     }
 }
 
-
 @media screen and (max-width: 567px) {
-.slider > div {
+    .slider > div {
         margin-left: 0;
         margin-right: 0;
     }
-
 }
