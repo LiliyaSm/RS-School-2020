@@ -15,7 +15,7 @@ body {
     font-size: 1.4rem;
     font-style: normal;
     font-weight: normal;
-    max-width: 100%;
+    /* max-width: 100%; */
 }
 
 /* h1 is hidden */
@@ -38,7 +38,7 @@ h3 {
     font-weight: normal;
     font-size: 3.5rem;
     line-height: 130%;
-    letter-spacing: 0.2rem;
+    letter-spacing: 0.18rem;
     color: #545454;
 }
 
@@ -90,7 +90,7 @@ header {
     position: -webkit-sticky; /* Safari */
     position: sticky;
     top: 0;
-    z-index: 2;   
+    z-index: 2;
 }
 .header-wrap {
     padding-top: 3rem;
@@ -98,7 +98,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 120rem;
+    max-width: 120rem;
     margin: 0 auto;
 }
 .navbar-header {
@@ -165,11 +165,11 @@ header .logo-subtitle {
 }
 
 .pets-wrap {
-    width: 120rem;
+    max-width: 128rem;
     margin: 0 auto;
     text-align: center;
     padding-top: 8rem;
-    padding-bottom: 18.2rem;
+    padding-bottom: 10rem;
 }
 
 .pets h3 {
@@ -178,10 +178,10 @@ header .logo-subtitle {
 
 .slider {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-content: space-around;
     border-radius: 0.9rem;
-    position: relative;
+    /* position: relative; */
     margin-top: 6rem;
     flex-wrap: wrap;
 }
@@ -194,6 +194,8 @@ header .logo-subtitle {
     background-color: #fafafa;
     align-items: center;
     margin-bottom: 30px;
+    margin-left: 2rem;
+    margin-right: 2rem;
 }
 
 .card:hover {
@@ -241,7 +243,7 @@ header .logo-subtitle {
 }
 
 .slider .page-number {
-    position: absolute;
+    /* position: absolute; */
     border-radius: 50%;
     outline: none;
     background-color: #f1cdb3;
@@ -262,7 +264,7 @@ header .logo-subtitle {
 .slider .btn-pagination-right-end,
 .slider .btn-pagination-left,
 .slider .btn-pagination-left-end {
-    position: absolute;
+    /* position: absolute; */
     border-radius: 50%;
     outline: none;
     background-color: #f6f6f6;
@@ -270,25 +272,25 @@ header .logo-subtitle {
 }
 
 .slider .btn-pagination-right {
-    bottom: -82px;
-    left: 646px;
+    /* bottom: -82px;
+    left: 646px; */
     padding: 19px 19px 15px 19px;
 }
 .slider .btn-pagination-right-end {
-    bottom: -82px;
-    left: 718px;
+    /* bottom: -82px;
+    left: 718px; */
     padding: 19px 12px 15px 11px;
 }
 
 .slider .btn-pagination-left {
-    bottom: -82px;
-    left: 502px;
+    /* bottom: -82px;
+    left: 502px; */
     padding: 19px 19px 15px 19px;
     transform: scale(-1, -1);
 }
 .slider .btn-pagination-left-end {
-    bottom: -82px;
-    left: 430px;
+    /* bottom: -82px;
+    left: 430px; */
     padding: 19px 12px 15px 11px;
     transform: scale(-1, -1);
 }
@@ -311,6 +313,16 @@ header .logo-subtitle {
     fill: #cdcdcd;
 }
 
+.buttons {
+    width: 34rem;
+    height: 5.2rem;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3rem;
+    /* margin-left: 100%;
+    margin-right: 100%; */
+}
+
 /* footer */
 
 footer {
@@ -327,6 +339,13 @@ footer {
     justify-content: space-between;
     padding-top: 4rem;
 }
+
+.columns {
+    width: 74rem;
+    display: flex;
+    justify-content: space-between;
+}
+
 footer h3 {
     color: #ffffff;
 }
@@ -336,7 +355,7 @@ footer h4 {
 }
 
 .footer-column-s {
-    width: 25.5%;
+    max-width: 302px;
     padding-top: 1.7rem;
 }
 
@@ -349,7 +368,7 @@ footer h4 {
 }
 
 .footer-column-f {
-    min-width: 30%;
+    max-width: 27.8rem;
     padding-top: 1.7rem;
 }
 
@@ -375,7 +394,7 @@ footer svg {
 
 footer img {
     align-self: flex-end;
-    width: 100%;
+    height: auto;
 }
 
 .location-1 svg {
@@ -387,6 +406,169 @@ footer img {
     align-items: center;
 }
 
-.footer-image-wrapper {
-    display: flex;
+.menu-icon {
+    display: none;
+}
+
+.bar1,
+.bar2,
+.bar3 {
+    width: 30px;
+    height: 2px;
+    background-color: #000000;
+    margin: 8px 0;
+    transition: 0.4s;
+}
+
+@media screen and (max-width: 1279px) {
+    .header-wrap {
+        /* width: 100%; */
+        padding-left: 3rem;
+        padding-right: 3rem;
+        box-sizing: border-box;
+    }
+
+    .navbar-header {
+        min-width: 62.6%;
+    }
+
+    .pets-wrap {
+        /* width: 100%; */
+        padding-bottom: 7.5rem;
+        box-sizing: border-box;
+    }
+
+    .pets-wrap .card:nth-of-type(6) ~ .card {
+        display: none;
+    }
+
+    .slider {
+        justify-content: center;
+        margin-top: 3rem;
+    }
+    .slider > div {
+        margin-left: 90px;
+        margin-right: 90px;
+    }
+
+    .buttons {
+        margin-top: 1rem;
+        width: 34rem;
+    }
+
+    /* footer */
+
+    .columns {
+        margin-left: 10%;
+        margin-right: 10%;
+    }
+
+    .footer-wrap {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        padding: 1.4rem 6.4rem 0 6.4rem;
+        box-sizing: border-box;
+    }
+    .footer-image-wrapper {
+        margin-top: 6.4rem;
+        justify-content: center;
+        display: flex;
+    }
+}
+
+@media screen and (max-width: 926px) {
+    .slider > div {
+        margin-left: 2rem;
+        margin-right: 2rem;
+    }
+
+    .columns {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .navbar-header {
+        display: none;
+    }
+
+    .slider > .card {
+        margin-left: 100%;
+        margin-right: 100%;
+    }
+
+    .pets-wrap {
+        padding-top: 4rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .pets h3 {
+        font-size: 25px;
+        letter-spacing: 0.06em;
+    }
+
+    .menu-icon {
+        display: block;
+    }
+
+    .header-wrap {
+        padding-top: 3rem;
+        padding-left: 1rem;
+        padding-right: 5rem;
+    }
+    .slider {
+        margin-top: 4.5rem;
+    }
+
+    .pets-wrap .card:nth-of-type(2n) {
+        display: none;
+    }
+
+    
+
+    .pets-wrap {
+        padding-bottom: 4.3rem;
+    }
+    /* footer*/
+
+    .footer-wrap {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    .footer-wrap img {
+        width: 87%;
+    }
+
+    .columns {
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .columns h3 {
+        text-align: center;
+    }
+    .footer-column-f {
+        padding-left: 1.2rem;
+        padding-right: 1.2rem;
+    }
+
+    .footer-column-s {
+        padding-top: 4rem;
+    }
+    .footer-image-wrapper {
+        margin-top: 9.2rem;
+    }
+}
+
+
+@media screen and (max-width: 567px) {
+.slider > div {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
 }
