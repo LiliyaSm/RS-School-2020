@@ -1,15 +1,30 @@
 const body = document.querySelector("body");
 
-const PUZZLE_DIFFICULTY = 4;
+const PUZZLE_DIFFICULTY = 3;
 const SIZE = 80; //width, height
 const minShuffle = 100;
 const maxShuffle = 300;
-let winMap = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0];
+let winMap = createWinMap();
 let shuffleMap = shuffleTiles(winMap);
 
 const startPosition = {
     x: 0,
     y: 0,
+};
+
+
+let first_row = document.createElement("div");
+first_row.setAttribute("class", "row");
+
+
+
+function createWinMap() {
+    //  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0];
+    let arraySize = PUZZLE_DIFFICULTY * PUZZLE_DIFFICULTY;
+    let result = [...Array(arraySize + 1).keys()].slice(1);
+    result[arraySize - 1] = 0;
+    return result
+
 };
 
 function shuffleTiles(winMap) {
@@ -68,7 +83,9 @@ let myGameArea = {
         this.canvas.width = SIZE * PUZZLE_DIFFICULTY;
         this.canvas.height = SIZE * PUZZLE_DIFFICULTY;
         this.context = this.canvas.getContext("2d");
-        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        // document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+
+        Node.appendChild();
         //updates every 20th millisecond (50 times per second)
         // this.interval = setInterval(updateGameArea, 20);
     },
@@ -165,9 +182,19 @@ function getMousePos(event) {
     }
     
     createTiles(shuffleMap);
+    if (arraysEqual(winMap, shuffleMap)) {
+        console.log("win")
+    }
 }
 
 
+function arraysEqual(a, b) {  
+    //check if arrays are equal
+    for (var i = 0; i < a.length; ++i) {
+        if (a[i] !== b[i]) return false;
+    }
+    return true;
+}
 
 function updateGameArea() {
     // myGameArea.clear();
