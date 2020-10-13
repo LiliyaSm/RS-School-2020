@@ -35,7 +35,12 @@ class ShuffleMap {
     constructor() {
         this.winMap = this.createWinMap();
         this.shuffleMap = this.shuffleTiles(this.winMap);
-        this.drag - false;
+        this.dragPosition = null;
+        this.dragX = null;
+        this.dragY = null;
+        this.canvas = document.createElement("canvas");
+        this.context = this.canvas.getContext("2d");
+        this.rect = this.canvas.getBoundingClientRect(); // abs. size of element
     }
     shuffleMap = this.shuffleMap;
     // get shuffleMap() {
@@ -98,7 +103,9 @@ class ShuffleMap {
     }
 
     getMousePos(event) {
+        
         let rect = this.canvas.getBoundingClientRect(); // abs. size of element
+        console.log(rect);
         //mouse position subtracted from the parent element's offset position, mouse position you are getting is relative to the client window
         let x = event.clientX - rect.left;
         let y = event.clientY - rect.top;
@@ -170,22 +177,21 @@ class ShuffleMap {
         // myGameArea.createTiles(this.shuffleMap);
     }
 
-    canvas = document.createElement("canvas");
-    context = this.canvas.getContext("2d");
     start() {
         this.canvas.width = SIZE * PUZZLE_DIFFICULTY;
         this.canvas.height = SIZE * PUZZLE_DIFFICULTY;
+
         // document.body.insertBefore(this.canvas, document.body.childNodes[0]);
 
         second_row.appendChild(this.canvas);
         // this.createTiles(array);
         //updates every 20th millisecond (50 times per second)
         return setInterval(this.createTiles.bind(this), 20);
-    };
+    }
 
     clear() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    };
+    }
 
     //draws tiles for array [1, 3, 2, ...]
     createTiles() {
@@ -196,49 +202,104 @@ class ShuffleMap {
             if (array[i] === 0) {
                 continue;
             }
+
+            if (this.dragPosition !=null && this.dragPosition === i) {
+                console.log("x: " + this.dragX + " y:" + this.dragY);
+                continue;
+            }
             // i:         0 1 2 3 4 5 itc
             // i / 4      0 0 0 0
             //            1 1 1 1
             let row = Math.floor(i / PUZZLE_DIFFICULTY);
             // i % 4      0 1 2 3 0 1 2 3
             let col = i % PUZZLE_DIFFICULTY;
-            let ctx = this.context;
             new component(
-                ctx,
+                this.context,
                 SIZE,
                 array[i],
                 startPosition.x + col * SIZE,
                 startPosition.y + row * SIZE
             );
         }
+
+        if (this.dragPosition != null) {
+            console.log(
+                this.context,
+                SIZE,
+                this.shuffleArray[this.dragPosition],
+                this.dragX - SIZE / 2,
+                this.dragY - SIZE / 2
+            );
+            new component(
+                this.context,
+                SIZE,
+                this.shuffleArray[this.dragPosition],
+                this.dragX - SIZE / 2,
+                this.dragY - SIZE / 2
+            );
+        }
     }
 
     myMove(e) {
-        if (dragok) {
-            x = e.pageX - this.canvas.offsetLeft;
-            y = e.pageY - this.canvas.offsetTop;
+        if (this.dragPosition != null) {
+            console.log("move");
+            this.dragX = e.pageX - this.rect.left;
+            this.dragY = e.pageY - this.rect.top;
         }
     }
 
     myDown(event) {
-        // if (
-        //     e.pageX < x + 15 + this.canvas.offsetLeft &&
-        //     e.pageX > x - 15 + this.canvas.offsetLeft &&
-        //     e.pageY < y + 15 + this.canvas.offsetTop &&
-        //     e.pageY > y - 15 + this.canvas.offsetTop
-        // ) {
-            let rect = this.canvas.getBoundingClientRect(); // abs. size of element
-            //mouse position subtracted from the parent element's offset position, mouse position you are getting is relative to the client window
-            let x = event.clientX - rect.left;
-            let y = event.clientY - rect.top;
-            let col = Math.floor(x / SIZE);
-            let row = Math.floor(y / SIZE);
+        let rect = this.canvas.getBoundingClientRect(); // abs. size of element
+        this.rect = rect;
+        console.log(rect);
+        //mouse position subtracted from the parent element's offset position, mouse position you are getting is relative to the client window
+        let x = event.clientX - rect.left;
+        let y = event.clientY - rect.top;
+        let col = Math.floor(x / SIZE);
+        let row = Math.floor(y / SIZE);
+        let position = row * PUZZLE_DIFFICULTY + col;
 
-            let neWx = event.pageX - this.canvas.offsetLeft;
-            let neWy = event.pageY - this.canvas.offsetTop;
-            this.drag = true;
-            this.canvas.onmousemove = this.myMove;
-        // }
+        let emptyTilePosition = this.shuffleArray.indexOf(0);
+
+        // check if shifting is available
+        if (
+            !(position === emptyTilePosition + PUZZLE_DIFFICULTY ||
+            position === emptyTilePosition - PUZZLE_DIFFICULTY ||
+            position === emptyTilePosition - 1 ||
+            position === emptyTilePosition + 1)
+
+        ){
+            return
+        }
+            console.log(position);
+
+        this.dragX = event.clientX - this.rect.left;
+        this.dragY = event.clientY - this.rect.top;
+        this.dragPosition = position;
+        this.canvas.onmousemove = (e) => this.myMove(e);
+        this.canvas.onmouseup = (e) => this.myUp(e);
+    }
+
+    myUp(event) {
+
+        let x = event.clientX - this.rect.left;
+        let y = event.clientY - this.rect.top;
+        let col = Math.floor(x / SIZE);
+        let row = Math.floor(y / SIZE);
+        let position = row * PUZZLE_DIFFICULTY + col;
+
+        let emptyTilePosition = this.shuffleMap.indexOf(0);
+
+        if (position === emptyTilePosition) {
+            this.shuffleArray[emptyTilePosition] = this.shuffleArray[
+                this.dragPosition
+            ];
+            this.shuffleArray[this.dragPosition] = 0;
+        }        
+        
+        this.dragPosition = null;
+        this.canvas.onmousemove = null;
+        this.canvas.onmouseup = null;
     }
 }
 
@@ -276,23 +337,24 @@ function arraysEqual(a, b) {
     return true;
 }
 
-function updateGameArea() {
-    // myGameArea.clear();
-    // myGamePiece.x += 1;
-    // myGamePiece.update();
-}
+// function updateGameArea() {
+// myGameArea.clear();
+// myGamePiece.x += 1;
+// myGamePiece.update();
+// }
 
 document.body.onload = function () {
     let shuffleMap = new ShuffleMap();
     shuffleMap.start();
-    // myGameArea.createTiles(shuffleMap.shuffleMap);
-    shuffleMap.canvas.addEventListener("click", (e) =>
-        shuffleMap.getMousePos(e)
-    );
+
+    // shuffleMap.canvas.addEventListener("click", (e) =>
+    //     shuffleMap.getMousePos(e)
+    // );
+
     shuffleMap.canvas.addEventListener("mousedown", (e) =>
         shuffleMap.myDown(e)
     );
 
-    shuffleMap.canvas.onmousedown = shuffleMap.myDown;
+    // shuffleMap.canvas.onmousedown = shuffleMap.myDown;
     beginAgain.addEventListener("click", (e) => shuffleMap.beginAgainFunc(e));
 };
