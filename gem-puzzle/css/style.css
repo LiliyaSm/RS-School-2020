@@ -8,7 +8,10 @@ body {
   margin: 0;
   color: white;
   background: radial-gradient(#ceefff, #689ed1);
-  min-height: 100vh; }
+  min-height: 100vh; 
+    /* display: flex;
+  align-items: center; */
+}
 
 .wrapper {
   height: 100vh;
@@ -18,4 +21,10 @@ body {
 
 canvas {
   border: 1px solid #d3d3d3;
-  background-color: #f1f1f1; }
+  background-color: #f1f1f1; 
+    margin: 15% auto; 
+}
+
+.beginAgain {
+    
+}
