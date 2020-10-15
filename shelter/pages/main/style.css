@@ -16,6 +16,7 @@ body {
     font-style: normal;
     font-weight: normal;
     max-width: 100%;
+    overflow-x: hidden;
 }
 
 /* h1 is hidden */
@@ -611,6 +612,7 @@ footer img {
     transition: right 2s ease;
     z-index: 99;
 }
+
 
 .overlay {
     position: fixed;
