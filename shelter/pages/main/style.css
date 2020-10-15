@@ -126,7 +126,8 @@ p {
     justify-content: space-between;
 }
 
-.navbar-header li {
+.navbar-header li,
+.mobile-menu li {
     list-style: none;
 }
 
@@ -141,14 +142,21 @@ p {
     text-decoration: none;
 }
 
-.navbar-header a:hover {
+.navbar-header a:hover,
+.mobile-menu a:hover
+ {
     color: #fafafa;
     cursor: pointer;
 }
 
-.navbar-header .active a {
+.navbar-header .active a,
+.mobile-menu .active a {
     color: #fafafa;
     border-bottom: 0.3rem solid #f1cdb3;
+}
+
+.logo {
+    z-index: 100;
 }
 
 header .logo-title {
@@ -543,9 +551,79 @@ footer img {
     align-items: center;
 }
 
-.menu-icon {
+.hide{
     display: none;
 }
+
+.menu-icon  {
+    transition: all 1s ease;
+    z-index: 100;
+
+}
+
+.rotate {
+    transform: rotate(90deg);
+}
+
+
+.mobile-menu {
+    width:  320px;
+}
+
+.mobile-menu ul{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+    margin-top: 209px;
+}
+
+.mobile-menu a {
+    display: block;
+    margin-top: 4rem;
+    font-family: Arial;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 3.2rem;
+    line-height: 160%;
+    color: #cdcdcd;
+    text-decoration: none;
+    
+}
+
+.slide{
+    position: absolute;
+    background: #292929;
+    top: 0;
+    right: 0px;
+    transition: right 1s ease;
+    z-index: 99;
+}
+
+.hide-menu {
+    position: absolute;
+    background: #292929;
+    top: 0;
+    opacity: 1;
+    overflow: hidden;
+    right: -1000px;
+    transition: right 2s ease;
+    z-index: 99;
+}
+
+.overlay {
+    position: fixed;
+    /* full screen */
+    width: 100vw;
+    height: 100vh;
+    /* transparent black */
+    background: rgba(7, 6, 6, 0.3);
+
+    /* middle layer, i.e. appears below the sidebar */
+    z-index: 99;
+}
+
 
 .bar1,
 .bar2,
