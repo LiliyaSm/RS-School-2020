@@ -116,69 +116,110 @@ const Slider = {
         this.elements.rightArrow = document.querySelector(".right-arrow");
         // this.elements.cards = this._createCards();
 
-        this.elements.rightArrow.addEventListener("click", (e) => this.moveSlider(e));
+        this.elements.rightArrow.addEventListener("click", (e) =>
+            this.moveSlider(e)
+        );
+        this.elements.leftArrow.addEventListener("click", (e) =>
+            this.moveSlider(e)
+        );
         this.moveSlider();
     },
 
     moveSlider(e) {
-        
-        let slider = document.querySelector(".slider");
+        // let slider = document.querySelector(".slider");
         if (document.contains(document.querySelector(".card"))) {
             let elementsToDelete = document.querySelectorAll(".card");
             for (element of elementsToDelete) {
-                let parent = element.parentNode;
-                parent.removeChild(element);
+                // let parent = element.parentNode;
+                this.elements.slider.removeChild(element);
             }
         }
-        
-        const fragment = document.createDocumentFragment();
-        
-        // fragment.appendChild(this.elements.cards[i]);
-        
-        slider.insertBefore(
-            this._createCards(),
+        let cards;
+
+        if (e && e.target.className == "left-arrow") {
+            cards = this._createCardsLeft();
+        } else {
+            cards = this._createCardsRight();
+        }
+
+        this.elements.slider.insertBefore(
+            cards,
             this.elements.leftArrow.nextSibling
-            );
-            
-            this.info.currentSlider += this.info.cardsToShow;
-        },
-        
+        );
+    },
+
     showPopup(name) {},
 
-    _createCards() {
-        const fragment = document.createDocumentFragment();
-        // const keyLayout = [];         
+    _createCardsLeft() {
+        let fragment = document.createDocumentFragment();
+        this.info.currentSlider =
+            this.info.currentSlider - this.info.cardsToShow;
+
+        let index;
+
+        for (let i = 0; i < this.info.cardsToShow; i++) {
+            // let index = this.info.currentSlider - 1;
+            if (this.info.currentSlider - 1< 0) {
+                
+                index = pets.length - 1 + this.info.currentSlider;
+                // this.info.currentSlider = index;
+            } else {
+                index = this.info.currentSlider - 1;
+            }
+            this.info.currentSlider = index;
+            fragment.prepend(this.createCard(index));
+        }
+        this.info.currentSlider += this.info.cardsToShow ;
+        if (this.info.currentSlider >= pets.length) {
+            this.info.currentSlider = this.info.currentSlider % pets.length; 
+        }
+        return fragment;
+    },
+
+    _createCardsRight() {
+        let fragment = document.createDocumentFragment();
+        // const keyLayout = [];
 
         for (
             let i = this.info.currentSlider;
             i < this.info.cardsToShow + this.info.currentSlider;
             i++
         ) {
-            let pet = pets[i % pets.length];
-            const cardElement = document.createElement("div");
-            cardElement.classList.add("card");
-            cardElement.setAttribute("data-id", pet.name);
 
-            const image = document.createElement("img");
-            image.setAttribute("src", `../../assets/images/${pet.name}.png`);
-            image.setAttribute("alt", pet.name);
-            const cardTitle = document.createElement("div");
-            cardTitle.textContent = pet.name;
-            cardTitle.classList.add("card-title");
-            const cardButton = document.createElement("button");
-            cardButton.textContent = "Learn more";
-
-            cardElement.appendChild(image);
-            cardElement.appendChild(cardTitle);
-            cardElement.appendChild(cardButton);
-
-            cardButton.addEventListener("click", () => {
-                this.showPopup(pet.name);
-            });
-
-            fragment.appendChild(cardElement);
+            fragment.appendChild(this.createCard(i % pets.length));
         }
+        this.info.currentSlider += this.info.cardsToShow;
+        if (this.info.currentSlider >= pets.length) {
+            this.info.currentSlider = this.info.currentSlider % pets.length;
+        }
+
         return fragment;
+    },
+
+    createCard(i) {
+        let pet = pets[i];
+        const cardElement = document.createElement("div");
+        cardElement.classList.add("card");
+        cardElement.setAttribute("data-id", pet.name);
+
+        const image = document.createElement("img");
+        image.setAttribute("src", `../../assets/images/${pet.name}.png`);
+        image.setAttribute("alt", pet.name);
+        const cardTitle = document.createElement("div");
+        cardTitle.textContent = pet.name;
+        cardTitle.classList.add("card-title");
+        const cardButton = document.createElement("button");
+        cardButton.textContent = "Learn more";
+
+        cardElement.appendChild(image);
+        cardElement.appendChild(cardTitle);
+        cardElement.appendChild(cardButton);
+
+        cardButton.addEventListener("click", () => {
+            this.showPopup(pet.name);
+        });
+
+        return cardElement;
     },
 };
 
