@@ -107,7 +107,6 @@ const Slider = {
 
     info: {
         cardsToShow: 3,
-        currentSlider: 0,
     },
 
     init() {
@@ -116,17 +115,38 @@ const Slider = {
         this.elements.rightArrow = document.querySelector(".right-arrow");
         // this.elements.cards = this._createCards();
 
+        window.addEventListener("resize", (e) => this.resizeSlider(e));
+
         this.elements.rightArrow.addEventListener("click", (e) =>
-            this.moveSlider(e)
+            this.loadSlider(e)
         );
         this.elements.leftArrow.addEventListener("click", (e) =>
-            this.moveSlider(e)
+            this.loadSlider(e)
         );
-        this.moveSlider();
+        this.loadSlider();
     },
 
-    moveSlider(e) {
-        // let slider = document.querySelector(".slider");
+    resizeSlider(e) {
+        if (this.sizeSlider(window.innerWidth) !== this.info.cardsToShow) {
+            this.info.cardsToShow = this.sizeSlider(window.innerWidth);
+            this.loadSlider();
+        }
+        return;
+    },
+
+    sizeSlider(width) {
+        if (width < 1280 && width >= 768) {
+            return 2;
+        } else if (window.innerWidth < 768) {
+            return 1;
+        } else if (window.innerWidth >= 1280) {
+            return 3;
+        }
+    },
+
+    loadSlider(e) {
+        let fragment = document.createDocumentFragment();
+
         if (document.contains(document.querySelector(".card"))) {
             let elementsToDelete = document.querySelectorAll(".card");
             for (element of elementsToDelete) {
@@ -134,66 +154,33 @@ const Slider = {
                 this.elements.slider.removeChild(element);
             }
         }
-        let cards;
 
-        if (e && e.target.className == "left-arrow") {
-            cards = this._createCardsLeft();
-        } else {
-            cards = this._createCardsRight();
+        let cardIndexes = this.shuffle([...Array(pets.length).keys()]);
+        let index;
+        for (let i = 0; i < this.info.cardsToShow; i++) {
+            index = cardIndexes.pop();
+            fragment.prepend(this.createCard(index));
         }
 
         this.elements.slider.insertBefore(
-            cards,
+            fragment,
             this.elements.leftArrow.nextSibling
         );
     },
 
-    showPopup(name) {},
-
-    _createCardsLeft() {
-        let fragment = document.createDocumentFragment();
-        this.info.currentSlider =
-            this.info.currentSlider - this.info.cardsToShow;
-
-        let index;
-
-        for (let i = 0; i < this.info.cardsToShow; i++) {
-            // let index = this.info.currentSlider - 1;
-            if (this.info.currentSlider - 1< 0) {
-                
-                index = pets.length - 1 + this.info.currentSlider;
-                // this.info.currentSlider = index;
-            } else {
-                index = this.info.currentSlider - 1;
-            }
-            this.info.currentSlider = index;
-            fragment.prepend(this.createCard(index));
+    shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
         }
-        this.info.currentSlider += this.info.cardsToShow ;
-        if (this.info.currentSlider >= pets.length) {
-            this.info.currentSlider = this.info.currentSlider % pets.length; 
-        }
-        return fragment;
+        return array;
     },
 
-    _createCardsRight() {
-        let fragment = document.createDocumentFragment();
-        // const keyLayout = [];
 
-        for (
-            let i = this.info.currentSlider;
-            i < this.info.cardsToShow + this.info.currentSlider;
-            i++
-        ) {
+    showPopup(name) {
+        let popup = document.querySelector(".popup");
+        popup.to;
 
-            fragment.appendChild(this.createCard(i % pets.length));
-        }
-        this.info.currentSlider += this.info.cardsToShow;
-        if (this.info.currentSlider >= pets.length) {
-            this.info.currentSlider = this.info.currentSlider % pets.length;
-        }
-
-        return fragment;
     },
 
     createCard(i) {
@@ -229,7 +216,8 @@ window.addEventListener("DOMContentLoaded", function () {
     let overlay = document.querySelector(".overlay");
     let mobileMenu = document.querySelector(".mobile-menu");
     let menuIcon = document.querySelector(".menu-icon");
-    // let mobileLogo = document.querySelector("#mobile-logo");
+    let logo = document.querySelector(".logo");
+    let header = document.querySelector(".site-header");
 
     menuIcon.addEventListener("click", function (event) {
         // let overlay = document.querySelector(".overlay");
@@ -237,6 +225,8 @@ window.addEventListener("DOMContentLoaded", function () {
         mobileMenu.classList.toggle("hide-menu");
         overlay.classList.toggle("hide");
         menuIcon.classList.toggle("rotate");
+        logo.style.marginRight = "48px";
+        header.classList.toggle("flex-end");
     });
 
     document
@@ -246,5 +236,8 @@ window.addEventListener("DOMContentLoaded", function () {
             overlay.classList.toggle("hide");
             mobileMenu.classList.toggle("slide");
             menuIcon.classList.toggle("rotate");
+            logo.style.marginRight = "0";
+            header.classList.toggle("flex-end");
+
         });
 });
