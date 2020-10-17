@@ -97,6 +97,147 @@ const pets = [
     },
 ];
 
+const MobileMenu = {
+    mobileMenu: null,
+    menuIcon: null,
+    logo: null,
+    header: null,
+    overlay: null,
+
+    init() {
+        this.mobileMenu = document.querySelector(".mobile-menu");
+        this.menuIcon = document.querySelector(".menu-icon");
+        this.logo = document.querySelector(".logo");
+        this.header = document.querySelector(".site-header");
+        this.overlay = document.querySelector(".overlay");
+    },
+
+    toggleMenu() {
+        this.mobileMenu.classList.toggle("slide");
+        this.mobileMenu.classList.toggle("hide-menu");
+        this.overlay.classList.toggle("hide");
+        this.menuIcon.classList.toggle("rotate");
+        this.logo.style.marginRight = "40px";
+        this.header.classList.toggle("flex-end");
+    },
+
+    closeMenu() {
+        this.mobileMenu.classList.add("hide-menu");
+        this.mobileMenu.classList.remove("slide");
+        this.menuIcon.classList.toggle("rotate");
+        this.logo.style.marginRight = "0";
+        this.header.classList.remove("flex-end");
+    },
+};
+const Popup = {
+    overlayPopup: null,
+    init() {
+        this.overlayPopup = document.querySelector(".overlay-popup");
+        this.overlayPopup.addEventListener("click",  (event) => {
+            // this.overlayPopup.classList.add("hide");
+            this.closePopup(event);
+        });
+
+        this.overlayPopup.addEventListener("mouseover",  (event) => {
+            document.querySelector(".close-popup").style.background = "#fddcc4";
+        });
+        this.overlayPopup.addEventListener("mouseout", (event) => {
+            document.querySelector(".close-popup").style.background = "Transparent";
+        });
+
+        
+
+
+    },
+    showPopup(event) {
+        let petName = event.target.parentElement.getAttribute("data-id");
+        let pet = pets.find((pet) => pet.name === petName);
+
+        const popup = document.createElement("div");
+        popup.classList.add("popup");
+        // popup.classList.add("hide-imp");
+
+        const imgWrapper = document.createElement("div");
+        imgWrapper.classList.add("img-wrapper");
+
+        const image = document.createElement("img");
+        image.setAttribute("src", `../../assets/images/${pet.name}.png`);
+        imgWrapper.appendChild(image);
+
+        const popupText = document.createElement("div");
+        popupText.classList.add("popup-text");
+
+        const h3 = document.createElement("h3");
+        h3.textContent = `${petName}`;
+        popupText.appendChild(h3);
+
+        const h4 = document.createElement("h4");
+        h4.textContent = `${pet.type} - ${pet.breed}`;
+        popupText.appendChild(h4);
+
+        const h5 = document.createElement("h5");
+        h5.textContent = `${pet.description}`;
+        popupText.appendChild(h5);
+
+        const ul = document.createElement("ul");
+        const li = document.createElement("li");
+        li.innerHTML = "<strong>Age: </strong>" + `${pet.age}`;
+        const li2 = document.createElement("li");
+        li2.innerHTML =
+            "<strong>Inoculations: </strong>" +
+            `${pet.inoculations.reduce((a, b) => a + ", " + b)}`;
+        const li3 = document.createElement("li");
+        li3.innerHTML = "<strong>Diseases: </strong>" + `${pet.diseases.reduce((a, b) => a + ", " + b)} `;
+
+        const li4 = document.createElement("li");
+        li4.innerHTML =
+            "<strong>Parasites: </strong>" +
+            `${pet.parasites.reduce((a, b) => a + ", " + b)} `;
+
+        const btn = document.createElement("button");
+        btn.classList.add("close-popup");
+
+        const btnImg = document.createElement("img");
+        btnImg.setAttribute("src", "../../assets/icons/close.svg");
+        btnImg.setAttribute("alt", "close");
+        btn.appendChild(btnImg);
+
+        btn.addEventListener("click", (e) => this.closePopup(e));
+
+        btn.addEventListener("mouseover", (event) => {
+            btn.style.background = "#fddcc4";
+        });
+
+        btn.addEventListener("mouseout", (event) => {
+            btn.style.background = "Transparent";
+        });
+
+        ul.appendChild(btn);
+        ul.appendChild(li);
+        ul.appendChild(li2);
+        ul.appendChild(li3);
+        ul.appendChild(li4);
+        popupText.appendChild(ul);
+
+        popup.appendChild(imgWrapper);
+        popup.appendChild(popupText);
+
+        document.body.appendChild(popup);
+
+        this.overlayPopup.classList.remove("hide");
+    },
+
+    closePopup() {
+        let popup = document.querySelector(".popup");
+        if (popup) {
+            document.body.removeChild(popup);
+        }
+        this.overlayPopup.classList.toggle("hide");
+    },
+
+    createPopup() {},
+};
+
 const Slider = {
     elements: {
         slider: null,
@@ -113,7 +254,6 @@ const Slider = {
         this.elements.slider = document.querySelector(".slider");
         this.elements.leftArrow = document.querySelector(".left-arrow");
         this.elements.rightArrow = document.querySelector(".right-arrow");
-        // this.elements.cards = this._createCards();
 
         window.addEventListener("resize", (e) => this.resizeSlider(e));
 
@@ -176,17 +316,6 @@ const Slider = {
         return array;
     },
 
-    showPopup(event) {
-        let petName = event.target.getAttribute("data-id");
-        let overlayPopup = document.querySelector(".overlay-popup");
-
-        // let closeBtn = event.target.getAttribute("data-id");
-        let popup = document.querySelector(".popup");
-        popup.classList.remove("hide-imp");
-        overlayPopup.classList.remove("hide");
-        // closeBtn.classList.toggle("hide");
-    },
-
     createCard(i) {
         let pet = pets[i];
         const cardElement = document.createElement("div");
@@ -207,7 +336,7 @@ const Slider = {
         cardElement.appendChild(cardButton);
 
         cardButton.addEventListener("click", (event) => {
-            this.showPopup(event);
+            Popup.showPopup(event);
         });
 
         return cardElement;
@@ -216,43 +345,27 @@ const Slider = {
 
 window.addEventListener("DOMContentLoaded", function () {
     Slider.init();
+    Popup.init();
+    MobileMenu.init();
+
+    let menuIcon = document.querySelector(".menu-icon");
 
     let overlay = document.querySelector(".overlay");
     let overlayPopup = document.querySelector(".overlay-popup");
     let mobileMenu = document.querySelector(".mobile-menu");
-    let menuIcon = document.querySelector(".menu-icon");
-    let logo = document.querySelector(".logo");
-    let header = document.querySelector(".site-header");
     let popup = document.querySelector(".popup");
 
     menuIcon.addEventListener("click", function (event) {
-        // let overlay = document.querySelector(".overlay");
-        mobileMenu.classList.toggle("slide");
-        mobileMenu.classList.toggle("hide-menu");
-        overlay.classList.toggle("hide");
-        menuIcon.classList.toggle("rotate");
-        logo.style.marginRight = "40px";
-        header.classList.toggle("flex-end");
+        MobileMenu.toggleMenu();
     });
 
-    document
-        .querySelector(".overlay-popup")
-        .addEventListener("click", function (event) {
-            if (popup) {
-                popup.classList.add("hide-imp");
-            }
-            overlayPopup.classList.toggle("hide");
-        });
+    
 
     document
         .querySelector(".overlay")
         .addEventListener("click", function (event) {
             if (!mobileMenu.classList.contains("hide-menu")) {
-                mobileMenu.classList.add("hide-menu");
-                mobileMenu.classList.remove("slide");
-                menuIcon.classList.toggle("rotate");
-                logo.style.marginRight = "0";
-                header.classList.remove("flex-end");
+                MobileMenu.closeMenu();
             }
             overlay.classList.toggle("hide");
             // if (!mobileMenu.classList.contains("hide-menu")) {
