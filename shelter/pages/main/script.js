@@ -176,11 +176,15 @@ const Slider = {
         return array;
     },
 
+    showPopup(event) {
+        let petName = event.target.getAttribute("data-id");
+        let overlayPopup = document.querySelector(".overlay-popup");
 
-    showPopup(name) {
+        // let closeBtn = event.target.getAttribute("data-id");
         let popup = document.querySelector(".popup");
-        popup.to;
-
+        popup.classList.remove("hide-imp");
+        overlayPopup.classList.remove("hide");
+        // closeBtn.classList.toggle("hide");
     },
 
     createCard(i) {
@@ -202,8 +206,8 @@ const Slider = {
         cardElement.appendChild(cardTitle);
         cardElement.appendChild(cardButton);
 
-        cardButton.addEventListener("click", () => {
-            this.showPopup(pet.name);
+        cardButton.addEventListener("click", (event) => {
+            this.showPopup(event);
         });
 
         return cardElement;
@@ -214,10 +218,12 @@ window.addEventListener("DOMContentLoaded", function () {
     Slider.init();
 
     let overlay = document.querySelector(".overlay");
+    let overlayPopup = document.querySelector(".overlay-popup");
     let mobileMenu = document.querySelector(".mobile-menu");
     let menuIcon = document.querySelector(".menu-icon");
     let logo = document.querySelector(".logo");
     let header = document.querySelector(".site-header");
+    let popup = document.querySelector(".popup");
 
     menuIcon.addEventListener("click", function (event) {
         // let overlay = document.querySelector(".overlay");
@@ -225,19 +231,31 @@ window.addEventListener("DOMContentLoaded", function () {
         mobileMenu.classList.toggle("hide-menu");
         overlay.classList.toggle("hide");
         menuIcon.classList.toggle("rotate");
-        logo.style.marginRight = "48px";
+        logo.style.marginRight = "40px";
         header.classList.toggle("flex-end");
     });
 
     document
+        .querySelector(".overlay-popup")
+        .addEventListener("click", function (event) {
+            if (popup) {
+                popup.classList.add("hide-imp");
+            }
+            overlayPopup.classList.toggle("hide");
+        });
+
+    document
         .querySelector(".overlay")
         .addEventListener("click", function (event) {
-            mobileMenu.classList.toggle("hide-menu");
+            if (!mobileMenu.classList.contains("hide-menu")) {
+                mobileMenu.classList.add("hide-menu");
+                mobileMenu.classList.remove("slide");
+                menuIcon.classList.toggle("rotate");
+                logo.style.marginRight = "0";
+                header.classList.remove("flex-end");
+            }
             overlay.classList.toggle("hide");
-            mobileMenu.classList.toggle("slide");
-            menuIcon.classList.toggle("rotate");
-            logo.style.marginRight = "0";
-            header.classList.toggle("flex-end");
-
+            // if (!mobileMenu.classList.contains("hide-menu")) {
+            // }
         });
 });
