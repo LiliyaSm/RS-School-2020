@@ -283,11 +283,11 @@ header .logo-subtitle {
 
 .slider .btn-pagination-left {
     padding: 19px 19px 15px 19px;
-    transform: scale(-1, -1);
+    transform: scale(-1, 1);
 }
 .slider .btn-pagination-left-end {
     padding: 19px 12px 15px 11px;
-    transform: scale(-1, -1);
+    transform: scale(-1, 1);
 }
 
 .slider .btn-pagination-right-end:hover:enabled,
@@ -746,7 +746,7 @@ strong {
         margin-top: 4.5rem;
     }
 
-    .pets-wrap .card:nth-of-type(2n) {
+    .pets-wrap .card:nth-of-type(3) ~ .card {
         display: none;
     }
 
