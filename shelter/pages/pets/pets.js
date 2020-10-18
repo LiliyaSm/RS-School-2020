@@ -1,6 +1,5 @@
-import { MobileMenu } from "./MobileMenu.js";
-import { Popup } from "./Popup.js";
-
+import { MobileMenu } from "../main/MobileMenu.js";
+import { Popup } from "../main/Popup.js";
 
 async function getJSON() {
     const response = await fetch("../pets.json");
@@ -8,7 +7,17 @@ async function getJSON() {
     console.log(data);
     return data;
 }
+//toggle position for correct z-index work
+function changeHeaderStyle() {
+    let header = document.querySelector("header");
+    let style = window.getComputedStyle(header);
 
+    if (style.getPropertyValue("position") === "sticky") {
+        header.style.position = "static";
+    } else {
+        header.style.position = "sticky";
+    }
+}
 
 const Slider = {
     elements: {
@@ -16,69 +25,77 @@ const Slider = {
         leftArrow: null,
         rightArrow: null,
         cards: [],
+        currPage: 1,
     },
+    shufflePets: [],
     pets: null,
     info: {
-        cardsToShow: 3,
+        cardsToShow: 8,
     },
 
     init(pets) {
         this.elements.slider = document.querySelector(".slider");
-        this.elements.leftArrow = document.querySelector(".left-arrow");
-        this.elements.rightArrow = document.querySelector(".right-arrow");
+        this.elements.leftArrow = document.querySelector(
+            ".btn-pagination-left"
+        );
+        this.elements.rightArrow = document.querySelector(
+            ".btn-pagination-right"
+        );
         this.pets = pets;
+
+        for (let i = 0; i < 6; i++) {
+            let arr = this.shuffle([...Array(this.pets.length).keys()]);
+
+            this.shufflePets = this.shufflePets.concat(arr);
+        }
+        console.log(this.shufflePets);
 
         window.addEventListener("resize", (e) => this.resizeSlider(e));
 
         this.elements.rightArrow.addEventListener("click", (e) =>
-            this.loadSlider(e)
+            this.loadSliderRight(e)
         );
         this.elements.leftArrow.addEventListener("click", (e) =>
-            this.loadSlider(e)
+            this.loadSliderLeft(e)
         );
-        this.loadSlider();
+        this.loadSliderInit();
     },
 
     resizeSlider(e) {
         if (this.sizeSlider(window.innerWidth) !== this.info.cardsToShow) {
             this.info.cardsToShow = this.sizeSlider(window.innerWidth);
-            this.loadSlider();
+            this.loadSliderInit();
         }
         return;
     },
 
     sizeSlider(width) {
         if (width < 1280 && width >= 768) {
-            return 2;
+            return 6;
         } else if (window.innerWidth < 768) {
-            return 1;
-        } else if (window.innerWidth >= 1280) {
             return 3;
+        } else if (window.innerWidth >= 1280) {
+            return 8;
         }
     },
 
-    loadSlider(e) {
+    loadSliderInit(e) {
         let fragment = document.createDocumentFragment();
 
         if (document.contains(document.querySelector(".card"))) {
             let elementsToDelete = document.querySelectorAll(".card");
             for (let element of elementsToDelete) {
-                // let parent = element.parentNode;
                 this.elements.slider.removeChild(element);
             }
         }
 
-        let cardIndexes = this.shuffle([...Array(this.pets.length).keys()]);
-        let index;
-        for (let i = 0; i < this.info.cardsToShow; i++) {
-            index = cardIndexes.pop();
-            fragment.prepend(this.createCard(index));
+        let startIndex = (this.currPage - 1) * this.cardsToShow;
+        let indexes = this.shufflePets.slice(startIndex, this.info.cardsToShow);
+        for (let i = 0; i < indexes.length; i++) {
+            fragment.prepend(this.createCard(indexes[i]));
         }
 
-        this.elements.slider.insertBefore(
-            fragment,
-            this.elements.leftArrow.nextSibling
-        );
+        this.elements.slider.prepend(fragment);
     },
 
     shuffle(array) {
@@ -119,18 +136,18 @@ const Slider = {
 window.addEventListener("DOMContentLoaded", async function () {
     const pets = await getJSON();
 
-    Slider.init(pets);
     Popup.init(pets);
     MobileMenu.init();
+    Slider.init(pets);
 
     let menuIcon = document.querySelector(".menu-icon");
-
     let overlay = document.querySelector(".overlay");
     let overlayPopup = document.querySelector(".overlay-popup");
     let mobileMenu = document.querySelector(".mobile-menu");
     let popup = document.querySelector(".popup");
 
     menuIcon.addEventListener("click", function (event) {
+        changeHeaderStyle();
         MobileMenu.toggleMenu();
     });
 
@@ -140,8 +157,7 @@ window.addEventListener("DOMContentLoaded", async function () {
             if (!mobileMenu.classList.contains("hide-menu")) {
                 MobileMenu.closeMenu();
             }
+            changeHeaderStyle();
             overlay.classList.toggle("hide");
-          
         });
 });
-

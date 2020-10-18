@@ -553,13 +553,13 @@ footer img {
     align-items: center;
 }
 
-.hide-imp {
-    display: none !important;
-}
-
 .hide {
     display: none;
 }
+
+/* .hide-overlay {
+    opacity: 0;
+} */
 
 .menu-icon {
     transition: all 1s ease;
@@ -625,10 +625,6 @@ footer img {
     width: 100vw;
     height: 100vh;
     background: rgba(41, 41, 41, 0.6);
-}
-
-.overlay-popup:hover {
-
 }
 
 .overlay {

@@ -18,31 +18,46 @@
         />
         <link rel="stylesheet" href="pets.css" />
         <title>shelter</title>
+        <script type="module" src="pets.js"></script>
+
     </head>
 
-    <body class="wrapper">
+    <body>
+        <div class="overlay hide"></div>
+        <div class="overlay-popup hide"></div>
         <header>
-            <div class="header-wrap">
-                <div class="logo">
+            <div class="site-header">
+                <a href="../main/main.html" class="logo">
                     <div class="logo-title">Cozy House</div>
                     <div class="logo-subtitle">Shelter for pets in Boston</div>
-                </div>
+                </a>
                 <nav class="navbar-header">
                     <ul>
                         <li>
                             <a href="../main/main.html">About the shelter</a>
                         </li>
                         <li class="active"><a href="#">Our pets</a></li>
-                        <li><a href="#">Help the shelter</a></li>
-                        <li><a href="#">Contacts</a></li>
+                        <li><a href="javascript: void(0)">Help the shelter</a></li>
+                        <li><a href="javascript: void(0)">Contacts</a></li>
                     </ul>
                 </nav>
 
-                 <div class="menu-icon">
+                 <div class="menu-icon hide">
                         <div class="bar1"></div>
                         <div class="bar2"></div>
                         <div class="bar3"></div>
                     </div>
+
+                    <nav class="mobile-menu hide-menu">                        
+                        <ul>
+                            <li class="active">
+                                <a href="../main/main.html">About the shelter</a>
+                            </li>
+                            <li><a href="#">Our pets</a></li>
+                            <li><a href="javascript: void(0)">Help the shelter</a></li>
+                            <li><a href="javascript: void(0)">Contacts</a></li>
+                        </ul>
+                    </nav>
             </div>
         </header>
         <main>
@@ -55,7 +70,7 @@
                         </h3>
                     </div>
                     <div class="slider">
-                        <div class="card">
+                        <!-- <div class="card">
                             <img
                                 src="../../assets/images/Katrine.png"
                                 alt="Katrine"
@@ -118,7 +133,7 @@
                             />
                             <div class="card-title">Freddie</div>
                             <button>Learn more</button>
-                        </div>
+                        </div> -->
                         <div class="buttons">
                             <button disabled class="btn-pagination-left-end">
                                 <svg
