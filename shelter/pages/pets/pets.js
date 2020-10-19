@@ -7,15 +7,29 @@ async function getJSON() {
     console.log(data);
     return data;
 }
-//toggle position for correct z-index work
+
+//toggle header position for correct z-index work
 function changeHeaderStyle() {
     let header = document.querySelector("header");
+    let logoTitle = document.querySelector(".logo-title");
+    let logoSubTitle = document.querySelector(".logo-subtitle");
     let style = window.getComputedStyle(header);
+    let bars = document.querySelectorAll("[class^=bar]");
+    let mobileMenu = document.querySelector(".mobile-menu");
 
-    if (style.getPropertyValue("position") === "sticky") {
+    if (
+        style.getPropertyValue("position") === "sticky" &&
+        mobileMenu.classList.contains("slide")
+    ) {
         header.style.position = "static";
+        logoTitle.style.color = "#f1cdb3";
+        logoSubTitle.style.color = "#ffffff";
+        bars.forEach((bar) => (bar.style.backgroundColor = "#f1cdb3"));
     } else {
         header.style.position = "sticky";
+        logoTitle.style.color = "#545454";
+        logoSubTitle.style.color = "#292929";
+        bars.forEach((bar) => (bar.style.backgroundColor = "#000000"));
     }
 }
 
@@ -69,7 +83,12 @@ const Slider = {
 
         console.log(this.shufflePets);
 
-        window.addEventListener("resize", (e) => this.resizeSlider(e));
+        window.addEventListener("resize", (e) => {
+            this.resizeSlider(e);
+            this.centerPopup();
+
+            // Popup.closePopup();
+        });
 
         this.elements.rightArrow.addEventListener("click", (e) =>
             this.loadSliderRight(e)
@@ -95,10 +114,17 @@ const Slider = {
             this.info.cardsToShow = this.sizeSlider(window.innerWidth);
             this.info.currPage = this.info.pageAfterResize;
             this.loadSliderInit();
+            MobileMenu.closeMenu();
+            changeHeaderStyle();
+            let overlay = document.querySelector(".overlay");
+            if (!overlay.classList.contains("hide")) {
+                overlay.classList.add("hide");
+            }
         }
         return;
     },
 
+    // returns number of cards to display on current screen
     sizeSlider(width) {
         if (width < 1280 && width >= 768) {
             this.getPageAfterResize(6);
@@ -115,6 +141,7 @@ const Slider = {
         }
     },
 
+    // counts page number of current cards on another screen size
     getPageAfterResize(cardsToShow) {
         this.info.pageAfterResize =
             Math.floor(
@@ -123,10 +150,6 @@ const Slider = {
     },
 
     loadSliderInit(e) {
-        // if (this.info.currPage > this.info.pages) {
-        //     this.info.currPage = this.info.pageAfterResize;
-        // }
-
         let fragment = document.createDocumentFragment();
 
         if (document.contains(document.querySelector(".card"))) {
@@ -209,9 +232,24 @@ const Slider = {
 
         cardButton.addEventListener("click", (event) => {
             Popup.showPopup(event);
+            this.centerPopup();
         });
-
         return cardElement;
+    },
+
+    centerPopup() {
+        let popup = document.querySelector(".popup");
+
+        if (popup) {
+            let style = window.getComputedStyle(popup);
+            let w = parseInt(style.getPropertyValue("width"));
+            popup.style.left = screen.width / 2 - w / 2 + "px";
+            popup.style.top =
+                document.documentElement.scrollTop +
+                (screen.height / 2 -
+                    parseInt(style.getPropertyValue("height")) / 2) +
+                "px";
+        }
     },
 };
 
@@ -224,13 +262,12 @@ window.addEventListener("DOMContentLoaded", async function () {
 
     let menuIcon = document.querySelector(".menu-icon");
     let overlay = document.querySelector(".overlay");
-    let overlayPopup = document.querySelector(".overlay-popup");
+    // let overlayPopup = document.querySelector(".overlay-popup");
     let mobileMenu = document.querySelector(".mobile-menu");
-    let popup = document.querySelector(".popup");
 
     menuIcon.addEventListener("click", function (event) {
-        changeHeaderStyle();
         MobileMenu.toggleMenu();
+        changeHeaderStyle();
     });
 
     document

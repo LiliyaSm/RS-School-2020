@@ -1,14 +1,12 @@
 import { MobileMenu } from "./MobileMenu.js";
 import { Popup } from "./Popup.js";
 
-
 async function getJSON() {
     const response = await fetch("../pets.json");
     const data = await response.json();
     console.log(data);
     return data;
 }
-
 
 const Slider = {
     elements: {
@@ -42,6 +40,13 @@ const Slider = {
     resizeSlider(e) {
         if (this.sizeSlider(window.innerWidth) !== this.info.cardsToShow) {
             this.info.cardsToShow = this.sizeSlider(window.innerWidth);
+            MobileMenu.closeMenu();
+            let overlay = document.querySelector(".overlay");
+            if (!overlay.classList.contains("hide")) {
+                overlay.classList.add("hide");
+            }
+
+            // Popup.closePopup();
             this.loadSlider();
         }
         return;
@@ -126,7 +131,7 @@ window.addEventListener("DOMContentLoaded", async function () {
     let menuIcon = document.querySelector(".menu-icon");
 
     let overlay = document.querySelector(".overlay");
-    let overlayPopup = document.querySelector(".overlay-popup");
+    // let overlayPopup = document.querySelector(".overlay-popup");
     let mobileMenu = document.querySelector(".mobile-menu");
     let popup = document.querySelector(".popup");
 
@@ -134,14 +139,8 @@ window.addEventListener("DOMContentLoaded", async function () {
         MobileMenu.toggleMenu();
     });
 
-    document
-        .querySelector(".overlay")
-        .addEventListener("click", function (event) {
-            if (!mobileMenu.classList.contains("hide-menu")) {
-                MobileMenu.closeMenu();
-            }
-            overlay.classList.toggle("hide");
-          
-        });
+    overlay.addEventListener("click", function (event) {
+        MobileMenu.closeMenu();
+        overlay.classList.toggle("hide");
+    });
 });
-

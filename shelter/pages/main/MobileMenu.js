@@ -23,11 +23,13 @@ const MobileMenu = {
     },
 
     closeMenu() {
-        this.mobileMenu.classList.add("hide-menu");
-        this.mobileMenu.classList.remove("slide");
-        this.menuIcon.classList.toggle("rotate");
-        this.logo.style.marginRight = "0";
-        this.header.classList.remove("flex-end");
+        if (this.mobileMenu.classList.contains("slide")) {
+            this.mobileMenu.classList.add("hide-menu");
+            this.mobileMenu.classList.remove("slide");
+            this.menuIcon.classList.toggle("rotate");
+            this.logo.style.marginRight = "0";
+            this.header.classList.remove("flex-end");
+        }
     },
 };
 

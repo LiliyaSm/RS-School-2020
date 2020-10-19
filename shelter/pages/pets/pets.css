@@ -125,8 +125,13 @@ header {
     text-decoration: none;
 }
 
-.navbar-header a:hover {
+.navbar-header a:hover{
     color: #292929;
+    cursor: pointer;
+}
+
+.mobile-menu a:hover {
+    color: #fafafa;
     cursor: pointer;
 }
 
@@ -414,6 +419,7 @@ footer img {
 
 .mobile-menu {
     width: 320px;
+    height: 823px;
     position: static;
     z-index: 101;
 }
@@ -437,6 +443,11 @@ footer img {
     line-height: 160%;
     color: #cdcdcd;
     text-decoration: none;
+}
+
+.mobile-menu .active a{
+    color: #fafafa;
+    border-bottom: 0.3rem solid #f1cdb3;
 }
 
 .flex-end {
@@ -498,9 +509,10 @@ footer img {
     height: 480px;
     background-color: white;
     position: absolute;
-    top: 50.9%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    /* top: 50.9%; */
+    /* top: 50%;
+    left: 50%; */
+    /* transform: translate(-50%, -50%); */
     z-index: 201;
     display: flex;
 }

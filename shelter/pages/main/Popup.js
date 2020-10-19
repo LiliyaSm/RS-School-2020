@@ -15,6 +15,8 @@ const Popup = {
         const popup = document.createElement("div");
         popup.classList.add("popup");
 
+        
+
         const imgWrapper = document.createElement("div");
         imgWrapper.classList.add("img-wrapper");
 
@@ -84,10 +86,16 @@ const Popup = {
 
         document.body.appendChild(popup);
 
+
+        
+
         this.overlayPopup.classList.remove("hide");
 
         this.overlayPopup.addEventListener("mouseover", (event) => {
-            document.querySelector(".close-popup").style.background = "#fddcc4";
+            if (document.querySelector(".close-popup")) {
+                document.querySelector(".close-popup").style.background =
+                    "#fddcc4";
+            }
         });
 
         this.overlayPopup.addEventListener("mouseout", (event) => {
@@ -103,7 +111,9 @@ const Popup = {
         if (popup) {
             document.body.removeChild(popup);
         }
-        this.overlayPopup.classList.toggle("hide");
+        if (!this.overlayPopup.classList.contains("hide")) {
+            this.overlayPopup.classList.add("hide");
+        }
     },
 };
 
