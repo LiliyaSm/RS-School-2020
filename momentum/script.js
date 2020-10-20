@@ -23,70 +23,157 @@ const months = [
     "December",
 ];
 
+const seasons = ["morning", "day", "evening", "night"];
+
 // DOM Elements
-const time = document.querySelector(".time"),
-    greeting = document.querySelector(".greeting"),
+const greeting = document.querySelector(".greeting"),
     name = document.querySelector(".name"),
-    date = document.querySelector(".date"),
-    btnImage = document.querySelector(".btnImage"),
     blockquote = document.querySelector("blockquote"),
     figcaption = document.querySelector("figcaption"),
     btnQuote = document.querySelector(".btnQuote"),
     focus = document.querySelector(".focus");
-
-// Show Time
-function showTime() {
-    let today = new Date();
-
-    // year = today.getFullYear();
-    month = months[today.getMonth()];
-    dayMonth = today.getDate();
-    // 0 (воскресенье) до 6 (суббота)
-    weekDay = days[today.getDay()];
-    hour = today.getHours();
-    min = today.getMinutes();
-    sec = today.getSeconds();
-
-    // Output Time
-    date.innerHTML = `${weekDay}<span>, </span>${dayMonth} ${month}`;
-
-    time.innerHTML = `${hour}<span>:</span>${addZero(
-        min
-    )}<span>:</span>${addZero(sec)}`;
-
-    setTimeout(showTime, 1000);
-}
 
 // Add Zeros
 function addZero(n) {
     return (parseInt(n, 10) < 10 ? "0" : "") + n;
 }
 
-// Set Background and Greeting
-function setBgGreet() {
-    let today = new Date(),
-        hour = today.getHours();
 
-    let number = getImageNumber();
+function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    };
 
-    if (hour > 3 && hour < 12) {
-        // Morning
-        document.body.style.backgroundImage = `url('./assets/images/morning/${number}.jpg')`;
-        greeting.textContent = "Good Morning, ";
-        document.body.style.color = "white";
-    } else if (hour < 18) {
-        // Day
-        document.body.style.backgroundImage = `url('./assets/images/day/${number}.jpg')`;
-        greeting.textContent = "Good Afternoon, ";
-        document.body.style.color = "white";
-    } else if (hour < 23) {
-        // Evening
-        document.body.style.backgroundImage = `url('./assets/images/evening/${number}.jpg')`;
-        greeting.textContent = "Good Evening, ";
-        document.body.style.color = "white";
-        //night
-    } else {
-        document.body.style.backgroundImage = `url('./assets/images/night/${number}.jpg')`;
+class Momentum {
+    constructor() {
+        this.seasonNumber = null;
+        this.i = 0;
+        this.date = null;
+        this.time = null;
+        this.shuffleArray = null;
+    }
+
+    init() {
+
+        this.date = document.querySelector(".date");
+        this.time = document.querySelector(".time");
+
+        // for (let i = 0; i < 4; i++) {
+            this.shuffleArray = shuffle([...Array(20).keys()].map(x => ++x));
+        //     this.shuffleArray = this.shuffleArray.concat(arr);
+        // }
+
+
+        this.showTime();
+        this.setBSeason();
+        this.loadByNumber();
+        const btnImage = document.querySelector(".btnImage");
+        btnImage.addEventListener("click", () => this.loadByNumber());
+    }
+
+    // Show Time
+    showTime() {
+        const today = new Date();
+
+        // year = today.getFullYear();
+        const month = months[today.getMonth()];
+        const dayMonth = today.getDate();
+        // 0 (воскресенье) до 6 (суббота)
+        const weekDay = days[today.getDay()];
+        const hour = today.getHours();
+        const min = today.getMinutes();
+        const sec = today.getSeconds();
+
+        // Output Time
+        this.date.innerHTML = `${weekDay}<span>, </span>${dayMonth} ${month}`;
+
+        this.time.innerHTML = `${hour}<span>:</span>${addZero(
+            min
+        )}<span>:</span>${addZero(sec)}`;
+
+        if (min === 0 && sec === 0) {
+            this.setBSeason();
+            this.loadByNumber(true);
+        }
+        setTimeout(() => this.showTime(), 1000);
+
+    }
+
+    loadByNumber(flag) {
+        const imageSrc = this.getImageNumber(flag);
+        this.viewBgImage(imageSrc);
+    }
+
+    // Set Background and Greeting
+    setBSeason() {
+        let today = new Date(),
+            hour = today.getHours();
+        let currSeason = this.seasonNumber;
+
+        if (hour > 5 && hour < 12) {
+            // Morning
+            this.seasonNumber = 0;
+            greeting.textContent = "Good Morning, ";
+        } else if (hour < 6) {
+            //night
+            this.seasonNumber = 3;
+            greeting.textContent = "Good Night, ";
+        } else if (hour < 18) {
+            // Day
+            this.seasonNumber = 1;
+            greeting.textContent = "Good Afternoon, ";
+        } else {
+            // Evening
+            this.seasonNumber = 2;
+            greeting.textContent = "Good Evening, ";
+        }
+
+        if (currSeason !== this.seasonNumber) {
+            this.i = 0;
+        }
+    }
+
+    viewBgImage(imageSrc) {
+        const body = document.querySelector("body");
+        const img = document.createElement("img");
+        img.src = imageSrc;
+        img.onload = () => {
+            body.style.backgroundImage = `url(${imageSrc})`;
+        };
+    }
+
+    getImageNumber(flag) {
+        let season = seasons[this.seasonNumber];
+        // let number = this.i;
+        
+        if (this.i > 19) {
+            if (!flag) {
+                this.seasonNumber = (this.seasonNumber + 1) % seasons.length;
+                season = seasons[this.seasonNumber];
+                this.i = this.i - 20;
+                this.shuffleArray = shuffle(
+                    [...Array(20).keys()].map((x) => ++x)
+                );
+                
+            } else {
+                this.i = this.i - 20;
+            }
+        }
+        console.log(this.i);
+        console.log(season);
+        
+        let randomNumber = this.shuffleArray[this.i];
+        console.log(randomNumber);
+        console.log(this.shuffleArray);
+        this.i = this.i + 1;
+
+
+        let formatNumber = (randomNumber < 10 ? "0" : "") + randomNumber;
+        let src = `./assets/images/${season}/${formatNumber}.jpg`;
+        return src;
     }
 }
 
@@ -135,15 +222,6 @@ function setFocus(e) {
     }
 }
 // get number for image
-let i = 0;
-
-function getImageNumber() {
-    let number = (i % 20) + 1;
-    console.log(number);
-    i++;
-    return (number < 10 ? "0" : "") + number;
-}
-
 
 async function getQuote() {
     const url = `http://quotes.stormconsultancy.co.uk/random.json`;
@@ -157,14 +235,15 @@ name.addEventListener("keypress", setName);
 name.addEventListener("blur", setName);
 focus.addEventListener("keypress", setFocus);
 focus.addEventListener("blur", setFocus);
-btnImage.addEventListener("click", setBgGreet);
 
 document.addEventListener("DOMContentLoaded", getQuote);
 btnQuote.addEventListener("click", getQuote);
 
 // Run
-showTime();
-setBgGreet();
+
+let momentum = new Momentum();
+momentum.init();
+
 getName();
 getFocus();
 
