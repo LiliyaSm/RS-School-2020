@@ -38,14 +38,13 @@ function addZero(n) {
     return (parseInt(n, 10) < 10 ? "0" : "") + n;
 }
 
-
 function shuffle(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
-    };
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
 
 class Momentum {
     constructor() {
@@ -57,15 +56,10 @@ class Momentum {
     }
 
     init() {
-
         this.date = document.querySelector(".date");
         this.time = document.querySelector(".time");
 
-        // for (let i = 0; i < 4; i++) {
-            this.shuffleArray = shuffle([...Array(20).keys()].map(x => ++x));
-        //     this.shuffleArray = this.shuffleArray.concat(arr);
-        // }
-
+        this.shuffleArray = shuffle([...Array(20).keys()].map((x) => ++x));
 
         this.showTime();
         this.setBSeason();
@@ -77,8 +71,6 @@ class Momentum {
     // Show Time
     showTime() {
         const today = new Date();
-
-        // year = today.getFullYear();
         const month = months[today.getMonth()];
         const dayMonth = today.getDate();
         // 0 (воскресенье) до 6 (суббота)
@@ -95,15 +87,15 @@ class Momentum {
         )}<span>:</span>${addZero(sec)}`;
 
         if (min === 0 && sec === 0) {
+            console.log(hour, min, sec)
             this.setBSeason();
             this.loadByNumber(true);
         }
         setTimeout(() => this.showTime(), 1000);
-
     }
 
-    loadByNumber(flag) {
-        const imageSrc = this.getImageNumber(flag);
+    loadByNumber(sameDayTime) {
+        const imageSrc = this.getImageNumber(sameDayTime);
         this.viewBgImage(imageSrc);
     }
 
@@ -117,22 +109,30 @@ class Momentum {
             // Morning
             this.seasonNumber = 0;
             greeting.textContent = "Good Morning, ";
+            console.log("Good Morning, ");
         } else if (hour < 6) {
             //night
             this.seasonNumber = 3;
             greeting.textContent = "Good Night, ";
+            console.log("Good Night, ");
+
         } else if (hour < 18) {
             // Day
             this.seasonNumber = 1;
             greeting.textContent = "Good Afternoon, ";
+            console.log("Good Afternoon, ");
+
         } else {
             // Evening
             this.seasonNumber = 2;
             greeting.textContent = "Good Evening, ";
+            console.log("Good Evening, ");
+
         }
 
         if (currSeason !== this.seasonNumber) {
             this.i = 0;
+            this.shuffleArray = shuffle([...Array(20).keys()].map((x) => ++x));
         }
     }
 
@@ -145,31 +145,28 @@ class Momentum {
         };
     }
 
-    getImageNumber(flag) {
+    getImageNumber(sameDayTime) {
         let season = seasons[this.seasonNumber];
-        // let number = this.i;
-        
+
         if (this.i > 19) {
-            if (!flag) {
+            if (!sameDayTime) {
                 this.seasonNumber = (this.seasonNumber + 1) % seasons.length;
                 season = seasons[this.seasonNumber];
                 this.i = this.i - 20;
                 this.shuffleArray = shuffle(
                     [...Array(20).keys()].map((x) => ++x)
                 );
-                
             } else {
                 this.i = this.i - 20;
             }
         }
         console.log(this.i);
         console.log(season);
-        
+
         let randomNumber = this.shuffleArray[this.i];
         console.log(randomNumber);
         console.log(this.shuffleArray);
         this.i = this.i + 1;
-
 
         let formatNumber = (randomNumber < 10 ? "0" : "") + randomNumber;
         let src = `./assets/images/${season}/${formatNumber}.jpg`;
@@ -179,11 +176,11 @@ class Momentum {
 
 // Get Name
 function getName() {
-    //returns random image number
+    //returns name if exists in storage
     if (localStorage.getItem("name") === null) {
-        name.textContent = "[Enter Name]";
+        name.value = "[Enter Name]";
     } else {
-        name.textContent = localStorage.getItem("name");
+        name.value = localStorage.getItem("name");
     }
 }
 
@@ -192,12 +189,24 @@ function setName(e) {
     if (e.type === "keypress") {
         // Make sure enter is pressed
         if (e.which == 13 || e.keyCode == 13) {
-            localStorage.setItem("name", e.target.innerText);
+            localStorage.setItem("name", e.target.value);
             name.blur();
         }
+    } else if (e.type === "focus") {
+        name.value = "";
     } else {
-        localStorage.setItem("name", e.target.innerText);
+        // blur
+        if (e.target.value.trim() != "") {
+            localStorage.setItem("name", e.target.value);
+        } else {
+            getName();
+            resizeInput.call(name);
+        }
     }
+}
+
+function resizeInput() {
+    this.style.width = this.value.length + "ch";
 }
 
 // Get Focus
@@ -217,8 +226,14 @@ function setFocus(e) {
             localStorage.setItem("focus", e.target.innerText);
             focus.blur();
         }
+    } else if (e.type === "focus") {
+        focus.textContent = "";
     } else {
-        localStorage.setItem("focus", e.target.innerText);
+        if (e.target.innerText.trim() != "") {
+            localStorage.setItem("focus", e.target.innerText);
+        } else {
+            getFocus();
+        }
     }
 }
 // get number for image
@@ -233,8 +248,12 @@ async function getQuote() {
 
 name.addEventListener("keypress", setName);
 name.addEventListener("blur", setName);
+name.addEventListener("focus", setName);
+name.addEventListener("input", resizeInput); // bind the "resizeInput" callback on "input" event
+
 focus.addEventListener("keypress", setFocus);
 focus.addEventListener("blur", setFocus);
+focus.addEventListener("focus", setFocus);
 
 document.addEventListener("DOMContentLoaded", getQuote);
 btnQuote.addEventListener("click", getQuote);
@@ -245,6 +264,7 @@ let momentum = new Momentum();
 momentum.init();
 
 getName();
+resizeInput.call(name); // immediately call the function
 getFocus();
 
 // http://quotes.stormconsultancy.co.uk/random.json

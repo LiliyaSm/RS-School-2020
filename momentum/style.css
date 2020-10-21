@@ -51,7 +51,8 @@ h2 {
 }
 
 .btn {
-  color: black;
+  width: 170px;
+  color: #d8d8d8;
   font-weight: 400;
   border: none;
   outline: none;
@@ -61,7 +62,15 @@ h2 {
   box-shadow: 2px 2px 8px #000000;
   font-size: 16px;
   line-height: 100%;
-  background-color: #e0dcdc;
+  background-size: 200% 100%;
+}
+
+.btnQuote {
+  background-image: linear-gradient(to right, #25aae188, #4481eb88, #04befe88, #3f86ed88);
+}
+
+.btnImage {
+  background-image: linear-gradient(to right, #fc607570, #ff9b4460, #ef9c4365, #e7551663);
 }
 
 button:active {
@@ -76,7 +85,19 @@ button:focus {
 .btn:hover {
   /* color: white; */
   /* background-color: rgb(132, 248, 242); */
+  color: white;
+  transition: all 0.4s ease-in-out;
+  background-position: 100% 0;
   cursor: pointer;
+  opacity: 1;
+}
+
+.btnQuote:hover {
+  background-image: linear-gradient(to right, #25aae1, #4481eb, #04befe, #3f86ed);
+}
+
+.btnImage:hover {
+  background-image: linear-gradient(to right, #fc6076, #ff9a44, #ef9d43, #e75516);
 }
 
 .wrapper {
@@ -90,11 +111,28 @@ button:focus {
   margin: 25px;
 }
 
+.name {
+  background: transparent;
+  border: transparent;
+  color: white;
+  width: 10rem;
+  text-shadow: 2px 2px 8px #000000;
+}
+
+.name:focus {
+  border: transparent;
+}
+
+button:focus {
+  outline: none;
+}
+
 @media screen and (max-width: 767px) {
   .time {
     font-size: 6rem;
   }
-  h1, h2 {
+  h1,
+  h2 {
     font-size: 1.5rem;
   }
   .date {
@@ -106,6 +144,29 @@ button:focus {
   }
   figcaption {
     font-size: 0.8rem;
+  }
+  .btn {
+    font-size: 14px;
+  }
+  .buttons {
+    margin: 15px 0 25px 0;
+  }
+}
+
+@media screen and (max-width: 454px) {
+  figure {
+    font-size: 0.8rem;
+    height: 11rem;
+  }
+  .time {
+    font-size: 4rem;
+  }
+  .btn {
+    width: 100px;
+  }
+  h1,
+  h2 {
+    font-size: 1.3rem;
   }
 }
 /*# sourceMappingURL=style.css.map */
