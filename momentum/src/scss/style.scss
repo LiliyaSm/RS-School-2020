@@ -14,14 +14,11 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* justify-content: center; */
     text-align: center;
     height: 100vh;
     background-size: cover;
-    /* -webkit-text-stroke: 1px #000000; */
     text-shadow: 2px 2px 8px #000000;
     transition: background-image 0.7s ease-in-out;
-    /* text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;  */
 }
 
 .time {
@@ -45,15 +42,11 @@ h1 {
 
 h2 {
     margin-bottom: 0.5rem;
-    // opacity: 0.8;
 }
 
 .btn {
-    // color: black;
     width: 170px;
-    // color: rgb(216, 216, 216);
     color: rgba(255, 255, 255, 0.884);
-
     font-weight: 400;
     border: none;
     outline: none;
@@ -124,22 +117,12 @@ button:focus {
 
 .btnImage:active {
     // border: none;
-    background-image: linear-gradient(
-        to right,
-        #fac18f,
-        #f7a54d,
-    );
+    background-image: linear-gradient(to right, #fac18f, #f7a54d);
 }
-
 
 .btnQuote:active {
-    background-image: linear-gradient(
-        to right,
-        #6e9be7,
-        #5ad1f8,
-    );
+    background-image: linear-gradient(to right, #6e9be7, #5ad1f8);
 }
-
 
 .wrapper {
     display: flex;
@@ -165,7 +148,6 @@ button:focus {
     font-size: 1.4rem;
     margin-bottom: 1rem;
     transition: color 0.5s ease-out;
-    
 }
 
 .focus {
@@ -238,18 +220,22 @@ button:focus {
 
     .weather {
         font-size: 12px;
-        position: initial;
-        bottom: 0;
+        // position: initial;
+        bottom: 10px;
     }
-    .weather {
-        // left: 5px;
+     .city {
+        margin-bottom: 0;
     }
 }
 
 @media screen and (max-width: 454px) {
+
+    .buttons {
+    margin: 10px 0 15px 0;
+}
     figure {
         font-size: 0.8rem;
-        height: 11rem;
+        height: 6rem;
     }
 
     .time {
@@ -263,12 +249,30 @@ button:focus {
     h2 {
         font-size: 1.3rem;
     }
-
-    .city {
-        margin-bottom: 0.5rem;
+   
+    h1,
+    h2 {
+        margin-top: 0.9rem;
+        //    margin-bottom: 1rem;
     }
+
+    h1 {
+        margin-bottom: 0;
+    }
+
+    .focus {
+        margin-top: 0;
+    }
+
+    // .city {
+    //     margin-bottom: 0.5rem;
+    // }
 
     .btn {
         padding: 12px 14px;
+    }
+
+    blockquote {
+        margin: 0 0 0.4rem;
     }
 }

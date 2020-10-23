@@ -278,7 +278,6 @@ function setCity(e) {
         if (e.target.innerText.trim() != "") {
             localStorage.setItem("city", e.target.innerText);
             getWeather();
-
         } else {
             getCity();
         }
@@ -290,8 +289,12 @@ async function getQuote() {
     const url = `http://quotes.stormconsultancy.co.uk/random.json`;
     const res = await fetch(url);
     const data = await res.json();
-    blockquote.innerHTML = ` <i> ${data.quote} </i> `;
-    figcaption.innerHTML = ` <i> ${data.author} </i> `;
+    if (data.quote.length > 260) {
+        getQuote();
+    } else {
+        blockquote.innerHTML = ` <i> ${data.quote} </i> `;
+        figcaption.innerHTML = ` <i> ${data.author} </i> `;
+    }
 }
 
 // get weather
@@ -303,7 +306,7 @@ async function getWeather() {
         weatherIcon.classList.add(`owf-${data.weather[0].id}`);
         temperature.textContent = `Temperature: ${data.main.temp}°C`;
         weatherDescription.textContent = data.weather[0].description;
-        windSpeed.textContent =`Wind speed: ${data.wind.speed}`;
+        windSpeed.textContent = `Wind speed: ${data.wind.speed}`;
         humidity.textContent = `Humidity: ${data.main.humidity}%`;
     } else {
         weatherDescription.textContent = "City not found";
@@ -313,8 +316,7 @@ async function getWeather() {
         temperature.textContent = "";
     }
 
-
-    if (city.textContent === "[Enter City]"){
+    if (city.textContent === "[Enter City]") {
         weatherDescription.textContent = "";
     }
 }
@@ -335,18 +337,17 @@ city.addEventListener("blur", setCity);
 city.addEventListener("focus", setCity);
 // Run
 
-city.addEventListener("keydown", (event)=>{
+city.addEventListener("keydown", (event) => {
     if (city.innerText.length === 25 && event.keyCode != 8) {
         event.preventDefault();
     }
-})
+});
 
 focus.addEventListener("keydown", (event) => {
     if (focus.innerText.length === 25 && event.keyCode != 8) {
         event.preventDefault();
     }
 });
-
 
 document.addEventListener("DOMContentLoaded", () => {
     let momentum = new Momentum();
@@ -357,5 +358,4 @@ document.addEventListener("DOMContentLoaded", () => {
     getName();
     resizeInput.call(name); // immediately call the function
     getFocus();
-
 });
