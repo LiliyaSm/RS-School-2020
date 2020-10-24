@@ -85,9 +85,7 @@ const Slider = {
 
         window.addEventListener("resize", (e) => {
             this.resizeSlider(e);
-            this.centerPopup();
-
-            // Popup.closePopup();
+            Popup.centerPopup();
         });
 
         this.elements.rightArrow.addEventListener("click", (e) =>
@@ -220,6 +218,9 @@ const Slider = {
         const image = document.createElement("img");
         image.setAttribute("src", `../../assets/images/${pet.name}.png`);
         image.setAttribute("alt", pet.name);
+        image.setAttribute("height", "270px");
+        image.setAttribute("width", "270px");
+
         const cardTitle = document.createElement("div");
         cardTitle.textContent = pet.name;
         cardTitle.classList.add("card-title");
@@ -230,27 +231,14 @@ const Slider = {
         cardElement.appendChild(cardTitle);
         cardElement.appendChild(cardButton);
 
-        cardButton.addEventListener("click", (event) => {
+        cardElement.addEventListener("click", (event) => {
             Popup.showPopup(event);
-            this.centerPopup();
+            // this.centerPopup();
         });
         return cardElement;
     },
 
-    centerPopup() {
-        let popup = document.querySelector(".popup");
 
-        if (popup) {
-            let style = window.getComputedStyle(popup);
-            let w = parseInt(style.getPropertyValue("width"));
-            popup.style.left = screen.width / 2 - w / 2 + "px";
-            popup.style.top =
-                document.documentElement.scrollTop +
-                (screen.height / 2 -
-                    parseInt(style.getPropertyValue("height")) / 2) +
-                "px";
-        }
-    },
 };
 
 window.addEventListener("DOMContentLoaded", async function () {

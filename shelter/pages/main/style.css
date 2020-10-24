@@ -11,12 +11,19 @@
 
 html,
 body {
-    position: relative;
     font-size: 1.4rem;
     font-style: normal;
     font-weight: normal;
     max-width: 100%;
-    overflow-x: hidden;
+}
+
+body {
+    overflow: hidden auto;
+    position: relative;
+}
+
+.no-scroll {
+    overflow: hidden;
 }
 
 /* h1 is hidden */
@@ -108,7 +115,6 @@ p {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* transition: all 2s ease-in; */
 }
 
 .header-wrap {
@@ -144,10 +150,15 @@ p {
     text-decoration: none;
 }
 
-.navbar-header a:hover,
-.mobile-menu a:hover {
+.navbar-header a:hover:not(.disabledLink),
+.mobile-menu a:hover:not(.disabledLink) {
     color: #fafafa;
     cursor: pointer;
+}
+
+.navbar-header a.disabledLink,
+.mobile-menu a.disabledLink {
+    cursor: default;
 }
 
 .navbar-header .active a,
@@ -159,6 +170,7 @@ p {
 .logo {
     z-index: 101;
     transition: all 1s ease-in;
+    margin-right: 4rem;
 }
 
 header .logo-title {
@@ -288,7 +300,6 @@ header .logo-subtitle {
     flex-direction: column;
     padding-top: 8rem;
     padding-bottom: 10rem;
-    /* box-sizing: border-box; */
 }
 
 .slider {
@@ -466,7 +477,8 @@ header .logo-subtitle {
     justify-content: center;
 }
 
-.donation-wrap a {
+.donation-wrap a,
+.btn a {
     text-decoration: none;
 }
 
@@ -557,10 +569,6 @@ footer img {
     display: none;
 }
 
-/* .hide-overlay {
-    opacity: 0;
-} */
-
 .menu-icon {
     transition: all 1s ease;
     z-index: 101;
@@ -649,15 +657,13 @@ footer img {
 /* .popup */
 
 .popup {
+    position: fixed;
     padding: 10px 20px 10px 10px;
     border-radius: 9px;
     width: 870px;
     height: 480px;
     background-color: white;
     position: absolute;
-    top: 50.9%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     z-index: 201;
     display: flex;
 }
@@ -665,7 +671,6 @@ footer img {
 .close-popup {
     top: -13%;
     left: 103%;
-    /* transform: translate(-50%, -50%); */
     position: absolute;
     border-radius: 50%;
     padding: 1.8rem 1.8rem 1.5rem 1.8rem;
@@ -677,7 +682,6 @@ footer img {
 
 .close-popup:hover {
     background: #fddcc4;
-
 }
 
 .popup ul {
@@ -726,15 +730,13 @@ strong {
 
 .popup ul li::before {
     content: "• ";
-    color: #f1cdb3; /* or whatever color you prefer */
-    margin-right: 4px;
+    color: #f1cdb3; 
+    margin-right: 0.4rem;
 }
 
 .popup .img-wrapper {
     overflow: hidden;
     width: 100%;
-    /* padding-bottom: 10px; */
-    /* display: flex; */
 }
 
 .popup .img-wrapper img {
@@ -746,6 +748,23 @@ strong {
 
 .popup-text {
     width: 589px;
+}
+
+.my-animation {
+    animation: fade 0.2s steps(90) forwards;
+    -webkit-animation: fade 0.2s steps(90) forwards;
+    -moz-animation: fade 0.2s steps(90) forwards;
+}
+
+@keyframes fade {
+    from {
+        opacity: 0;
+        transform: scale(0);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 @media screen and (max-width: 1279px) {
@@ -869,40 +888,39 @@ strong {
         padding-top: 11px;
         padding-right: 3px;
         box-sizing: border-box;
-        top: 51.7%;
+        /* top: 51.7%; */
     }
 
     .popup-text {
         width: 465px;
-        /* margin-left: 6px; */
     }
 
     .popup-text h5 {
-        font-size: 13px;
+        font-size: 1.3rem;
         line-height: 110%;
-        margin-top: 21px;
+        margin-top: 2.1rem;
     }
 
     .popup-text h4 {
-        margin-top: 9px;
+        margin-top: 0.9rem;
     }
     .popup h3 {
         margin-top: 0;
     }
 
     .popup ul li {
-        margin-top: 7px;
+        margin-top: 0.7rem;
     }
 
     .popup ul {
-        margin-top: 13px;
+        margin-top: 1.3rem;
     }
 
     .popup .img-wrapper img {
         height: auto;
         width: 99%;
-        margin-top: -10px;
-        margin-left: -10px;
+        margin-top: -1rem;
+        margin-left: -1rem;
     }
 
     .close-popup {
@@ -911,7 +929,7 @@ strong {
     }
 
     .popup ul li::before {
-        margin-right: 2px;
+        margin-right: 0.2rem;
     }
 }
 
@@ -1004,7 +1022,7 @@ strong {
     /* pets */
 
     .pets-wrap h3 {
-        font-size: 25px;
+        font-size: 2.5rem;
         letter-spacing: 0.06em;
         text-align: center;
     }
@@ -1051,7 +1069,7 @@ strong {
     /* help section */
 
     .help-wrap h3 {
-        font-size: 25px;
+        font-size: 2.5rem;
         letter-spacing: 0.06em;
     }
     .help-wrap {
@@ -1169,12 +1187,10 @@ strong {
         padding-left: 10px;
         padding-right: 10px;
         padding-bottom: 10px;
-        top: 45.83%;
     }
 
     .popup .img-wrapper {
         display: none;
-        /* display: flex; */
     }
 
     .popup-text h3,
@@ -1187,10 +1203,10 @@ strong {
     }
 
     .popup ul {
-        margin-top: 16px;
+        margin-top: 1.6rem;
     }
     .popup ul li::before {
-        margin-right: 4px;
+        margin-right: 0.4rem;
     }
     .close-popup {
         left: 94%;

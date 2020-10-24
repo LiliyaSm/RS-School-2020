@@ -8,84 +8,24 @@ const Popup = {
             this.closePopup(event);
         });
     },
+    
+    // Recursively find an element with card class in elem or it's parents
+    findCard(elem){
+        if(elem.classList.contains("card")){
+            return elem;
+        }else{
+            return this.findCard(elem.parentElement);
+        }
+    },
+     
     showPopup(event) {
-        let petName = event.target.parentElement.getAttribute("data-id");
+        let card = this.findCard(event.target);
+        let petName = card.getAttribute("data-id");
         let pet = this.pets.find((pet) => pet.name === petName);
-
-        // const popup = document.createElement("div");
-        // popup.classList.add("popup");
-
-        // const imgWrapper = document.createElement("div");
-        // imgWrapper.classList.add("img-wrapper");
-
-        // const image = document.createElement("img");
-        // image.setAttribute("src", `../../assets/images/${pet.name}.png`);
-        // imgWrapper.appendChild(image);
-
-        // const popupText = document.createElement("div");
-        // popupText.classList.add("popup-text");
-
-        // const h3 = document.createElement("h3");
-        // h3.textContent = `${petName}`;
-        // popupText.appendChild(h3);
-
-        // const h4 = document.createElement("h4");
-        // h4.textContent = `${pet.type} - ${pet.breed}`;
-        // popupText.appendChild(h4);
-
-        // const h5 = document.createElement("h5");
-        // h5.textContent = `${pet.description}`;
-        // popupText.appendChild(h5);
-
-        // const ul = document.createElement("ul");
-        // const li = document.createElement("li");
-        // li.innerHTML = "<strong>Age: </strong>" + `${pet.age}`;
-        // const li2 = document.createElement("li");
-        // li2.innerHTML =
-        //     "<strong>Inoculations: </strong>" +
-        //     `${pet.inoculations.reduce((a, b) => a + ", " + b)}`;
-        // const li3 = document.createElement("li");
-        // li3.innerHTML =
-        //     "<strong>Diseases: </strong>" +
-        //     `${pet.diseases.reduce((a, b) => a + ", " + b)} `;
-
-        // const li4 = document.createElement("li");
-        // li4.innerHTML =
-        //     "<strong>Parasites: </strong>" +
-        //     `${pet.parasites.reduce((a, b) => a + ", " + b)} `;
-
-        // const btn = document.createElement("button");
-        // btn.classList.add("close-popup");
-
-        // const btnImg = document.createElement("img");
-        // btnImg.setAttribute("src", "../../assets/icons/close.svg");
-        // btnImg.setAttribute("alt", "close");
-        // btn.appendChild(btnImg);
-
-        // btn.addEventListener("click", (e) => this.closePopup(e));
-
-        // btn.addEventListener("mouseover", (event) => {
-        //     btn.style.background = "#fddcc4";
-        // });
-
-        // btn.addEventListener("mouseout", (event) => {
-        //     btn.style.background = "Transparent";
-        // });
-
-        // ul.appendChild(btn);
-        // ul.appendChild(li);
-        // ul.appendChild(li2);
-        // ul.appendChild(li3);
-        // ul.appendChild(li4);
-        // popupText.appendChild(ul);
-
-        // popup.appendChild(imgWrapper);
-        // popup.appendChild(popupText);
-
-        // document.body.appendChild(popup);
 
         let temp = document.getElementsByTagName("template")[0];
         let clon = temp.content.cloneNode(true);
+        clon.querySelector(":first-child").classList.add("popup");
 
         clon.querySelector(".img-wrapper img").setAttribute(
             "src",
@@ -107,9 +47,8 @@ const Popup = {
             "<strong>Parasites: </strong>" +
             `${pet.parasites.reduce((a, b) => a + ", " + b)} `;
 
-
         let btn = clon.querySelector(".close-popup");
-        btn.addEventListener("click", (event) => this.closePopup(e));
+        btn.addEventListener("click", (event) => this.closePopup(event));
 
         btn.addEventListener("mouseover", (event) => {
             btn.style.background = "#fddcc4";
@@ -118,6 +57,7 @@ const Popup = {
         btn.addEventListener("mouseout", (event) => {
             btn.style.background = "Transparent";
         });
+
 
         document.body.appendChild(clon);
 
@@ -136,15 +76,35 @@ const Popup = {
                     "Transparent";
             }
         });
+
+        this.centerPopup();
+        document.body.classList.add("no-scroll");
     },
 
     closePopup() {
         let popup = document.querySelector(".popup");
         if (popup) {
             document.body.removeChild(popup);
+            document.body.classList.remove("no-scroll");
         }
         if (!this.overlayPopup.classList.contains("hide")) {
             this.overlayPopup.classList.add("hide");
+        }
+
+    },
+
+    centerPopup() {
+        let popup = document.querySelector(".popup");
+        if (popup) {
+            let style = window.getComputedStyle(popup);
+            let w = parseInt(style.getPropertyValue("width"));
+            popup.style.left = window.innerWidth / 2 - w / 2 + "px";
+            let t = style.getPropertyValue("height") ;
+            popup.style.top =
+                document.documentElement.scrollTop +
+                (window.innerHeight / 2 -
+                    parseInt(t)/ 2) +
+                "px";
         }
     },
 };

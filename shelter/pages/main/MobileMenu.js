@@ -18,8 +18,11 @@ const MobileMenu = {
         this.mobileMenu.classList.toggle("hide-menu");
         this.overlay.classList.toggle("hide");
         this.menuIcon.classList.toggle("rotate");
-        this.logo.style.marginRight = "40px";
         this.header.classList.toggle("flex-end");
+        document.body.classList.toggle("no-scroll");
+
+       
+
     },
 
     closeMenu() {
@@ -27,8 +30,8 @@ const MobileMenu = {
             this.mobileMenu.classList.add("hide-menu");
             this.mobileMenu.classList.remove("slide");
             this.menuIcon.classList.toggle("rotate");
-            this.logo.style.marginRight = "0";
             this.header.classList.remove("flex-end");
+            document.body.classList.remove("no-scroll");
         }
     },
 };

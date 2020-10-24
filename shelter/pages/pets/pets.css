@@ -11,11 +11,17 @@
 
 html,
 body {
-    position: relative;
     font-size: 1.4rem;
     font-style: normal;
-    font-weight: normal;
-    overflow-x: hidden;
+    font-weight: normal;    
+    position: relative;
+}
+
+body {overflow: hidden auto;
+position: relative;}
+
+.no-scroll {
+    overflow: hidden;
 }
 
 /* h1 is hidden */
@@ -100,6 +106,8 @@ header {
     align-items: center;
     max-width: 120rem;
     margin: 0 auto;
+    
+
 }
 .navbar-header {
     min-width: 37%;
@@ -125,19 +133,29 @@ header {
     text-decoration: none;
 }
 
-.navbar-header a:hover{
+.navbar-header a:hover:not(.disabledLink){
     color: #292929;
     cursor: pointer;
 }
 
-.mobile-menu a:hover {
+.mobile-menu a:hover:not(.disabledLink){
     color: #fafafa;
     cursor: pointer;
 }
 
+.navbar-header a.disabledLink,
+.mobile-menu a.disabledLink {
+    cursor: default;
+}
+
+
 .navbar-header .active a {
     color: #292929;
     border-bottom: 0.3rem solid #f1cdb3;
+}
+
+.logo {
+    margin-right: 4rem;
 }
 
 header .logo-title {
@@ -202,7 +220,7 @@ header .logo-subtitle {
     flex-direction: column;
     background-color: #fafafa;
     align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: 3rem;
     margin-left: 2rem;
     margin-right: 2rem;
 }
@@ -210,7 +228,6 @@ header .logo-subtitle {
 .card:hover {
     box-shadow: 0rem 0.4rem 0.4rem rgba(0, 0, 0, 0.25);
     background-color: #ffffff;
-    /* cursor: pointer; */
 }
 
 .card-title {
@@ -240,10 +257,14 @@ header .logo-subtitle {
     background-color: inherit;
 }
 
-.slider .card button:hover {
+.slider .card:hover button {
     cursor: pointer;
     background-color: #fddcc4;
     border: 2px solid #fddcc4;
+}
+
+.slider .card:hover {
+    cursor: pointer;
 }
 
 .pet-button {
@@ -252,7 +273,6 @@ header .logo-subtitle {
 }
 
 .slider .page-number {
-    /* position: absolute; */
     border-radius: 50%;
     outline: none;
     background-color: #f1cdb3;
@@ -429,8 +449,8 @@ footer img {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-size: 32px;
-    margin-top: 209px;
+    font-size: 3.2rem;
+    margin-top: 20.9rem;
 }
 
 .mobile-menu a {
@@ -509,10 +529,6 @@ footer img {
     height: 480px;
     background-color: white;
     position: absolute;
-    /* top: 50.9%; */
-    /* top: 50%;
-    left: 50%; */
-    /* transform: translate(-50%, -50%); */
     z-index: 201;
     display: flex;
 }
@@ -520,10 +536,9 @@ footer img {
 .close-popup {
     top: -13%;
     left: 103%;
-    /* transform: translate(-50%, -50%); */
     position: absolute;
     border-radius: 50%;
-    padding: 1.8rem 1.8rem 1.5rem 1.8rem;
+    padding: 18px 18px 15px 18px;
     background-color: Transparent;
     border: 2px solid #fddcc4;
     cursor: pointer;
@@ -557,7 +572,7 @@ strong {
 }
 
 .popup-text h4 {
-    margin-top: 10px;
+    margin-top: 1rem;
     color: #000;
 }
 
@@ -565,30 +580,28 @@ strong {
     letter-spacing: 0.06em;
     color: #000000;
     line-height: 115%;
-    margin-top: 39px;
+    margin-top: 3.9rem;
     font-weight: normal;
 }
 
 .popup ul li {
-    margin-top: 12px;
+    margin-top: 1.2rem;
 }
 
 .popup h3 {
-    margin-top: 40px;
+    margin-top: 4rem;
     color: #000;
 }
 
 .popup ul li::before {
     content: "• ";
-    color: #f1cdb3; /* or whatever color you prefer */
+    color: #f1cdb3; 
     margin-right: 4px;
 }
 
 .popup .img-wrapper {
     overflow: hidden;
-    width: 100%;
-    /* padding-bottom: 10px; */
-    /* display: flex; */
+    width: 100%;   
 }
 
 .popup .img-wrapper img {
@@ -604,7 +617,6 @@ strong {
 
 @media screen and (max-width: 1279px) {
     .site-header {
-        /* width: 100%; */
         padding-left: 3rem;
         padding-right: 3rem;
         box-sizing: border-box;
@@ -615,7 +627,6 @@ strong {
     }
 
     .pets-wrap {
-        /* width: 100%; */
         padding-bottom: 7.5rem;
         box-sizing: border-box;
     }
@@ -629,8 +640,8 @@ strong {
         margin-top: 3rem;
     }
     .slider > div {
-        margin-left: 90px;
-        margin-right: 90px;
+        margin-left: 9rem;
+        margin-right: 9rem;
     }
 
     .buttons {
@@ -665,22 +676,20 @@ strong {
         padding-top: 11px;
         padding-right: 3px;
         box-sizing: border-box;
-        top: 51.7%;
     }
 
     .popup-text {
         width: 465px;
-        /* margin-left: 6px; */
     }
 
     .popup-text h5 {
-        font-size: 13px;
+        font-size: 1.3rem;
         line-height: 110%;
         margin-top: 21px;
     }
 
     .popup-text h4 {
-        margin-top: 9px;
+        margin-top: 0.9rem;
     }
     .popup h3 {
         margin-top: 0;
@@ -697,8 +706,8 @@ strong {
     .popup .img-wrapper img {
         height: auto;
         width: 99%;
-        margin-top: -10px;
-        margin-left: -10px;
+        margin-top: -1rem;
+        margin-left: -1rem;
     }
 
     .close-popup {
@@ -707,7 +716,7 @@ strong {
     }
 
     .popup ul li::before {
-        margin-right: 2px;
+        margin-right: 0.2rem;
     }
 }
 
@@ -740,7 +749,7 @@ strong {
     }
 
     .pets h3 {
-        font-size: 25px;
+        font-size: 2.5rem;
         letter-spacing: 0.06em;
     }
 
@@ -807,7 +816,6 @@ strong {
 
     .popup .img-wrapper {
         display: none;
-        /* display: flex; */
     }
 
     .popup-text h3,
@@ -820,10 +828,10 @@ strong {
     }
 
     .popup ul {
-        margin-top: 16px;
+        margin-top: 1.6rem;
     }
     .popup ul li::before {
-        margin-right: 4px;
+        margin-right: 0.4rem;
     }
     .close-popup {
         left: 94%;

@@ -13,8 +13,10 @@ const Slider = {
         slider: null,
         leftArrow: null,
         rightArrow: null,
-        cards: [],
     },
+    cards: [],
+    newCards: [],
+    oldCards: [],
     pets: null,
     info: {
         cardsToShow: 3,
@@ -34,12 +36,15 @@ const Slider = {
         this.elements.leftArrow.addEventListener("click", (e) =>
             this.loadSlider(e)
         );
+        this.cards = this.shuffle([...Array(this.pets.length).keys()]);
+
         this.loadSlider();
     },
 
     resizeSlider(e) {
         if (this.sizeSlider(window.innerWidth) !== this.info.cardsToShow) {
             this.info.cardsToShow = this.sizeSlider(window.innerWidth);
+            //close menu if open and overlay if exists
             MobileMenu.closeMenu();
             let overlay = document.querySelector(".overlay");
             if (!overlay.classList.contains("hide")) {
@@ -73,17 +78,25 @@ const Slider = {
             }
         }
 
-        let cardIndexes = this.shuffle([...Array(this.pets.length).keys()]);
-        let index;
+        // let cardIndexes = this.shuffle([...Array(this.pets.length).keys()]);
+
         for (let i = 0; i < this.info.cardsToShow; i++) {
-            index = cardIndexes.pop();
-            fragment.prepend(this.createCard(index));
+            //get random index
+            let randItem = Math.floor(Math.random() * this.cards.length);
+            // remove selected index from cards array. Like pop with index as param
+            let index = this.cards.splice(randItem, 1)[0];
+            this.newCards.push(index);
+            let card = this.createCard(index);
+            fragment.prepend(card);
         }
 
         this.elements.slider.insertBefore(
             fragment,
             this.elements.leftArrow.nextSibling
         );
+        this.cards = this.cards.concat(this.oldCards);
+        this.oldCards = [...this.newCards];
+        this.newCards = [];
     },
 
     shuffle(array) {
@@ -103,6 +116,9 @@ const Slider = {
         const image = document.createElement("img");
         image.setAttribute("src", `../../assets/images/${pet.name}.png`);
         image.setAttribute("alt", pet.name);
+        image.setAttribute("height", "270px");
+        image.setAttribute("width", "270px");
+
         const cardTitle = document.createElement("div");
         cardTitle.textContent = pet.name;
         cardTitle.classList.add("card-title");
@@ -112,10 +128,14 @@ const Slider = {
         cardElement.appendChild(image);
         cardElement.appendChild(cardTitle);
         cardElement.appendChild(cardButton);
-
-        cardButton.addEventListener("click", (event) => {
+        cardElement.classList.add("my-animation");
+        cardElement.addEventListener("click", (event) => {
             Popup.showPopup(event);
         });
+
+        // cardButton.addEventListener("click", (event) => {
+        //     Popup.showPopup(event);
+        // });
 
         return cardElement;
     },
@@ -142,5 +162,11 @@ window.addEventListener("DOMContentLoaded", async function () {
     overlay.addEventListener("click", function (event) {
         MobileMenu.closeMenu();
         overlay.classList.toggle("hide");
+    });
+
+    document.querySelectorAll(".petsLink").forEach((link) => {
+        link.addEventListener("click", () => {
+            location.href = "../pets/pets.html";
+        });
     });
 });
