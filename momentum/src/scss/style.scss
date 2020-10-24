@@ -116,8 +116,11 @@ button:focus {
 }
 
 .btnImage:active {
-    // border: none;
     background-image: linear-gradient(to right, #fac18f, #f7a54d);
+}
+
+.disabled {
+    background-image: linear-gradient(to right, #fac18f, #f7a54d) !important;
 }
 
 .btnQuote:active {
@@ -148,6 +151,7 @@ button:focus {
     font-size: 1.4rem;
     margin-bottom: 1rem;
     transition: color 0.5s ease-out;
+    margin-top: 1rem;
 }
 
 .focus {
@@ -168,8 +172,17 @@ button:focus {
 
 .weather {
     position: fixed;
-    bottom: 40px;
-    // left: 5px;
+    bottom: 25px;
+    left: 20px;
+    width: 160px;
+    border-radius: 15px;
+    background-color: rgba(226, 226, 226, 0.425);
+}
+
+figure span {
+    background-color: rgba(226, 226, 226, 0.425);
+    border-radius: 5px;
+    padding: 4px;
 }
 
 .name:focus {
@@ -220,19 +233,22 @@ button:focus {
 
     .weather {
         font-size: 12px;
-        // position: initial;
-        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
     }
-     .city {
+    .city {
         margin-bottom: 0;
+    }
+
+    figure span {
+        padding: 3px;
     }
 }
 
 @media screen and (max-width: 454px) {
-
     .buttons {
-    margin: 10px 0 15px 0;
-}
+        margin: 10px 0 15px 0;
+    }
     figure {
         font-size: 0.8rem;
         height: 6rem;
@@ -247,26 +263,23 @@ button:focus {
 
     h1,
     h2 {
-        font-size: 1.3rem;
-    }
-   
-    h1,
-    h2 {
+        font-size: 1.1rem;
         margin-top: 0.9rem;
-        //    margin-bottom: 1rem;
-    }
-
-    h1 {
         margin-bottom: 0;
     }
 
     .focus {
         margin-top: 0;
+        font-size: 1rem;
     }
 
-    // .city {
-    //     margin-bottom: 0.5rem;
-    // }
+    .city {
+        font-size: 1rem;
+    }
+
+    figure span {
+        padding: 0.5px;
+    }
 
     .btn {
         padding: 12px 14px;

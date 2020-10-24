@@ -30,6 +30,8 @@ const months = [
     "December",
 ];
 
+const imagesSet = 6;
+
 const seasons = ["morning", "day", "evening", "night"];
 
 // DOM Elements
@@ -73,13 +75,26 @@ class Momentum {
         this.date = document.querySelector(".date");
         this.time = document.querySelector(".time");
 
-        this.shuffleArray = shuffle([...Array(18).keys()].map((x) => ++x));
+        this.shuffleArray = shuffle(
+            [...Array(imagesSet).keys()].map((x) => ++x)
+        );
 
         this.showTime();
         this.setBSeason();
         this.loadByNumber();
         const btnImage = document.querySelector(".btnImage");
-        btnImage.addEventListener("click", () => this.loadByNumber());
+        btnImage.addEventListener("click", (e) => {
+            this.loadByNumber();
+            this.blockBtn(e);
+        });
+    }
+    blockBtn(e) {
+        e.target.disabled = true;
+        e.target.classList.add("disabled");
+        setTimeout(function () {
+            e.target.disabled = false;
+            e.target.classList.remove("disabled");
+        }, 700);
     }
 
     // Show Time
@@ -146,7 +161,9 @@ class Momentum {
 
         if (currSeason !== this.seasonNumber) {
             this.i = 0;
-            this.shuffleArray = shuffle([...Array(18).keys()].map((x) => ++x));
+            this.shuffleArray = shuffle(
+                [...Array(imagesSet).keys()].map((x) => ++x)
+            );
         }
     }
 
@@ -162,16 +179,16 @@ class Momentum {
     getImageNumber(sameDayTime) {
         let season = seasons[this.seasonNumber];
 
-        if (this.i > 19) {
+        if (this.i > imagesSet - 1) {
             if (!sameDayTime) {
                 this.seasonNumber = (this.seasonNumber + 1) % seasons.length;
                 season = seasons[this.seasonNumber];
-                this.i = this.i - 18;
+                this.i = this.i - imagesSet;
                 this.shuffleArray = shuffle(
-                    [...Array(18).keys()].map((x) => ++x)
+                    [...Array(imagesSet).keys()].map((x) => ++x)
                 );
             } else {
-                this.i = this.i - 18;
+                this.i = this.i - imagesSet;
             }
         }
         console.log(this.i);
@@ -203,19 +220,26 @@ function setName(e) {
     if (e.type === "keypress") {
         // Make sure enter is pressed
         if (e.which == 13 || e.keyCode == 13) {
-            localStorage.setItem("name", e.target.value);
+            name.value = e.target.value.trim();
+            if (e.target.value != "") {
+                localStorage.setItem("name", e.target.value);
+            } else {
+                getName();
+            }
+            resizeInput.call(name);
             name.blur();
         }
     } else if (e.type === "focus") {
         name.value = "";
     } else {
         // blur
-        if (e.target.value.trim() != "") {
+        name.value = e.target.value.trim();
+        if (e.target.value != "") {
             localStorage.setItem("name", e.target.value);
         } else {
             getName();
-            resizeInput.call(name);
         }
+        resizeInput.call(name);
     }
 }
 
@@ -237,13 +261,19 @@ function setFocus(e) {
     if (e.type === "keypress") {
         // Make sure enter is pressed
         if (e.which == 13 || e.keyCode == 13) {
-            localStorage.setItem("focus", e.target.innerText);
+            focus.textContent = e.target.innerText.trim();
+            if (e.target.innerText != "") {
+                localStorage.setItem("focus", e.target.innerText);
+            } else {
+                getFocus();
+            }
             focus.blur();
         }
     } else if (e.type === "focus") {
         focus.textContent = "";
     } else {
-        if (e.target.innerText.trim() != "") {
+        focus.textContent = e.target.innerText.trim();
+        if (e.target.innerText != "") {
             localStorage.setItem("focus", e.target.innerText);
         } else {
             getFocus();
@@ -268,14 +298,20 @@ function setCity(e) {
     if (e.type === "keypress") {
         // Make sure enter is pressed
         if (e.which == 13 || e.keyCode == 13) {
-            localStorage.setItem("city", e.target.innerText);
-            getWeather();
+            city.textContent = e.target.innerText.trim();
+            if (e.target.innerText != "") {
+                localStorage.setItem("city", e.target.innerText);
+                getWeather();
+            } else {
+                getCity();
+            }
             city.blur();
         }
     } else if (e.type === "focus") {
         city.textContent = "";
     } else {
-        if (e.target.innerText.trim() != "") {
+        city.textContent = e.target.innerText.trim();
+        if (e.target.innerText != "") {
             localStorage.setItem("city", e.target.innerText);
             getWeather();
         } else {
@@ -292,8 +328,8 @@ async function getQuote() {
     if (data.quote.length > 260) {
         getQuote();
     } else {
-        blockquote.innerHTML = ` <i> ${data.quote} </i> `;
-        figcaption.innerHTML = ` <i> ${data.author} </i> `;
+        blockquote.innerHTML = `<span> <i> ${data.quote} </i> </span>`;
+        figcaption.innerHTML = `<span> <i> ${data.author} </i> </span>`;
     }
 }
 
@@ -335,7 +371,6 @@ btnQuote.addEventListener("click", getQuote);
 city.addEventListener("keypress", setCity);
 city.addEventListener("blur", setCity);
 city.addEventListener("focus", setCity);
-// Run
 
 city.addEventListener("keydown", (event) => {
     if (city.innerText.length === 25 && event.keyCode != 8) {
