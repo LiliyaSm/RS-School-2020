@@ -21,6 +21,12 @@ const MobileMenu = {
         this.header.classList.toggle("flex-end");
         document.body.classList.toggle("no-scroll");
 
+        if (this.logo.style.marginRight === "40px"){
+            this.logo.style.marginRight = "0";
+        } else {
+            this.logo.style.marginRight = "40px";
+        }
+
        
 
     },
@@ -32,6 +38,7 @@ const MobileMenu = {
             this.menuIcon.classList.toggle("rotate");
             this.header.classList.remove("flex-end");
             document.body.classList.remove("no-scroll");
+            this.logo.style.marginRight = "0";
         }
     },
 };

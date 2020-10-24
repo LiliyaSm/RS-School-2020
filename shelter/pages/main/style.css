@@ -170,7 +170,7 @@ p {
 .logo {
     z-index: 101;
     transition: all 1s ease-in;
-    margin-right: 4rem;
+    /* margin-right: 4rem; */
 }
 
 header .logo-title {
@@ -267,7 +267,7 @@ header .logo-subtitle {
 }
 
 .about-text {
-    max-width: 43rem;
+    max-width: 40rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -456,6 +456,9 @@ header .logo-subtitle {
     width: fit-content;
     margin-top: 2rem;
 }
+
+.donation-text h4:hover {
+    background-color: #fddcc4;}
 
 .donation-text h3 {
     width: 30rem;

@@ -4,7 +4,6 @@ import { Popup } from "../main/Popup.js";
 async function getJSON() {
     const response = await fetch("../pets.json");
     const data = await response.json();
-    console.log(data);
     return data;
 }
 
@@ -81,7 +80,7 @@ const Slider = {
             this.shufflePets = this.shufflePets.concat(arr);
         }
 
-        console.log(this.shufflePets);
+        // console.log(this.shufflePets);
 
         window.addEventListener("resize", (e) => {
             this.resizeSlider(e);
@@ -267,4 +266,11 @@ window.addEventListener("DOMContentLoaded", async function () {
             changeHeaderStyle();
             overlay.classList.toggle("hide");
         });
+
+    document.querySelector(".active").addEventListener("click", () => {
+        MobileMenu.closeMenu();
+        if (!overlay.classList.contains("hide")) {
+            overlay.classList.add("hide");
+        }
+    });
 });

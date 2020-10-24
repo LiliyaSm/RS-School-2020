@@ -4,7 +4,6 @@ import { Popup } from "./Popup.js";
 async function getJSON() {
     const response = await fetch("../pets.json");
     const data = await response.json();
-    console.log(data);
     return data;
 }
 
@@ -168,5 +167,12 @@ window.addEventListener("DOMContentLoaded", async function () {
         link.addEventListener("click", () => {
             location.href = "../pets/pets.html";
         });
+    });
+
+    document.querySelector(".active").addEventListener("click", () => {
+        MobileMenu.closeMenu();
+        if (!overlay.classList.contains("hide")) {
+            overlay.classList.add("hide");
+        }
     });
 });
