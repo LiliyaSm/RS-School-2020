@@ -62,20 +62,20 @@ h2 {
 .btnQuote {
     background-image: linear-gradient(
         to right,
-        #25aae188,
-        #4481eb88,
-        #04befe88,
-        #3f86ed88
+        #25a9e1d0,
+        #4481ebc9,
+        #04c0fec4,
+        #3f85edcb
     );
 }
 
 .btnImage {
     background-image: linear-gradient(
         to right,
-        #fc607570,
-        #ff9b4460,
-        #ef9c4365,
-        #e7551663
+        #fc6075b9,
+        #ff9b44c5,
+        #ef9c43c0,
+        #e75516bd
     );
 }
 
@@ -176,11 +176,13 @@ button:focus {
     left: 20px;
     width: 160px;
     border-radius: 15px;
-    background-color: rgba(226, 226, 226, 0.425);
+    // background-color: rgba(226, 226, 226, 0.425);
+    background-color:  #52515294;
+    font-size: 14px;
 }
 
 figure span {
-    background-color: rgba(226, 226, 226, 0.425);
+    background-color: #52515294;
     border-radius: 5px;
     padding: 4px;
 }
@@ -191,10 +193,6 @@ figure span {
 
 button:focus {
     outline: none;
-}
-
-.weather {
-    font-size: 13px;
 }
 
 @media screen and (max-width: 991px) {
