@@ -170,7 +170,6 @@ p {
 .logo {
     z-index: 101;
     transition: all 1s ease-in;
-    /* margin-right: 4rem; */
 }
 
 header .logo-title {
