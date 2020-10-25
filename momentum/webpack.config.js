@@ -10,8 +10,7 @@ module.exports = {
     entry: ["./src/index.js", "./src/scss/style.scss"],
     output: {
         filename: "main.js",
-        path: path.resolve(__dirname, "dist"),
-        publicPath: "/",
+        path: path.resolve(__dirname, "dist")
     },
     module: {
         rules: [
