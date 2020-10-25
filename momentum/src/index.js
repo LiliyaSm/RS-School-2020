@@ -117,7 +117,7 @@ class Momentum {
 
         if (min === 0 && sec === 0) {
             //every hour
-            console.log(hour, min, sec);
+            // console.log(hour, min, sec);
             this.setBSeason();
             this.loadByNumber(true);
             getWeather(); // update the weather
@@ -141,22 +141,18 @@ class Momentum {
             // Morning
             this.seasonNumber = 0;
             greeting.textContent = "Good Morning, ";
-            console.log("Good Morning, ");
         } else if (hour < 6) {
             //night
             this.seasonNumber = 3;
             greeting.textContent = "Good Night, ";
-            console.log("Good Night, ");
         } else if (hour < 18) {
             // Day
             this.seasonNumber = 1;
             greeting.textContent = "Good Afternoon, ";
-            console.log("Good Afternoon, ");
         } else {
             // Evening
             this.seasonNumber = 2;
             greeting.textContent = "Good Evening, ";
-            console.log("Good Evening, ");
         }
 
         if (currSeason !== this.seasonNumber) {
@@ -191,12 +187,11 @@ class Momentum {
                 this.i = this.i - imagesSet;
             }
         }
-        console.log(this.i);
-        console.log(season);
+        // console.log(this.i);
+        // console.log(season);
 
         let randomNumber = this.shuffleArray[this.i];
-        console.log(randomNumber);
-        console.log(this.shuffleArray);
+        // console.log(randomNumber);
         this.i = this.i + 1;
 
         let formatNumber = (randomNumber < 10 ? "0" : "") + randomNumber;
@@ -322,13 +317,13 @@ function setCity(e) {
 
 // get quotes
 async function getQuote() {
-    const url = `http://quotes.stormconsultancy.co.uk/random.json`;
+    const url = `https://programming-quotes-api.herokuapp.com/quotes/random/lang/sr`;
     const res = await fetch(url);
     const data = await res.json();
-    if (data.quote.length > 200) {
+    if (data.en.length > 200) {
         getQuote();
     } else {
-        blockquote.innerHTML = `<span> <i> ${data.quote} </i> </span>`;
+        blockquote.innerHTML = `<span> <i> ${data.en} </i> </span>`;
         figcaption.innerHTML = `<span> <i> ${data.author} </i> </span>`;
     }
 }
