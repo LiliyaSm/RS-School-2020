@@ -177,7 +177,7 @@ button:focus {
     width: 160px;
     border-radius: 15px;
     // background-color: rgba(226, 226, 226, 0.425);
-    background-color:  #52515294;
+    background-color: #52515294;
     font-size: 14px;
 }
 
@@ -200,10 +200,6 @@ button:focus {
         font-size: 6rem;
     }
 
-    .weather {
-        margin-top: 110px;
-    }
-
     h1,
     h2 {
         font-size: 1.5rem;
@@ -218,7 +214,7 @@ button:focus {
         height: 8rem;
     }
     figcaption {
-        font-size: 0.8rem;
+        font-size: 0.9rem;
     }
 
     .btn {
@@ -230,16 +226,25 @@ button:focus {
     }
 
     .weather {
-        font-size: 12px;
+        font-size: 14px;
         left: 50%;
         transform: translateX(-50%);
+        margin-top: 110px;
+        bottom: 5px;
     }
+
     .city {
         margin-bottom: 0;
+        margin-top: 0.3rem;
+
     }
 
     figure span {
         padding: 3px;
+    }
+
+    .owf-3x {
+        font-size: 1em;
     }
 }
 
@@ -248,8 +253,9 @@ button:focus {
         margin: 10px 0 15px 0;
     }
     figure {
-        font-size: 0.8rem;
+        font-size: 0.9rem;
         height: 6rem;
+        line-height: 1.4;
     }
 
     .time {
@@ -286,4 +292,5 @@ button:focus {
     blockquote {
         margin: 0 0 0.4rem;
     }
+    
 }

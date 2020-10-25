@@ -325,7 +325,7 @@ async function getQuote() {
     const url = `http://quotes.stormconsultancy.co.uk/random.json`;
     const res = await fetch(url);
     const data = await res.json();
-    if (data.quote.length > 260) {
+    if (data.quote.length > 200) {
         getQuote();
     } else {
         blockquote.innerHTML = `<span> <i> ${data.quote} </i> </span>`;
