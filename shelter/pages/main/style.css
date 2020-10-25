@@ -18,8 +18,8 @@ body {
 }
 
 body {
-    overflow: hidden auto;
-    position: relative;
+    /* overflow: hidden auto; */
+    /* position: relative; */
 }
 
 .no-scroll {
@@ -583,6 +583,11 @@ footer img {
 .mobile-menu {
     width: 320px;
     height: 823px;
+    position: absolute;
+    visibility: hidden;
+    background: #292929;
+    top: 0;
+    z-index: 100;
 }
 
 .mobile-menu ul {
@@ -611,23 +616,15 @@ footer img {
 }
 
 .slide {
-    position: absolute;
-    background: #292929;
-    top: 0;
     right: 0px;
-    transition: right 1s ease;
-    z-index: 100;
+    visibility: visible;
+    transition: all 1s ease;
 }
 
 .hide-menu {
-    position: absolute;
-    background: #292929;
-    top: 0;
-    opacity: 1;
-    overflow: hidden;
     right: -1000px;
-    transition: right 2s ease;
-    z-index: 100;
+    visibility: hidden;
+    transition: all 2s ease;
 }
 
 .overlay,
