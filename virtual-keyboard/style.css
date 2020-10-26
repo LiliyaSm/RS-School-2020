@@ -58,12 +58,12 @@ body {
 }
 
 .keyboard__key--extra-wide {
-    width: 36%;
-    max-width: 500px;
+    width: 39%;
+    max-width: 570px;
 }
 
 .keyboard__key--activatable::after {
-    content: '';
+    content: "";
     top: 10px;
     right: 10px;
     position: absolute;
@@ -81,8 +81,7 @@ body {
     background: rgba(0, 0, 0, 0.25);
 }
 
-
-.use-keyboard-input{
+.use-keyboard-input {
     min-height: 45vh;
     font-size: 24px;
     resize: none;
@@ -91,9 +90,7 @@ body {
     border-radius: 20px;
     padding: 5px;
     background-color: #ffffff;
-
 }
-
 
 .pressed-button {
     background-color: #ffffff;

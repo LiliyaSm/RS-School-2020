@@ -1,5 +1,83 @@
 import language from "./layouts/index.js"; // { en, ru }
 
+const rowsOrder = [
+    [
+        "Backquote",
+        "Digit1",
+        "Digit2",
+        "Digit3",
+        "Digit4",
+        "Digit5",
+        "Digit6",
+        "Digit7",
+        "Digit8",
+        "Digit9",
+        "Digit0",
+        "Minus",
+        "Equal",
+        "Delete",
+    ],
+    [
+        "Tab",
+        "KeyQ",
+        "KeyW",
+        "KeyE",
+        "KeyR",
+        "KeyT",
+        "KeyY",
+        "KeyU",
+        "KeyI",
+        "KeyO",
+        "KeyP",
+        "BracketLeft",
+        "BracketRight",
+        "Backspace",
+    ],
+    [
+        "CapsLock",
+        "KeyA",
+        "KeyS",
+        "KeyD",
+        "KeyF",
+        "KeyG",
+        "KeyH",
+        "KeyJ",
+        "KeyK",
+        "KeyL",
+        "Semicolon",
+        "Quote",
+        "Backslash",
+        "Enter",
+    ],
+    [
+        "ShiftLeft",
+        "Done",
+        "KeyZ",
+        "KeyX",
+        "KeyC",
+        "KeyV",
+        "KeyB",
+        "KeyN",
+        "KeyM",
+        "Comma",
+        "Period",
+        "Slash",
+        "ArrowUp",
+        "ShiftRight",
+    ],
+    [
+        "ControlLeft",
+        "Win",
+        "AltLeft",
+        "Space",
+        "AltRight",
+        "ControlRight",
+        "ArrowLeft",
+        "ArrowDown",
+        "ArrowRight",
+    ],
+];
+
 const Keyboard = {
     elements: {
         main: null,
@@ -58,352 +136,169 @@ const Keyboard = {
 
     _createKeys() {
         const fragment = document.createDocumentFragment();
-        const keyLayout = {
-            // 1: {
-            //     text: "1",
-            //     event: "Digit1",
-            // },
-            // 2: {
-            //     text: "2",
-            //     event: "Digit2",
-            // },
-            // 3: {
-            //     text: "3",
-            //     event: "Digit3",
-            // },
-            // 4: {
-            //     text: "4",
-            //     event: "Digit4",
-            // },
-            // 5: {
-            //     text: "5",
-            //     event: "Digit5",
-            // },
-            // 6: {
-            //     text: "6",
-            //     event: "Digit6",
-            // },
-            // 7: {
-            //     text: "7",
-            //     event: "Digit6",
-            // },
-            // 8: {
-            //     text: "8",
-            //     event: "Digit6",
-            // },
-            // 9: {
-            //     text: "9",
-            //     event: "Digit9",
-            // },
-            // 0: {
-            //     text: "0",
-            //     event: "Digit0",
-            // },
-            // "-": {
-            //     text: "-",
-            //     event: "Minus",
-            // },
-            // "=": {
-            //     text: "=",
-            //     event: "Equal",
-            // },
-            // backspace: {
-            //     text: "Backspace",
-            //     event: "Backspace",
-            // },
-            // q: {
-            //     text: "q",
-            //     event: "KeyQ",
-            // },
-            // w: {
-            //     text: "w",
-            //     event: "KeyW",
-            // },
-            // e: {
-            //     text: "e",
-            //     event: "KeyE",
-            // },
-            // r: {
-            //     text: "r",
-            //     event: "KeyR",
-            // },
-            // t: {
-            //     text: "t",
-            //     event: "KeyT",
-            // },
-            // y: {
-            //     text: "y",
-            //     event: "KeyY",
-            // },
-            // u: {
-            //     text: "u",
-            //     event: "KeyU",
-            // },
-            // i: {
-            //     text: "i",
-            //     event: "KeyI",
-            // },
-            // o: {
-            //     text: "o",
-            //     event: "KeyO",
-            // },
-            // p: {
-            //     text: "p",
-            //     event: "KeyP",
-            // },
-            // caps: {
-            //     text: "Caps lock",
-            //     event: "CapsLock",
-            // },
-            // a: {
-            //     text: "a",
-            //     event: "KeyA",
-            // },
-            // s: {
-            //     text: "s",
-            //     event: "KeyS",
-            // },
-            // d: {
-            //     text: "d",
-            //     event: "KeyD",
-            // },
-            // f: {
-            //     text: "f",
-            //     event: "KeyF",
-            // },
-            // g: {
-            //     text: "g",
-            //     event: "KeyG",
-            // },
-            // h: {
-            //     text: "h",
-            //     event: "KeyH",
-            // },
-            // j: {
-            //     text: "j",
-            //     event: "KeyJ",
-            // },
-            // k: {
-            //     text: "k",
-            //     event: "KeyK",
-            // },
-            // l: {
-            //     text: "l",
-            //     event: "KeyL",
-            // },
-            // enter: {
-            //     text: "Enter",
-            //     event: "Enter",
-            // },
-            // done: {
-            //     text: "Close Keyboard",
-            //     event: "",
-            // },
-            // shift: {
-            //     text: "Shift",
-            //     event: "ShiftLeft",
-            // },
-            // z: {
-            //     text: "z",
-            //     event: "KeyZ",
-            // },
-            // x: {
-            //     text: "x",
-            //     event: "KeyX",
-            // },
-            // c: {
-            //     text: "c",
-            //     event: "KeyC",
-            // },
-            // v: {
-            //     text: "v",
-            //     event: "KeyV",
-            // },
-            // b: {
-            //     text: "b",
-            //     event: "KeyB",
-            // },
-            // n: {
-            //     text: "n",
-            //     event: "KeyN",
-            // },
-            // m: {
-            //     text: "m",
-            //     event: "KeyM",
-            // },
-            // ",": {
-            //     text: ",",
-            //     event: "Comma",
-            // },
-            // ".": {
-            //     text: ".",
-            //     event: "Period",
-            // },
-            // "/": {
-            //     text: "/",
-            //     event: "Slash",
-            // },
-            // shift: {
-            //     text: "Shift",
-            //     event: "ShiftRight",
-            // },
-            // up: {
-            //     text: "&#8593;",
-            //     event: "ArrowUp",
-            // },
-            // space: {
-            //     text: "",
-            //     event: "Space",
-            // },
-        };
 
         // Creates HTML for an icon
         const createIconHTML = (icon_name) => {
             return `<i class="material-icons">${icon_name}</i>`;
         };
 
-        this.keyLayout.forEach((value) => {
-            const keyElement = document.createElement("button");
-            const insertLineBreak =
-                ["Backspace", "p", "Enter", "&uarr;"].indexOf(value.small) !==
-                -1;
+        rowsOrder.forEach((row, i) => {
+            let div = document.createElement("div");
+            // const insertLineBreak =
+            //     [
+            //         "Delete",
+            //         "Backspace",
+            //         "Enter",
+            //         "ShiftRight",
+            //         "ControlRight",
+            //     ].indexOf(value.small) !== -1;
 
-            // Add attributes/classes
-            keyElement.setAttribute("type", "button");
-            keyElement.classList.add("keyboard__key");
+            row.forEach((code) => {
+                const keyElement = document.createElement("button");
+                const keyObj = this.keyLayout.find((key) => key.code === code);
+                // Add attributes/classes
+                keyElement.setAttribute("type", "button");
+                keyElement.classList.add("keyboard__key");
 
-            switch (value.small) {
-                case "Backspace":
-                    keyElement.classList.add("keyboard__key--wide");
-                    keyElement.innerHTML = value.text;
-                    keyElement.setAttribute("data-code", "Backspace");
+                if (keyObj) {
+                    switch (keyObj.code) {
+                        case "Backspace":
+                            keyElement.classList.add("keyboard__key--wide");
+                            keyElement.innerHTML = keyObj.small;
+                            keyElement.setAttribute("data-code", "Backspace");
 
-                    keyElement.addEventListener("click", () => {
-                        let caretPos = this.elements.inputField.selectionStart;
-                        let str = this.properties.value;
+                            keyElement.addEventListener("click", () => {
+                                let caretPos = this.elements.inputField
+                                    .selectionStart;
+                                let str = this.properties.value;
 
-                        this.properties.value =
-                            str.substring(0, caretPos - 1) +
-                            str.substring(caretPos);
-                        this._triggerEvent("oninput");
+                                this.properties.value =
+                                    str.substring(0, caretPos - 1) +
+                                    str.substring(caretPos);
+                                this._triggerEvent("oninput");
 
-                        this.elements.inputField.focus();
+                                this.elements.inputField.focus();
 
-                        // Start: This parameter holds the index of the first selected character. The index value greater than the length of the element pointing to the end value.
-                        // End: This parameter holds the index of the character after the last selected character. The index value greater than the length of the element pointing to the end value.
-                        this.elements.inputField.setSelectionRange(
-                            caretPos - 1,
-                            caretPos - 1
-                        );
-                    });
+                                // Start: This parameter holds the index of the first selected character. The index value greater than the length of the element pointing to the end value.
+                                // End: This parameter holds the index of the character after the last selected character. The index value greater than the length of the element pointing to the end value.
+                                this.elements.inputField.setSelectionRange(
+                                    caretPos - 1,
+                                    caretPos - 1
+                                );
+                            });
 
-                    break;
+                            break;
 
-                case "caps":
-                    keyElement.classList.add(
-                        "keyboard__key--wide",
-                        "keyboard__key--activatable"
-                    );
-                    // keyElement.innerHTML = createIconHTML("keyboard_capslock");
+                        case "CapsLock":
+                            keyElement.classList.add(
+                                "keyboard__key--wide",
+                                "keyboard__key--activatable"
+                            );
+                            // keyElement.innerHTML = createIconHTML("keyboard_capslock");
 
-                    keyElement.addEventListener("click", () => {
-                        this._toggleCapsLock();
-                        keyElement.classList.toggle(
-                            "keyboard__key--active",
-                            this.properties.capsLock
-                        );
-                    });
+                            keyElement.addEventListener("click", () => {
+                                this._toggleCapsLock();
+                                keyElement.classList.toggle(
+                                    "keyboard__key--active",
+                                    this.properties.capsLock
+                                );
+                            });
 
-                    break;
+                            break;
 
-                case "enter":
-                    keyElement.classList.add("keyboard__key--wide");
-                    keyElement.innerHTML = "Enter";
-                    keyElement.setAttribute("data-code", "Enter");
+                        case "Enter":
+                            keyElement.classList.add("keyboard__key--wide");
+                            keyElement.innerHTML = keyObj.small;
+                            keyElement.setAttribute("data-code", keyObj.small);
 
-                    keyElement.addEventListener("click", (e) => {
-                        this.characterInput("\n");
-                    });
+                            keyElement.addEventListener("click", (e) => {
+                                this.characterInput("\n");
+                            });
 
-                    break;
+                            break;
 
-                case "up":
-                    keyElement.classList.add("keyboard__key--wide");
-                    // keyElement.innerHTML = createIconHTML("keyboard_return");
-                    keyElement.innerHTML = "&#8593;";
+                        case "Tab":
+                            keyElement.classList.add("keyboard__key--wide");
+                            keyElement.innerHTML = keyObj.small;
+                            keyElement.setAttribute("data-code", keyObj.small);
 
-                    keyElement.addEventListener("click", () => {
-                        this._triggerEvent("oninput");
-                    });
+                            keyElement.addEventListener("click", (e) => {
+                                this.characterInput("\t");
+                            });
 
-                    break;
+                            break;
 
-                case "space":
-                    keyElement.classList.add("keyboard__key--extra-wide");
-                    keyElement.setAttribute("data-code", "Space");
+                        case "Space":
+                            keyElement.classList.add(
+                                "keyboard__key--extra-wide"
+                            );
+                            keyElement.innerHTML = keyObj.small;
+                            keyElement.setAttribute("data-code", keyObj.small);
 
-                    keyElement.addEventListener("click", () => {
-                        this.characterInput(" ");
-                    });
+                            keyElement.addEventListener("click", () => {
+                                this.characterInput(" ");
+                            });
 
-                    break;
+                            break;
 
-                case "Close keyboard":
-                    keyElement.classList.add(
-                        "keyboard__key--wide",
-                        "keyboard__key--dark"
-                    );
-                    keyElement.innerHTML = createIconHTML("check_circle");
+                        case "Done":
+                            keyElement.classList.add(
+                                "keyboard__key--wide",
+                                "keyboard__key--dark"
+                            );
+                            keyElement.innerHTML = createIconHTML(
+                                "check_circle"
+                            );
 
-                    keyElement.addEventListener("click", () => {
-                        this.close();
-                        this._triggerEvent("onclose");
-                    });
-                    
-                    break;
+                            keyElement.addEventListener("click", () => {
+                                this.close();
+                                this._triggerEvent("onclose");
+                            });
 
-                case "shift":
-                    keyElement.classList.add("keyboard__key--wide");
-                    keyElement.textContent = "Shift";
+                            break;
 
-                    keyElement.addEventListener("click", () => {});
+                        case "shift":
+                            keyElement.classList.add("keyboard__key--wide");
+                            keyElement.textContent = "Shift";
 
-                    break;
+                            keyElement.addEventListener("click", () => {});
 
-         
-                default:
-                    // keyElement.textContent = key.toLowerCase();
-                    // event.code;
-                    keyElement.innerHTML = value.small;
+                            break;
 
-                    // if (isNaN(key)) {
-                    // let dataAttr = `Key${key.toUpperCase()}`;
-                    keyElement.setAttribute("data-code", value.code);
+                        default:
+                            // keyElement.textContent = key.toLowerCase();
+                            // event.code;
+                            keyElement.innerHTML = keyObj.small;
 
-                    let key = this.properties.capsLock
-                        ? value.small.toUpperCase()
-                        : value.small.toLowerCase();
+                            // if (isNaN(key)) {
+                            // let dataAttr = `Key${key.toUpperCase()}`;
+                            keyElement.setAttribute("data-code", keyObj.code);
 
-                    keyElement.addEventListener("click", () => {
-                        this.characterInput(key);
-                    });
-                    // } else {
-                    // let dataAttr = `Digit${key}`;
-                    // keyElement.setAttribute("data-code", dataAttr);
+                            let key = this.properties.capsLock
+                                ? keyObj.small.toUpperCase()
+                                : keyObj.small.toLowerCase();
 
-                    // keyElement.addEventListener("click", () => {
-                    //     this.characterInput(key);
-                    // });
-                    // }
+                            keyElement.addEventListener("click", () => {
+                                this.characterInput(key);
+                            });
+                            // } else {
+                            // let dataAttr = `Digit${key}`;
+                            // keyElement.setAttribute("data-code", dataAttr);
 
-                    break;
-            }
+                            // keyElement.addEventListener("click", () => {
+                            //     this.characterInput(key);
+                            // });
+                            // }
 
-            fragment.appendChild(keyElement);
+                            break;
+                    }
 
-            if (insertLineBreak) {
-                fragment.appendChild(document.createElement("br"));
-            }
+                    div.appendChild(keyElement);
+                }
+            });
+
+            // div.appendChild(document.createElement("br"));
+            fragment.appendChild(div);
         });
 
         return fragment;

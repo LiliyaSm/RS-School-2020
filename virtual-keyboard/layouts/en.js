@@ -64,11 +64,7 @@ export default [
         shift: "+",
         code: "Equal",
     },
-    {
-        small: "Backspace",
-        shift: null,
-        code: "Backspace",
-    },
+
     {
         small: "Delete",
         shift: null,
@@ -139,10 +135,11 @@ export default [
         shift: "}",
         code: "BracketRight",
     },
+
     {
-        small: "Enter",
+        small: "Backspace",
         shift: null,
-        code: "Enter",
+        code: "Backspace",
     },
 
     {
@@ -150,7 +147,7 @@ export default [
         event: null,
         code: null,
     },
-    
+
     {
         small: "CapsLock",
         shift: null,
@@ -217,14 +214,19 @@ export default [
         code: "Backslash",
     },
     {
+        small: "Enter",
+        shift: null,
+        code: "Enter",
+    },
+    {
         small: "Shift",
         shift: null,
         code: "ShiftLeft",
     },
     {
-        small: "<",
-        shift: ">",
-        code: "IntlBackslash",
+        small: "Close ",
+        shift: null,
+        code: "Done",
     },
     {
         small: "z",
