@@ -17,11 +17,6 @@ body {
     max-width: 100%;
 }
 
-body {
-    /* overflow: hidden auto; */
-    /* position: relative; */
-}
-
 .no-scroll {
     overflow: hidden;
 }
@@ -583,7 +578,7 @@ footer img {
 .mobile-menu {
     width: 320px;
     height: 823px;
-    position: absolute;
+    position: fixed;
     visibility: hidden;
     background: #292929;
     top: 0;
@@ -887,7 +882,6 @@ strong {
         padding-top: 11px;
         padding-right: 3px;
         box-sizing: border-box;
-        /* top: 51.7%; */
     }
 
     .popup-text {
