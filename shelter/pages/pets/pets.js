@@ -17,15 +17,12 @@ function changeHeaderStyle() {
     let mobileMenu = document.querySelector(".mobile-menu");
 
     if (
-        style.getPropertyValue("position") === "sticky" &&
         mobileMenu.classList.contains("slide")
     ) {
-        header.style.position = "static";
         logoTitle.style.color = "#f1cdb3";
         logoSubTitle.style.color = "#ffffff";
         bars.forEach((bar) => (bar.style.backgroundColor = "#f1cdb3"));
     } else {
-        header.style.position = "sticky";
         logoTitle.style.color = "#545454";
         logoSubTitle.style.color = "#292929";
         bars.forEach((bar) => (bar.style.backgroundColor = "#000000"));

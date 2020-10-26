@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="viewport" content="width=device-width, minimum-scale=1.0" />
         <meta http-equiv="x-ua-compatible" content="ie=edge" />
         <link
             rel="stylesheet"
@@ -17,17 +17,17 @@
             crossorigin="anonymous"
         />
         <link rel="stylesheet" href="pets.css" />
-        <link rel="icon" href="../../assets/icons/favicon.ico">
+        <link rel="icon" href="../../assets/icons/favicon.ico" />
         <title>shelter</title>
         <script type="module" src="pets.js"></script>
-
     </head>
 
     <body>
-        <div class="overlay hide"></div>
         <div class="overlay-popup hide"></div>
         <header>
             <div class="site-header">
+                <div class="overlay hide"></div>
+
                 <a href="../main/main.html" class="logo">
                     <div class="logo-title">Cozy House</div>
                     <div class="logo-subtitle">Shelter for pets in Boston</div>
@@ -37,28 +37,48 @@
                         <li>
                             <a href="../main/main.html">About the shelter</a>
                         </li>
-                        <li class="active"><a href="../pets/pets.html">Our pets</a></li>
-                        <li><a class ="disabledLink" href="javascript: void(0)">Help the shelter</a></li>
-                        <li><a class ="disabledLink" href="javascript: void(0)">Contacts</a></li>
+                        <li class="active">
+                            <a href="../pets/pets.html">Our pets</a>
+                        </li>
+                        <li>
+                            <a class="disabledLink" href="javascript: void(0)"
+                                >Help the shelter</a
+                            >
+                        </li>
+                        <li>
+                            <a class="disabledLink" href="javascript: void(0)"
+                                >Contacts</a
+                            >
+                        </li>
                     </ul>
                 </nav>
 
-                 <div class="menu-icon hide">
-                        <div class="bar1"></div>
-                        <div class="bar2"></div>
-                        <div class="bar3"></div>
-                    </div>
+                <div class="menu-icon hide">
+                    <div class="bar1"></div>
+                    <div class="bar2"></div>
+                    <div class="bar3"></div>
+                </div>
 
-                    <nav class="mobile-menu hide-menu">                        
-                        <ul>
-                            <li >
-                                <a href="../main/main.html">About the shelter</a>
-                            </li>
-                            <li class="active"><a href="../pets/pets.html">Our pets</a></li>
-                            <li><a class ="disabledLink" href="javascript: void(0)">Help the shelter</a></li>
-                            <li><a class ="disabledLink" href="javascript: void(0)">Contacts</a></li>
-                        </ul>
-                    </nav>
+                <nav class="mobile-menu hide-menu">
+                    <ul>
+                        <li>
+                            <a href="../main/main.html">About the shelter</a>
+                        </li>
+                        <li class="active">
+                            <a href="../pets/pets.html">Our pets</a>
+                        </li>
+                        <li>
+                            <a class="disabledLink" href="javascript: void(0)"
+                                >Help the shelter</a
+                            >
+                        </li>
+                        <li>
+                            <a class="disabledLink" href="javascript: void(0)"
+                                >Contacts</a
+                            >
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </header>
         <main>
@@ -70,7 +90,7 @@
                             are looking for a house
                         </h3>
                     </div>
-                    <div class="slider">                       
+                    <div class="slider">
                         <div class="buttons">
                             <button class="btn-pagination-left-end">
                                 <svg
@@ -263,21 +283,37 @@
         </footer>
         <template>
             <div>
-                <div class = "img-wrapper"><img src="../../assets/images/Jennifer.png" alt=""></div>
-                <div class = "popup-text">
+                <div class="img-wrapper">
+                    <img src="../../assets/images/Jennifer.png" alt="" />
+                </div>
+                <div class="popup-text">
                     <h3>Jennifer</h3>
                     <h4>Dog - Labrador</h4>
-                    <h5>Jennifer is a sweet 2 months old Labrador that is patiently waiting to find a new forever home. This girl really enjoys being able to go outside to run and play, but won't hesitate to play up a storm in the house if she has all of her favorite toys.</h5>
+                    <h5>
+                        Jennifer is a sweet 2 months old Labrador that is
+                        patiently waiting to find a new forever home. This girl
+                        really enjoys being able to go outside to run and play,
+                        but won't hesitate to play up a storm in the house if
+                        she has all of her favorite toys.
+                    </h5>
                     <ul>
-                        
-                        <li class = "age"><strong>Age:</strong> 2 months</li>
-                        <li class = "inoculations"><strong>Inoculations:</strong> none</li>
-                        <li class = "diseases" ><strong>Diseases:</strong> none</li>
-                        <li class = "parasites"><strong>Parasites:</strong> none</li>
-        
+                        <li class="age"><strong>Age:</strong> 2 months</li>
+                        <li class="inoculations">
+                            <strong>Inoculations:</strong> none
+                        </li>
+                        <li class="diseases">
+                            <strong>Diseases:</strong> none
+                        </li>
+                        <li class="parasites">
+                            <strong>Parasites:</strong> none
+                        </li>
+
                         <button class="close-popup">
-                            <img src="../../assets/icons/close.svg" alt="close">
-                        </button>        
+                            <img
+                                src="../../assets/icons/close.svg"
+                                alt="close"
+                            />
+                        </button>
                     </ul>
                 </div>
             </div>

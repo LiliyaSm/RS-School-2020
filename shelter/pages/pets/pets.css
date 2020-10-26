@@ -430,7 +430,7 @@ footer img {
 .mobile-menu {
     width: 320px;
     height: 823px;
-    position: static;
+    position: fixed;
     z-index: 101;
     background: #292929;
     top: 0;
@@ -468,7 +468,6 @@ footer img {
 }
 
 .slide {
-    position: absolute;
     right: 0px;
     transition: all 1s ease;
     z-index: 100;
@@ -477,10 +476,9 @@ footer img {
 
 .hide-menu {
     visibility: hidden;
-    position: absolute;
     overflow: hidden;
-    right: -1000px;
-    transition: all 2s ease;
+    right: -100%;
+    transition: all 1s ease;
     z-index: 100;
 }
 
@@ -494,6 +492,8 @@ footer img {
 
 .overlay {
     z-index: 99;
+    top: 0;
+    left: 0;
 }
 
 .overlay-popup {
