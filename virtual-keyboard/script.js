@@ -53,62 +53,217 @@ const Keyboard = {
 
     _createKeys() {
         const fragment = document.createDocumentFragment();
-        const keyLayout = [
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "0",
-            "backspace",
-            "q",
-            "w",
-            "e",
-            "r",
-            "t",
-            "y",
-            "u",
-            "i",
-            "o",
-            "p",
-            "caps",
-            "a",
-            "s",
-            "d",
-            "f",
-            "g",
-            "h",
-            "j",
-            "k",
-            "l",
-            "enter",
-            "done",
-            "shift",
-            "z",
-            "x",
-            "c",
-            "v",
-            "b",
-            "n",
-            "m",
-            ",",
-            ".",
-            "/",
-            "shift",
-            "up",
-            "space",
-        ];
+        const keyLayout = {
+            1: {
+                text: "1",
+                event: "Digit1",
+            },
+            2: {
+                text: "2",
+                event: "Digit2",
+            },
+            3: {
+                text: "3",
+                event: "Digit3",
+            },
+            4: {
+                text: "4",
+                event: "Digit4",
+            },
+            5: {
+                text: "5",
+                event: "Digit5",
+            },
+            6: {
+                text: "6",
+                event: "Digit6",
+            },
+            7: {
+                text: "7",
+                event: "Digit6",
+            },
+            8: {
+                text: "8",
+                event: "Digit6",
+            },
+            9: {
+                text: "9",
+                event: "Digit9",
+            },
+            0: {
+                text: "0",
+                event: "Digit0",
+            },
+            "-": {
+                text: "-",
+                event: "Minus",
+            },
+
+            "=": {
+                text: "=",
+                event: "Equal",
+            },
+
+            backspace: {
+                text: "Backspace",
+                event: "Backspace",
+            },
+            q: {
+                text: "q",
+                event: "KeyQ",
+            },
+            w: {
+                text: "w",
+                event: "KeyW",
+            },
+            e: {
+                text: "e",
+                event: "KeyE",
+            },
+            r: {
+                text: "r",
+                event: "KeyR",
+            },
+            t: {
+                text: "t",
+                event: "KeyT",
+            },
+            y: {
+                text: "y",
+                event: "KeyY",
+            },
+            u: {
+                text: "u",
+                event: "KeyU",
+            },
+            i: {
+                text: "i",
+                event: "KeyI",
+            },
+            o: {
+                text: "o",
+                event: "KeyO",
+            },
+            p: {
+                text: "p",
+                event: "KeyP",
+            },
+            caps: {
+                text: "Caps lock",
+                event: "CapsLock",
+            },
+            a: {
+                text: "a",
+                event: "KeyA",
+            },
+            s: {
+                text: "s",
+                event: "KeyS",
+            },
+            d: {
+                text: "d",
+                event: "KeyD",
+            },
+            f: {
+                text: "f",
+                event: "KeyF",
+            },
+            g: {
+                text: "g",
+                event: "KeyG",
+            },
+            h: {
+                text: "h",
+                event: "KeyH",
+            },
+            j: {
+                text: "j",
+                event: "KeyJ",
+            },
+            k: {
+                text: "k",
+                event: "KeyK",
+            },
+            l: {
+                text: "l",
+                event: "KeyL",
+            },
+            enter: {
+                text: "Enter",
+                event: "Enter",
+            },
+            done: {
+                text: "Close Keyboard",
+                event: "",
+            },
+            shift: {
+                text: "Shift",
+                event: "ShiftLeft",
+            },
+            z: {
+                text: "z",
+                event: "KeyZ",
+            },
+            x: {
+                text: "x",
+                event: "KeyX",
+            },
+            c: {
+                text: "c",
+                event: "KeyC",
+            },
+            v: {
+                text: "v",
+                event: "KeyV",
+            },
+            b: {
+                text: "b",
+                event: "KeyB",
+            },
+            n: {
+                text: "n",
+                event: "KeyN",
+            },
+            m: {
+                text: "m",
+                event: "KeyM",
+            },
+
+            ",": {
+                text: ",",
+                event: "Comma",
+            },
+
+            ".": {
+                text: ".",
+                event: "Period",
+            },
+            "/": {
+                text: "/",
+                event: "Slash",
+            },
+
+            shift: {
+                text: "Shift",
+                event: "ShiftRight",
+            },
+
+            up: {
+                text: "&#8593;",
+                event: "ArrowUp",
+            },
+            space: {
+                text: "",
+                event: "Space",
+            },
+        };
 
         // Creates HTML for an icon
         const createIconHTML = (icon_name) => {
             return `<i class="material-icons">${icon_name}</i>`;
         };
 
-        keyLayout.forEach((key) => {
+        Object.entries(keyLayout).forEach(([key,value]) => {
             const keyElement = document.createElement("button");
             const insertLineBreak =
                 ["backspace", "p", "enter", "up"].indexOf(key) !== -1;
@@ -120,15 +275,26 @@ const Keyboard = {
             switch (key) {
                 case "backspace":
                     keyElement.classList.add("keyboard__key--wide");
-                    keyElement.innerHTML = createIconHTML("backspace");
+                    keyElement.innerHTML = value.text;
                     keyElement.setAttribute("data-code", "Backspace");
 
                     keyElement.addEventListener("click", () => {
-                        this.properties.value = this.properties.value.substring(
-                            0,
-                            this.properties.value.length - 1
-                        );
+                        let caretPos = this.elements.inputField.selectionStart;
+                        let str = this.properties.value;
+
+                        this.properties.value =
+                            str.substring(0, caretPos-1) +                            
+                            str.substring(caretPos);
                         this._triggerEvent("oninput");
+
+                        this.elements.inputField.focus();
+
+                        // Start: This parameter holds the index of the first selected character. The index value greater than the length of the element pointing to the end value.
+                        // End: This parameter holds the index of the character after the last selected character. The index value greater than the length of the element pointing to the end value.
+                        this.elements.inputField.setSelectionRange(
+                            caretPos-1,
+                            caretPos-1
+                        );
                     });
 
                     break;
@@ -138,7 +304,7 @@ const Keyboard = {
                         "keyboard__key--wide",
                         "keyboard__key--activatable"
                     );
-                    keyElement.innerHTML = createIconHTML("keyboard_capslock");
+                    // keyElement.innerHTML = createIconHTML("keyboard_capslock");
 
                     keyElement.addEventListener("click", () => {
                         this._toggleCapsLock();
@@ -152,11 +318,11 @@ const Keyboard = {
 
                 case "enter":
                     keyElement.classList.add("keyboard__key--wide");
-                    keyElement.innerHTML = createIconHTML("keyboard_return");
+                    keyElement.innerHTML = "Enter";
+                    keyElement.setAttribute("data-code", "Enter");
 
-                    keyElement.addEventListener("click", () => {
-                        this.properties.value += "\n";
-                        this._triggerEvent("oninput");
+                    keyElement.addEventListener("click", (e) => {
+                        this.characterInput("\n");
                     });
 
                     break;
@@ -167,7 +333,6 @@ const Keyboard = {
                     keyElement.innerHTML = "&#8593;";
 
                     keyElement.addEventListener("click", () => {
-                        this.properties.value += "\n";
                         this._triggerEvent("oninput");
                     });
 
@@ -175,11 +340,10 @@ const Keyboard = {
 
                 case "space":
                     keyElement.classList.add("keyboard__key--extra-wide");
-                    keyElement.innerHTML = createIconHTML("space_bar");
+                    keyElement.setAttribute("data-code", "Space");
 
                     keyElement.addEventListener("click", () => {
-                        this.properties.value += " ";
-                        this._triggerEvent("oninput");
+                        this.characterInput(" ");
                     });
 
                     break;
@@ -206,27 +370,46 @@ const Keyboard = {
 
                     break;
 
-                default:
-                    keyElement.textContent = key.toLowerCase();
-                    // event.code;
+                case ",":
+                    keyElement.setAttribute("data-code", "Comma");
+                    keyElement.textContent = key;
+                    keyElement.addEventListener("click", () => {
+                        this.characterInput(key);
+                    });
+                    break;
 
-                    if (isNaN(key)) {
-                        let dataAttr = `Key${key.toUpperCase()}`;
-                        keyElement.setAttribute("data-code", dataAttr);
-                        keyElement.addEventListener("click", () => {
-                            this.properties.value += this.properties.capsLock
-                                ? key.toUpperCase()
-                                : key.toLowerCase();
-                            this._triggerEvent("oninput");
-                        });
-                    } else {
-                        let dataAttr = `Digit${key}`;
-                        keyElement.setAttribute("data-code", dataAttr);
-                        keyElement.addEventListener("click", () => {
-                            this.properties.value += key;
-                            this._triggerEvent("oninput");
-                        });
-                    }
+                case "-":
+                    keyElement.setAttribute("data-code", "Minus");
+                    keyElement.textContent = key;
+                    keyElement.addEventListener("click", () => {
+                        this.characterInput(key);
+                    });
+                    break;
+
+                default:
+                    // keyElement.textContent = key.toLowerCase();
+                    // event.code;
+                    keyElement.innerHTML = key;
+
+                    // if (isNaN(key)) {
+                    // let dataAttr = `Key${key.toUpperCase()}`;
+                    keyElement.setAttribute("data-code", value.event);
+
+                    key = this.properties.capsLock
+                        ? key.toUpperCase()
+                        : key.toLowerCase();
+
+                    keyElement.addEventListener("click", () => {
+                        this.characterInput(key);
+                    });
+                    // } else {
+                    // let dataAttr = `Digit${key}`;
+                    // keyElement.setAttribute("data-code", dataAttr);
+
+                    // keyElement.addEventListener("click", () => {
+                    //     this.characterInput(key);
+                    // });
+                    // }
 
                     break;
             }
@@ -239,6 +422,21 @@ const Keyboard = {
         });
 
         return fragment;
+    },
+
+    characterInput(symbol) {
+        let caretPos = this.elements.inputField.selectionStart;
+        let str = this.properties.value;
+
+        this.properties.value =
+            str.substring(0, caretPos) + symbol + str.substring(caretPos);
+        this._triggerEvent("oninput");
+
+        this.elements.inputField.focus();
+
+        // Start: This parameter holds the index of the first selected character. The index value greater than the length of the element pointing to the end value.
+        // End: This parameter holds the index of the character after the last selected character. The index value greater than the length of the element pointing to the end value.
+        this.elements.inputField.setSelectionRange(caretPos + 1, caretPos + 1);
     },
 
     _triggerEvent(handlerName) {
@@ -284,6 +482,7 @@ window.addEventListener("DOMContentLoaded", function () {
     window.addEventListener("keyup", function (event) {
         let pressedBtn = document.querySelector(`[data-code= ${event.code}]`);
         pressedBtn.classList.remove("pressed-button");
+        //synchronization after entering by physical keyboard
         Keyboard.properties.value = document.querySelector(
             ".use-keyboard-input"
         ).value;
