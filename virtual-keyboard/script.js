@@ -1,3 +1,5 @@
+import language from "./layouts/index.js"; // { en, ru }
+
 const Keyboard = {
     elements: {
         main: null,
@@ -12,12 +14,15 @@ const Keyboard = {
         onclose: null,
     },
 
+    keyLayout: null,
+
     properties: {
         value: "",
         capsLock: false,
     },
 
-    init() {
+    init(langCode) {
+        this.keyLayout = language[langCode];
         // Create main elements
         this.elements.main = document.createElement("div");
         this.elements.keysContainer = document.createElement("div");
@@ -54,208 +59,202 @@ const Keyboard = {
     _createKeys() {
         const fragment = document.createDocumentFragment();
         const keyLayout = {
-            1: {
-                text: "1",
-                event: "Digit1",
-            },
-            2: {
-                text: "2",
-                event: "Digit2",
-            },
-            3: {
-                text: "3",
-                event: "Digit3",
-            },
-            4: {
-                text: "4",
-                event: "Digit4",
-            },
-            5: {
-                text: "5",
-                event: "Digit5",
-            },
-            6: {
-                text: "6",
-                event: "Digit6",
-            },
-            7: {
-                text: "7",
-                event: "Digit6",
-            },
-            8: {
-                text: "8",
-                event: "Digit6",
-            },
-            9: {
-                text: "9",
-                event: "Digit9",
-            },
-            0: {
-                text: "0",
-                event: "Digit0",
-            },
-            "-": {
-                text: "-",
-                event: "Minus",
-            },
-
-            "=": {
-                text: "=",
-                event: "Equal",
-            },
-
-            backspace: {
-                text: "Backspace",
-                event: "Backspace",
-            },
-            q: {
-                text: "q",
-                event: "KeyQ",
-            },
-            w: {
-                text: "w",
-                event: "KeyW",
-            },
-            e: {
-                text: "e",
-                event: "KeyE",
-            },
-            r: {
-                text: "r",
-                event: "KeyR",
-            },
-            t: {
-                text: "t",
-                event: "KeyT",
-            },
-            y: {
-                text: "y",
-                event: "KeyY",
-            },
-            u: {
-                text: "u",
-                event: "KeyU",
-            },
-            i: {
-                text: "i",
-                event: "KeyI",
-            },
-            o: {
-                text: "o",
-                event: "KeyO",
-            },
-            p: {
-                text: "p",
-                event: "KeyP",
-            },
-            caps: {
-                text: "Caps lock",
-                event: "CapsLock",
-            },
-            a: {
-                text: "a",
-                event: "KeyA",
-            },
-            s: {
-                text: "s",
-                event: "KeyS",
-            },
-            d: {
-                text: "d",
-                event: "KeyD",
-            },
-            f: {
-                text: "f",
-                event: "KeyF",
-            },
-            g: {
-                text: "g",
-                event: "KeyG",
-            },
-            h: {
-                text: "h",
-                event: "KeyH",
-            },
-            j: {
-                text: "j",
-                event: "KeyJ",
-            },
-            k: {
-                text: "k",
-                event: "KeyK",
-            },
-            l: {
-                text: "l",
-                event: "KeyL",
-            },
-            enter: {
-                text: "Enter",
-                event: "Enter",
-            },
-            done: {
-                text: "Close Keyboard",
-                event: "",
-            },
-            shift: {
-                text: "Shift",
-                event: "ShiftLeft",
-            },
-            z: {
-                text: "z",
-                event: "KeyZ",
-            },
-            x: {
-                text: "x",
-                event: "KeyX",
-            },
-            c: {
-                text: "c",
-                event: "KeyC",
-            },
-            v: {
-                text: "v",
-                event: "KeyV",
-            },
-            b: {
-                text: "b",
-                event: "KeyB",
-            },
-            n: {
-                text: "n",
-                event: "KeyN",
-            },
-            m: {
-                text: "m",
-                event: "KeyM",
-            },
-
-            ",": {
-                text: ",",
-                event: "Comma",
-            },
-
-            ".": {
-                text: ".",
-                event: "Period",
-            },
-            "/": {
-                text: "/",
-                event: "Slash",
-            },
-
-            shift: {
-                text: "Shift",
-                event: "ShiftRight",
-            },
-
-            up: {
-                text: "&#8593;",
-                event: "ArrowUp",
-            },
-            space: {
-                text: "",
-                event: "Space",
-            },
+            // 1: {
+            //     text: "1",
+            //     event: "Digit1",
+            // },
+            // 2: {
+            //     text: "2",
+            //     event: "Digit2",
+            // },
+            // 3: {
+            //     text: "3",
+            //     event: "Digit3",
+            // },
+            // 4: {
+            //     text: "4",
+            //     event: "Digit4",
+            // },
+            // 5: {
+            //     text: "5",
+            //     event: "Digit5",
+            // },
+            // 6: {
+            //     text: "6",
+            //     event: "Digit6",
+            // },
+            // 7: {
+            //     text: "7",
+            //     event: "Digit6",
+            // },
+            // 8: {
+            //     text: "8",
+            //     event: "Digit6",
+            // },
+            // 9: {
+            //     text: "9",
+            //     event: "Digit9",
+            // },
+            // 0: {
+            //     text: "0",
+            //     event: "Digit0",
+            // },
+            // "-": {
+            //     text: "-",
+            //     event: "Minus",
+            // },
+            // "=": {
+            //     text: "=",
+            //     event: "Equal",
+            // },
+            // backspace: {
+            //     text: "Backspace",
+            //     event: "Backspace",
+            // },
+            // q: {
+            //     text: "q",
+            //     event: "KeyQ",
+            // },
+            // w: {
+            //     text: "w",
+            //     event: "KeyW",
+            // },
+            // e: {
+            //     text: "e",
+            //     event: "KeyE",
+            // },
+            // r: {
+            //     text: "r",
+            //     event: "KeyR",
+            // },
+            // t: {
+            //     text: "t",
+            //     event: "KeyT",
+            // },
+            // y: {
+            //     text: "y",
+            //     event: "KeyY",
+            // },
+            // u: {
+            //     text: "u",
+            //     event: "KeyU",
+            // },
+            // i: {
+            //     text: "i",
+            //     event: "KeyI",
+            // },
+            // o: {
+            //     text: "o",
+            //     event: "KeyO",
+            // },
+            // p: {
+            //     text: "p",
+            //     event: "KeyP",
+            // },
+            // caps: {
+            //     text: "Caps lock",
+            //     event: "CapsLock",
+            // },
+            // a: {
+            //     text: "a",
+            //     event: "KeyA",
+            // },
+            // s: {
+            //     text: "s",
+            //     event: "KeyS",
+            // },
+            // d: {
+            //     text: "d",
+            //     event: "KeyD",
+            // },
+            // f: {
+            //     text: "f",
+            //     event: "KeyF",
+            // },
+            // g: {
+            //     text: "g",
+            //     event: "KeyG",
+            // },
+            // h: {
+            //     text: "h",
+            //     event: "KeyH",
+            // },
+            // j: {
+            //     text: "j",
+            //     event: "KeyJ",
+            // },
+            // k: {
+            //     text: "k",
+            //     event: "KeyK",
+            // },
+            // l: {
+            //     text: "l",
+            //     event: "KeyL",
+            // },
+            // enter: {
+            //     text: "Enter",
+            //     event: "Enter",
+            // },
+            // done: {
+            //     text: "Close Keyboard",
+            //     event: "",
+            // },
+            // shift: {
+            //     text: "Shift",
+            //     event: "ShiftLeft",
+            // },
+            // z: {
+            //     text: "z",
+            //     event: "KeyZ",
+            // },
+            // x: {
+            //     text: "x",
+            //     event: "KeyX",
+            // },
+            // c: {
+            //     text: "c",
+            //     event: "KeyC",
+            // },
+            // v: {
+            //     text: "v",
+            //     event: "KeyV",
+            // },
+            // b: {
+            //     text: "b",
+            //     event: "KeyB",
+            // },
+            // n: {
+            //     text: "n",
+            //     event: "KeyN",
+            // },
+            // m: {
+            //     text: "m",
+            //     event: "KeyM",
+            // },
+            // ",": {
+            //     text: ",",
+            //     event: "Comma",
+            // },
+            // ".": {
+            //     text: ".",
+            //     event: "Period",
+            // },
+            // "/": {
+            //     text: "/",
+            //     event: "Slash",
+            // },
+            // shift: {
+            //     text: "Shift",
+            //     event: "ShiftRight",
+            // },
+            // up: {
+            //     text: "&#8593;",
+            //     event: "ArrowUp",
+            // },
+            // space: {
+            //     text: "",
+            //     event: "Space",
+            // },
         };
 
         // Creates HTML for an icon
@@ -263,17 +262,18 @@ const Keyboard = {
             return `<i class="material-icons">${icon_name}</i>`;
         };
 
-        Object.entries(keyLayout).forEach(([key,value]) => {
+        this.keyLayout.forEach((value) => {
             const keyElement = document.createElement("button");
             const insertLineBreak =
-                ["backspace", "p", "enter", "up"].indexOf(key) !== -1;
+                ["Backspace", "p", "Enter", "&uarr;"].indexOf(value.small) !==
+                -1;
 
             // Add attributes/classes
             keyElement.setAttribute("type", "button");
             keyElement.classList.add("keyboard__key");
 
-            switch (key) {
-                case "backspace":
+            switch (value.small) {
+                case "Backspace":
                     keyElement.classList.add("keyboard__key--wide");
                     keyElement.innerHTML = value.text;
                     keyElement.setAttribute("data-code", "Backspace");
@@ -283,7 +283,7 @@ const Keyboard = {
                         let str = this.properties.value;
 
                         this.properties.value =
-                            str.substring(0, caretPos-1) +                            
+                            str.substring(0, caretPos - 1) +
                             str.substring(caretPos);
                         this._triggerEvent("oninput");
 
@@ -292,8 +292,8 @@ const Keyboard = {
                         // Start: This parameter holds the index of the first selected character. The index value greater than the length of the element pointing to the end value.
                         // End: This parameter holds the index of the character after the last selected character. The index value greater than the length of the element pointing to the end value.
                         this.elements.inputField.setSelectionRange(
-                            caretPos-1,
-                            caretPos-1
+                            caretPos - 1,
+                            caretPos - 1
                         );
                     });
 
@@ -348,7 +348,7 @@ const Keyboard = {
 
                     break;
 
-                case "done":
+                case "Close keyboard":
                     keyElement.classList.add(
                         "keyboard__key--wide",
                         "keyboard__key--dark"
@@ -359,7 +359,7 @@ const Keyboard = {
                         this.close();
                         this._triggerEvent("onclose");
                     });
-
+                    
                     break;
 
                 case "shift":
@@ -370,34 +370,19 @@ const Keyboard = {
 
                     break;
 
-                case ",":
-                    keyElement.setAttribute("data-code", "Comma");
-                    keyElement.textContent = key;
-                    keyElement.addEventListener("click", () => {
-                        this.characterInput(key);
-                    });
-                    break;
-
-                case "-":
-                    keyElement.setAttribute("data-code", "Minus");
-                    keyElement.textContent = key;
-                    keyElement.addEventListener("click", () => {
-                        this.characterInput(key);
-                    });
-                    break;
-
+         
                 default:
                     // keyElement.textContent = key.toLowerCase();
                     // event.code;
-                    keyElement.innerHTML = key;
+                    keyElement.innerHTML = value.small;
 
                     // if (isNaN(key)) {
                     // let dataAttr = `Key${key.toUpperCase()}`;
-                    keyElement.setAttribute("data-code", value.event);
+                    keyElement.setAttribute("data-code", value.code);
 
-                    key = this.properties.capsLock
-                        ? key.toUpperCase()
-                        : key.toLowerCase();
+                    let key = this.properties.capsLock
+                        ? value.small.toUpperCase()
+                        : value.small.toLowerCase();
 
                     keyElement.addEventListener("click", () => {
                         this.characterInput(key);
@@ -473,7 +458,7 @@ const Keyboard = {
 };
 
 window.addEventListener("DOMContentLoaded", function () {
-    Keyboard.init();
+    Keyboard.init("en");
     window.addEventListener("keydown", function (event) {
         let pressedBtn = document.querySelector(`[data-code= ${event.code}]`);
         pressedBtn.classList.add("pressed-button");
