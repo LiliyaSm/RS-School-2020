@@ -121,6 +121,7 @@ const Keyboard = {
                 case "backspace":
                     keyElement.classList.add("keyboard__key--wide");
                     keyElement.innerHTML = createIconHTML("backspace");
+                    keyElement.setAttribute("data-code", "Backspace");
 
                     keyElement.addEventListener("click", () => {
                         this.properties.value = this.properties.value.substring(
@@ -163,7 +164,7 @@ const Keyboard = {
                 case "up":
                     keyElement.classList.add("keyboard__key--wide");
                     // keyElement.innerHTML = createIconHTML("keyboard_return");
-                    keyElement.innerHTML = "&#8593;"
+                    keyElement.innerHTML = "&#8593;";
 
                     keyElement.addEventListener("click", () => {
                         this.properties.value += "\n";
@@ -175,7 +176,6 @@ const Keyboard = {
                 case "space":
                     keyElement.classList.add("keyboard__key--extra-wide");
                     keyElement.innerHTML = createIconHTML("space_bar");
-
 
                     keyElement.addEventListener("click", () => {
                         this.properties.value += " ";
@@ -209,15 +209,24 @@ const Keyboard = {
                 default:
                     keyElement.textContent = key.toLowerCase();
                     // event.code;
-                    let dataAttr = `Key${key.toUpperCase()}`;
-                    keyElement.setAttribute("data-code", dataAttr);
 
-                    keyElement.addEventListener("click", () => {
-                        this.properties.value += this.properties.capsLock
-                            ? key.toUpperCase()
-                            : key.toLowerCase();
-                        this._triggerEvent("oninput");
-                    });
+                    if (isNaN(key)) {
+                        let dataAttr = `Key${key.toUpperCase()}`;
+                        keyElement.setAttribute("data-code", dataAttr);
+                        keyElement.addEventListener("click", () => {
+                            this.properties.value += this.properties.capsLock
+                                ? key.toUpperCase()
+                                : key.toLowerCase();
+                            this._triggerEvent("oninput");
+                        });
+                    } else {
+                        let dataAttr = `Digit${key}`;
+                        keyElement.setAttribute("data-code", dataAttr);
+                        keyElement.addEventListener("click", () => {
+                            this.properties.value += key;
+                            this._triggerEvent("oninput");
+                        });
+                    }
 
                     break;
             }
@@ -271,8 +280,12 @@ window.addEventListener("DOMContentLoaded", function () {
         let pressedBtn = document.querySelector(`[data-code= ${event.code}]`);
         pressedBtn.classList.add("pressed-button");
     });
+
     window.addEventListener("keyup", function (event) {
         let pressedBtn = document.querySelector(`[data-code= ${event.code}]`);
         pressedBtn.classList.remove("pressed-button");
+        Keyboard.properties.value = document.querySelector(
+            ".use-keyboard-input"
+        ).value;
     });
 });
