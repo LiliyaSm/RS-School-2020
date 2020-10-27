@@ -107,6 +107,13 @@ const Keyboard = {
         this.elements.inputField = document.createElement("textarea");
         this.elements.title = document.createElement("h1");
 
+        //CHECK IF USER ALREADY HAS CAPSLOCK ON
+        this.elements.inputField.addEventListener("click", (event) => {
+            if (event.getModifierState("CapsLock")) {
+                this._toggleCapsLock();
+            }
+        });
+
         // Setup main elements
         this.elements.main.classList.add("keyboard", "keyboard--hidden");
         this.elements.keysContainer.classList.add("keyboard__keys");
@@ -123,6 +130,12 @@ const Keyboard = {
         document.body.appendChild(this.elements.title);
         document.body.appendChild(this.elements.inputField);
         document.body.appendChild(this.elements.main);
+
+        document.addEventListener("keydown", (e) => {
+            if (e.which == 20 || e.keyCode == 20) {
+                this._toggleCapsLock();
+            }
+        });
 
         // Automatically use keyboard for elements with .use-keyboard-input
         document.querySelectorAll(".use-keyboard-input").forEach((element) => {
@@ -155,36 +168,58 @@ const Keyboard = {
 
             row.forEach((code) => {
                 const keyElement = document.createElement("button");
-                const keyObj = this.keyLayout.find((key) => key.code === code);
-                // Add attributes/classes
                 keyElement.setAttribute("type", "button");
                 keyElement.classList.add("keyboard__key");
 
+                // keyElement.addEventListener("click", (event) => {
+                //     var x = event.getModifierState("CapsLock");})
+
+                const keyObj = this.keyLayout.find((key) => key.code === code);
+
                 if (keyObj) {
+                    keyElement.setAttribute("data-code", keyObj.code);
+                    keyElement.innerHTML = keyObj.small;
+
                     switch (keyObj.code) {
                         case "Backspace":
                             keyElement.classList.add("keyboard__key--wide");
-                            keyElement.innerHTML = keyObj.small;
-                            keyElement.setAttribute("data-code", "Backspace");
 
                             keyElement.addEventListener("click", () => {
                                 let caretPos = this.elements.inputField
                                     .selectionStart;
                                 let str = this.properties.value;
 
-                                this.properties.value =
-                                    str.substring(0, caretPos - 1) +
-                                    str.substring(caretPos);
-                                this._triggerEvent("oninput");
+                                let selectionText = document
+                                    .getSelection()
+                                    .toString();
 
-                                this.elements.inputField.focus();
+                                if (selectionText) {
+                                    const start = this.elements.inputField
+                                        .selectionStart;
+                                    const end = this.elements.inputField
+                                        .selectionEnd;
+                                    this.properties.value =
+                                        str.substring(0, start) +
+                                        str.substring(end);
+                                    this._triggerEvent("oninput");
+                                    this.elements.inputField.focus();
 
-                                // Start: This parameter holds the index of the first selected character. The index value greater than the length of the element pointing to the end value.
-                                // End: This parameter holds the index of the character after the last selected character. The index value greater than the length of the element pointing to the end value.
-                                this.elements.inputField.setSelectionRange(
-                                    caretPos - 1,
-                                    caretPos - 1
-                                );
+                                    this.elements.inputField.setSelectionRange(
+                                        caretPos,
+                                        caretPos
+                                    );
+                                } else {
+                                    this.properties.value =
+                                        str.substring(0, caretPos - 1) +
+                                        str.substring(caretPos);
+                                    this._triggerEvent("oninput");
+                                    this.elements.inputField.focus();
+
+                                    this.elements.inputField.setSelectionRange(
+                                        caretPos - 1,
+                                        caretPos - 1
+                                    );
+                                }
                             });
 
                             break;
@@ -194,22 +229,19 @@ const Keyboard = {
                                 "keyboard__key--wide",
                                 "keyboard__key--activatable"
                             );
-                            // keyElement.innerHTML = createIconHTML("keyboard_capslock");
 
                             keyElement.addEventListener("click", () => {
                                 this._toggleCapsLock();
-                                keyElement.classList.toggle(
-                                    "keyboard__key--active",
-                                    this.properties.capsLock
-                                );
+                                // keyElement.classList.toggle(
+                                //     "keyboard__key--active",
+                                //     this.properties.capsLock
+                                // );
                             });
 
                             break;
 
                         case "Enter":
                             keyElement.classList.add("keyboard__key--wide");
-                            keyElement.innerHTML = keyObj.small;
-                            keyElement.setAttribute("data-code", keyObj.small);
 
                             keyElement.addEventListener("click", (e) => {
                                 this.characterInput("\n");
@@ -219,8 +251,6 @@ const Keyboard = {
 
                         case "Tab":
                             keyElement.classList.add("keyboard__key--wide");
-                            keyElement.innerHTML = keyObj.small;
-                            keyElement.setAttribute("data-code", keyObj.small);
 
                             keyElement.addEventListener("click", (e) => {
                                 this.characterInput("\t");
@@ -232,8 +262,6 @@ const Keyboard = {
                             keyElement.classList.add(
                                 "keyboard__key--extra-wide"
                             );
-                            keyElement.innerHTML = keyObj.small;
-                            keyElement.setAttribute("data-code", keyObj.small);
 
                             keyElement.addEventListener("click", () => {
                                 this.characterInput(" ");
@@ -257,38 +285,34 @@ const Keyboard = {
 
                             break;
 
-                        case "shift":
+                        case "ShiftLeft":
+                        case "ShiftRight":
                             keyElement.classList.add("keyboard__key--wide");
-                            keyElement.textContent = "Shift";
-
                             keyElement.addEventListener("click", () => {});
+                            break;
 
+                        case "AltLeft":
+                        case "AltRight":
+                            keyElement.addEventListener("click", () => {
+                                this.elements.inputField.focus();
+                            });
+                            break;
+
+                        case "ControlRight":
+                        case "ControlLeft":
+                            keyElement.addEventListener("click", () => {
+                                this.elements.inputField.focus();
+                            });
                             break;
 
                         default:
-                            // keyElement.textContent = key.toLowerCase();
-                            // event.code;
-                            keyElement.innerHTML = keyObj.small;
-
-                            // if (isNaN(key)) {
-                            // let dataAttr = `Key${key.toUpperCase()}`;
-                            keyElement.setAttribute("data-code", keyObj.code);
-
-                            let key = this.properties.capsLock
-                                ? keyObj.small.toUpperCase()
-                                : keyObj.small.toLowerCase();
-
+                            let key = keyObj.small;
                             keyElement.addEventListener("click", () => {
-                                this.characterInput(key);
+                                let keyCase = this.properties.capsLock
+                                    ? key.toUpperCase()
+                                    : key.toLowerCase();
+                                this.characterInput(keyCase);
                             });
-                            // } else {
-                            // let dataAttr = `Digit${key}`;
-                            // keyElement.setAttribute("data-code", dataAttr);
-
-                            // keyElement.addEventListener("click", () => {
-                            //     this.characterInput(key);
-                            // });
-                            // }
 
                             break;
                     }
@@ -297,7 +321,6 @@ const Keyboard = {
                 }
             });
 
-            // div.appendChild(document.createElement("br"));
             fragment.appendChild(div);
         });
 
@@ -305,13 +328,20 @@ const Keyboard = {
     },
 
     characterInput(symbol) {
+        let selectionText = document.getSelection().toString();
         let caretPos = this.elements.inputField.selectionStart;
         let str = this.properties.value;
 
-        this.properties.value =
-            str.substring(0, caretPos) + symbol + str.substring(caretPos);
+        if (selectionText) {
+            const start = caretPos;
+            const end = this.elements.inputField.selectionEnd;
+            this.properties.value =
+                str.substring(0, start) + symbol + str.substring(end);
+        } else {
+            this.properties.value =
+                str.substring(0, caretPos) + symbol + str.substring(caretPos);
+        }
         this._triggerEvent("oninput");
-
         this.elements.inputField.focus();
 
         // Start: This parameter holds the index of the first selected character. The index value greater than the length of the element pointing to the end value.
@@ -325,11 +355,22 @@ const Keyboard = {
         }
     },
 
-    _toggleCapsLock() {
+    _toggleCapsLock(e) {
         this.properties.capsLock = !this.properties.capsLock;
 
+        document
+            .querySelector(`[data-code= CapsLock]`)
+            .classList.toggle(
+                "keyboard__key--active",
+                this.properties.capsLock
+            );
+
+        // const keyObj = this.keyLayout.find((keyL) => keyL.code === key.dataset.code);
         for (const key of this.elements.keys) {
-            if (key.childElementCount === 0) {
+            if (
+                key.textContent.match(/^[a-zа-яё]{1}$/i) &&
+                key.childElementCount === 0
+            ) {
                 key.textContent = this.properties.capsLock
                     ? key.textContent.toUpperCase()
                     : key.textContent.toLowerCase();
@@ -352,7 +393,7 @@ const Keyboard = {
     },
 };
 
-window.addEventListener("DOMContentLoaded", function () {
+window.addEventListener("DOMContentLoaded", function (event) {
     Keyboard.init("en");
     window.addEventListener("keydown", function (event) {
         let pressedBtn = document.querySelector(`[data-code= ${event.code}]`);
@@ -362,6 +403,7 @@ window.addEventListener("DOMContentLoaded", function () {
     window.addEventListener("keyup", function (event) {
         let pressedBtn = document.querySelector(`[data-code= ${event.code}]`);
         pressedBtn.classList.remove("pressed-button");
+
         //synchronization after entering by physical keyboard
         Keyboard.properties.value = document.querySelector(
             ".use-keyboard-input"
