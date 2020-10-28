@@ -329,8 +329,8 @@ export default [
         code: "ArrowRight",
     },
     {
-        small: "Win",
+        small: "EN/RU",
         shift: null,
-        code: "Win",
+        code: "EN/RU",
     },
 ];

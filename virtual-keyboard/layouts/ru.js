@@ -324,4 +324,14 @@ export default [
         shift: null,
         code: "Win",
     },
+    {
+        small: "EN/RU",
+        shift: null,
+        code: "EN/RU",
+    },
+    {
+        small: "Close ",
+        shift: null,
+        code: "Done",
+    },
 ];
