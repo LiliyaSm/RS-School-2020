@@ -184,14 +184,7 @@ const Keyboard = {
 
         rowsOrder.forEach((row, i) => {
             let div = document.createElement("div");
-            // const insertLineBreak =
-            //     [
-            //         "Delete",
-            //         "Backspace",
-            //         "Enter",
-            //         "ShiftRight",
-            //         "ControlRight",
-            //     ].indexOf(value.small) !== -1;
+            
 
             row.forEach((code) => {
                 const keyElement = document.createElement("button");
@@ -206,14 +199,37 @@ const Keyboard = {
                 if (keyObj) {
                     keyElement.setAttribute("data-code", keyObj.code);
 
-                    if (this.properties.shift) {
+                    if (this.properties.shift && !this.properties.capsLock) {
                         keyElement.innerHTML = keyObj.shift
                             ? keyObj.shift
                             : keyObj.small;
+                    } else if (
+                        !this.properties.shift &&
+                        this.properties.capsLock
+                    ) {
+                        if (keyObj.small.match(/^[a-zа-яё]{1}$/i)) {
+                            keyElement.innerHTML = keyObj.small.toUpperCase();
+                        } else {
+                            keyElement.innerHTML = keyObj.small;
+                        }
+                    } else if (
+                        this.properties.shift &&
+                        this.properties.capsLock
+                    ) {
+                        if (keyObj.small.match(/^[a-zа-яё]{1}$/i)) {
+                            keyElement.innerHTML = keyObj.small.toLowerCase();
+                        } else {
+                            keyElement.innerHTML = keyObj.shift
+                                ? keyObj.shift
+                                : keyObj.small;
+                        }
+
+                        // keyElement.innerHTML = keyObj.shift
+                        //     ? keyObj.shift
+                        //     : keyObj.small;
                     } else {
                         keyElement.innerHTML = keyObj.small;
                     }
-
                     switch (keyObj.code) {
                         case "Backspace":
                             keyElement.classList.add("keyboard__key--wide");
@@ -265,11 +281,7 @@ const Keyboard = {
                             );
 
                             keyElement.addEventListener("click", () => {
-                                this._toggleCapsLock();
-                                // keyElement.classList.toggle(
-                                //     "keyboard__key--active",
-                                //     this.properties.capsLock
-                                // );
+                                this._toggleCapsLock();                              
                             });
 
                             break;
@@ -347,15 +359,32 @@ const Keyboard = {
                         default:
                             let key = keyObj.small;
                             let shiftKey = keyObj.shift;
+
                             keyElement.addEventListener("click", () => {
-                                if (this.properties.shift) {
-                                    this.characterInput(shiftKey);
+                                 let keyCase;
+
+                                if (this.properties.shift && this.isUpper()) {
+                                    keyCase = shiftKey;
+                                } else if (
+                                    !this.properties.shift &&
+                                    this.isUpper()
+                                ) {
+                                    keyCase = key.toUpperCase()
+                                } else if (
+                                    this.properties.shift &&
+                                    !this.isUpper()
+                                ) {
+                                    if (keyObj.small.match(/^[a-zа-яё]{1}$/i)) {
+                                        keyCase = keyObj.small.toLowerCase();
+                                    } else {
+                                        keyCase = keyObj.shift
+                                            ? keyObj.shift
+                                            : keyObj.small;
+                                    }
                                 } else {
-                                    let keyCase = this.properties.capsLock
-                                        ? key.toUpperCase()
-                                        : key.toLowerCase();
-                                    this.characterInput(keyCase);
+                                    keyCase = keyObj.small;
                                 }
+                                this.characterInput(keyCase);
                             });
 
                             break;
@@ -399,6 +428,10 @@ const Keyboard = {
         }
     },
 
+    isUpper() {
+        return this.properties.capsLock ^ this.properties.shift;
+    },
+
     _toggleCapsLock(e) {
         this.properties.capsLock = !this.properties.capsLock;
 
@@ -415,7 +448,7 @@ const Keyboard = {
                 key.textContent.match(/^[a-zа-яё]{1}$/i) &&
                 key.childElementCount === 0
             ) {
-                key.textContent = this.properties.capsLock
+                key.textContent = this.isUpper()
                     ? key.textContent.toUpperCase()
                     : key.textContent.toLowerCase();
             }
@@ -443,6 +476,13 @@ const Keyboard = {
                     this.properties.shift
                 );
             });
+
+        this.elements.keysContainer
+            .querySelector(`[data-code*="CapsLock"]`)
+            .classList.toggle(
+                "keyboard__key--active",
+                this.properties.capsLock
+            );
 
         // for (const key of this.elements.keys) {
         //     if (
