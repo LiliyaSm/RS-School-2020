@@ -66,9 +66,9 @@ export default [
     },
 
     {
-        small: "Delete",
+        small: "Speech",
         shift: null,
-        code: "Delete",
+        code: "Speech",
     },
     {
         small: "Tab",
@@ -143,9 +143,9 @@ export default [
     },
 
     {
-        small: "Close Keyboard",
+        small: "Close",
         event: null,
-        code: null,
+        code: "Done",
     },
 
     {

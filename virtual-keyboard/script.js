@@ -15,7 +15,7 @@ const rowsOrder = [
         "Digit0",
         "Minus",
         "Equal",
-        "Delete",
+        "Speech",
     ],
     [
         "Tab",
@@ -112,11 +112,11 @@ const Keyboard = {
         this.elements.title = document.createElement("h1");
 
         //CHECK IF USER ALREADY HAS CAPSLOCK ON
-        this.elements.inputField.addEventListener("click", (event) => {
-            if (event.getModifierState("CapsLock")) {
-                this._toggleCapsLock();
-            }
-        });
+        // this.elements.inputField.addEventListener("click", (event) => {
+        //     if (event.getModifierState("CapsLock")) {
+        //         this.properties.capsLock = true;
+        //     }
+        // });
 
         // Setup main elements
         this.elements.main.classList.add("keyboard", "keyboard--hidden");
@@ -152,18 +152,17 @@ const Keyboard = {
                 `[data-code= ${event.code}]`
             );
             pressedBtn.classList.add("pressed-button");
-            // if (event.key.match(/^[a-zа-яё]{1}$/i)) {
-            //     console.log(event)
 
             let keyObj = this.keyLayout.find((key) => key.code === event.code);
+
             //check if button is Ctrl, SHIFT and other
             let isFuncButton = keyObj.shift ? false : true;
 
             if (!isFuncButton) {
                 let symbol = pressedBtn.textContent;
-                symbol = this.isUpper()
-                    ? symbol.toLocaleUpperCase()
-                    : symbol.toLocaleLowerCase();
+                // symbol = this.isUpper()
+                //     ? symbol.toLocaleUpperCase()
+                //     : symbol.toLocaleLowerCase();
                 event.preventDefault();
                 this.characterInput(symbol);
             }
@@ -364,6 +363,15 @@ const Keyboard = {
 
                             break;
 
+                        case "Speech":
+                            keyElement.innerHTML = createIconHTML("mic");
+                             keyElement.addEventListener("click", () => {
+                                 this._speechInput()
+                             });
+                        break;
+                        
+
+
                         case "ShiftLeft":
                         case "ShiftRight":
                             keyElement.classList.add(
@@ -405,6 +413,10 @@ const Keyboard = {
     },
 
     changeInnerHTML(keyElement, keyObj) {
+        //check for icons
+        if (keyElement.childElementCount !== 0) {
+            return keyElement;
+        }
         if (this.properties.shift && !this.properties.capsLock) {
             keyElement.innerHTML = keyObj.shift ? keyObj.shift : keyObj.small;
         } else if (!this.properties.shift && this.properties.capsLock) {
@@ -470,7 +482,6 @@ const Keyboard = {
                 this.properties.capsLock
             );
 
-        // const keyObj = this.keyLayout.find((keyL) => keyL.code === key.dataset.code);
         for (const key of this.elements.keys) {
             if (
                 key.textContent.match(/^[a-zа-яё]{1}$/i) &&
@@ -494,6 +505,18 @@ const Keyboard = {
                 this.changeInnerHTML(key, keyObj);
             }
         });
+    },
+
+    _speechInput(){
+        const SpeechRecognition =
+            window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition = new SpeechRecognition();
+        recognition.onresult = function (event) {
+            if (event.results.length > 0) {
+                query.value = event.results[0][0].transcript;
+                query.form.submit();
+            }
+        };
     },
 
     _toggleShift(e) {
