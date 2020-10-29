@@ -69,6 +69,7 @@ class Momentum {
         this.date = null;
         this.time = null;
         this.shuffleArray = null;
+        this.lastChange = -1;
     }
 
     init() {
@@ -114,9 +115,13 @@ class Momentum {
         this.time.innerHTML = `${hour}<span>:</span>${addZero(
             min
         )}<span>:</span>${addZero(sec)}`;
-
-        if (min === 0 && sec === 0) {
-            //every hour
+        
+        // skip on initial run
+        if(this.lastChange == -1){
+            this.lastChange = hour;
+        }else if (this.lastChange != hour) {
+            //every new hour
+            this.lastChange = hour;
             // console.log(hour, min, sec);
             this.setBSeason();
             this.loadByNumber(true);
