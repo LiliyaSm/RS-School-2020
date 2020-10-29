@@ -325,9 +325,9 @@ export default [
         code: "Win",
     },
     {
-        small: "EN/RU",
+        small: "RU",
         shift: null,
-        code: "EN/RU",
+        code: "Lang",
     },
     {
         small: "Close ",

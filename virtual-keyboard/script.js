@@ -67,7 +67,7 @@ const rowsOrder = [
     ],
     [
         "ControlLeft",
-        "EN/RU",
+        "Lang",
         "AltLeft",
         "Space",
         "AltRight",
@@ -152,11 +152,18 @@ const Keyboard = {
                 `[data-code= ${event.code}]`
             );
             pressedBtn.classList.add("pressed-button");
-            if (event.key.match(/^[a-zа-яё]{1}$/i)) {
-                // let symbol = this.properties.capsLock
-                let symbol = this.isUpper()
-                    ? event.key.toLocaleUpperCase()
-                    : event.key.toLocaleLowerCase();
+            // if (event.key.match(/^[a-zа-яё]{1}$/i)) {
+            //     console.log(event)
+
+            let keyObj = this.keyLayout.find((key) => key.code === event.code);
+            //check if button is Ctrl, SHIFT and other
+            let isFuncButton = keyObj.shift ? false : true;
+
+            if (!isFuncButton) {
+                let symbol = pressedBtn.textContent;
+                symbol = this.isUpper()
+                    ? symbol.toLocaleUpperCase()
+                    : symbol.toLocaleLowerCase();
                 event.preventDefault();
                 this.characterInput(symbol);
             }
@@ -196,46 +203,20 @@ const Keyboard = {
             let div = document.createElement("div");
 
             row.forEach((code) => {
-                const keyElement = document.createElement("button");
+                let keyElement = document.createElement("button");
                 keyElement.setAttribute("type", "button");
                 keyElement.classList.add("keyboard__key");
 
                 // keyElement.addEventListener("click", (event) => {
                 //     var x = event.getModifierState("CapsLock");})
 
-                const keyObj = this.keyLayout.find((key) => key.code === code);
+                let keyObj = this.keyLayout.find((key) => key.code === code);
 
                 if (keyObj) {
                     keyElement.setAttribute("data-code", keyObj.code);
 
                     //text on buttons
-                    if (this.properties.shift && !this.properties.capsLock) {
-                        keyElement.innerHTML = keyObj.shift
-                            ? keyObj.shift
-                            : keyObj.small;
-                    } else if (
-                        !this.properties.shift &&
-                        this.properties.capsLock
-                    ) {
-                        if (keyObj.small.match(/^[a-zа-яё]{1}$/i)) {
-                            keyElement.innerHTML = keyObj.small.toUpperCase();
-                        } else {
-                            keyElement.innerHTML = keyObj.small;
-                        }
-                    } else if (
-                        this.properties.shift &&
-                        this.properties.capsLock
-                    ) {
-                        if (keyObj.small.match(/^[a-zа-яё]{1}$/i)) {
-                            keyElement.innerHTML = keyObj.small.toLowerCase();
-                        } else {
-                            keyElement.innerHTML = keyObj.shift
-                                ? keyObj.shift
-                                : keyObj.small;
-                        }
-                    } else {
-                        keyElement.innerHTML = keyObj.small;
-                    }
+                    keyElement = this.changeInnerHTML(keyElement, keyObj);
 
                     switch (keyObj.code) {
                         case "Backspace":
@@ -394,43 +375,22 @@ const Keyboard = {
                             });
                             break;
 
-                        case "EN/RU":
+                        case "Lang":
                             keyElement.addEventListener("click", (e) => {
                                 this._toggleLang(e);
                             });
                             break;
 
                         default:
-                            let key = keyObj.small;
-                            let shiftKey = keyObj.shift;
+                            keyElement.addEventListener(
+                                "click",
+                                triggerInput.bind(this)
+                            );
 
-                            keyElement.addEventListener("click", () => {
-                                let keyCase;
-
-                                if (this.properties.shift && this.isUpper()) {
-                                    keyCase = shiftKey;
-                                } else if (
-                                    !this.properties.shift &&
-                                    this.isUpper()
-                                ) {
-                                    keyCase = key.toUpperCase();
-                                } else if (
-                                    this.properties.shift &&
-                                    !this.isUpper()
-                                ) {
-                                    if (keyObj.small.match(/^[a-zа-яё]{1}$/i)) {
-                                        keyCase = keyObj.small.toLowerCase();
-                                    } else {
-                                        keyCase = keyObj.shift
-                                            ? keyObj.shift
-                                            : keyObj.small;
-                                    }
-                                } else {
-                                    keyCase = keyObj.small;
-                                }
+                            function triggerInput() {
+                                let keyCase = keyElement.textContent;
                                 this.characterInput(keyCase);
-                            });
-
+                            }
                             break;
                     }
 
@@ -442,6 +402,30 @@ const Keyboard = {
         });
 
         return fragment;
+    },
+
+    changeInnerHTML(keyElement, keyObj) {
+        if (this.properties.shift && !this.properties.capsLock) {
+            keyElement.innerHTML = keyObj.shift ? keyObj.shift : keyObj.small;
+        } else if (!this.properties.shift && this.properties.capsLock) {
+            if (keyObj.small.match(/^[a-zа-яё]{1}$/i)) {
+                keyElement.innerHTML = keyObj.small.toUpperCase();
+            } else {
+                keyElement.innerHTML = keyObj.small;
+            }
+        } else if (this.properties.shift && this.properties.capsLock) {
+            if (keyObj.small.match(/^[a-zа-яё]{1}$/i)) {
+                keyElement.innerHTML = keyObj.small.toLowerCase();
+            } else {
+                keyElement.innerHTML = keyObj.shift
+                    ? keyObj.shift
+                    : keyObj.small;
+            }
+        } else {
+            keyElement.innerHTML = keyObj.small;
+        }
+
+        return keyElement;
     },
 
     characterInput(symbol) {
@@ -501,32 +485,27 @@ const Keyboard = {
 
     _toggleLang(e) {
         this.properties.lang = this.properties.lang === "en" ? "ru" : "en";
-        // this.init(this.properties.lang);
-
-        this.updateKeyboard();
-    },
-
-    updateKeyboard() {
         this.keyLayout = language[this.properties.lang];
 
-        //delete and re-create keyboard
-
-        this.elements.main.removeChild(this.elements.keysContainer);
-
-        this.elements.keysContainer = document.createElement("div");
-        this.elements.keysContainer.classList.add("keyboard__keys");
-
-        this.elements.keysContainer.appendChild(this._createKeys());
-        this.elements.main.appendChild(this.elements.keysContainer);
-        this.elements.keys = this.elements.keysContainer.querySelectorAll(
-            ".keyboard__key"
-        );
+        this.elements.keys.forEach((key) => {
+            let code = key.getAttribute("data-code");
+            let keyObj = this.keyLayout.find((keyL) => keyL.code === code);
+            if (keyObj) {
+                this.changeInnerHTML(key, keyObj);
+            }
+        });
     },
 
     _toggleShift(e) {
         this.properties.shift = !this.properties.shift;
 
-        this.updateKeyboard();
+        this.elements.keys.forEach((key) => {
+            let code = key.getAttribute("data-code");
+            let keyObj = this.keyLayout.find((keyL) => keyL.code === code);
+            if (keyObj) {
+                this.changeInnerHTML(key, keyObj);
+            }
+        });
 
         this.elements.keysContainer
             .querySelectorAll(`[data-code*="Shift"]`)
