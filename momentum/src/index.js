@@ -192,9 +192,6 @@ class Momentum {
                 this.i = this.i - imagesSet;
             }
         }
-        // console.log(this.i);
-        // console.log(season);
-
         let randomNumber = this.shuffleArray[this.i];
         // console.log(randomNumber);
         this.i = this.i + 1;
@@ -208,10 +205,10 @@ class Momentum {
 // Get Name
 function getName() {
     //returns name if exists in storage
-    if (localStorage.getItem("name") === null) {
+    if (localStorage.getItem("nameM") === null) {
         name.value = "[Enter Name]";
     } else {
-        name.value = localStorage.getItem("name");
+        name.value = localStorage.getItem("nameM");
     }
 }
 
@@ -222,7 +219,7 @@ function setName(e) {
         if (e.which == 13 || e.keyCode == 13) {
             name.value = e.target.value.trim();
             if (e.target.value != "") {
-                localStorage.setItem("name", e.target.value);
+                localStorage.setItem("nameM", e.target.value);
             } else {
                 getName();
             }
@@ -235,7 +232,7 @@ function setName(e) {
         // blur
         name.value = e.target.value.trim();
         if (e.target.value != "") {
-            localStorage.setItem("name", e.target.value);
+            localStorage.setItem("nameM", e.target.value);
         } else {
             getName();
         }
@@ -249,10 +246,10 @@ function resizeInput() {
 
 // Get Focus
 function getFocus() {
-    if (localStorage.getItem("focus") === null) {
+    if (localStorage.getItem("focusM") === null) {
         focus.textContent = "[Enter Focus]";
     } else {
-        focus.textContent = localStorage.getItem("focus");
+        focus.textContent = localStorage.getItem("focusM");
     }
 }
 
@@ -263,7 +260,7 @@ function setFocus(e) {
         if (e.which == 13 || e.keyCode == 13) {
             focus.textContent = e.target.innerText.trim();
             if (e.target.innerText != "") {
-                localStorage.setItem("focus", e.target.innerText);
+                localStorage.setItem("focusM", e.target.innerText);
             } else {
                 getFocus();
             }
@@ -274,7 +271,7 @@ function setFocus(e) {
     } else {
         focus.textContent = e.target.innerText.trim();
         if (e.target.innerText != "") {
-            localStorage.setItem("focus", e.target.innerText);
+            localStorage.setItem("focusM", e.target.innerText);
         } else {
             getFocus();
         }
@@ -282,7 +279,7 @@ function setFocus(e) {
 }
 
 function getCity() {
-    if (localStorage.getItem("city") === null) {
+    if (localStorage.getItem("cityM") === null) {
         city.textContent = "[Enter City]";
         weatherDescription.textContent = "";
         windSpeed.textContent = "";
@@ -290,7 +287,7 @@ function getCity() {
         weatherIcon.className = "weather-icon owf";
         temperature.textContent = "";
     } else {
-        city.textContent = localStorage.getItem("city");
+        city.textContent = localStorage.getItem("cityM");
     }
 }
 
@@ -300,7 +297,7 @@ function setCity(e) {
         if (e.which == 13 || e.keyCode == 13) {
             city.textContent = e.target.innerText.trim();
             if (e.target.innerText != "") {
-                localStorage.setItem("city", e.target.innerText);
+                localStorage.setItem("cityM", e.target.innerText);
                 getWeather();
             } else {
                 getCity();
@@ -312,7 +309,7 @@ function setCity(e) {
     } else {
         city.textContent = e.target.innerText.trim();
         if (e.target.innerText != "") {
-            localStorage.setItem("city", e.target.innerText);
+            localStorage.setItem("cityM", e.target.innerText);
             getWeather();
         } else {
             getCity();
