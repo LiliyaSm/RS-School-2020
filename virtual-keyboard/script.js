@@ -189,7 +189,7 @@ const Keyboard = {
                 console.log(e.results[e.results.length - 1]);
                 this.properties.value +=
                     e.results[e.results.length - 1][0].transcript;
-                console.log(e.results.length);
+                // console.log(e.results.length);
                 this._triggerEvent("oninput");
             }
         });
@@ -394,8 +394,8 @@ const Keyboard = {
 
                         case "ArrowUp":
                         case "ArrowDown":
-                            case "AltLeft":
-                            case "AltRight":
+                        case "AltLeft":
+                        case "AltRight":
                             keyElement.addEventListener("click", () => {
                                 this.setFocus();
                             });
@@ -595,7 +595,12 @@ const Keyboard = {
         this.properties.lang = this.properties.lang === "en" ? "ru" : "en";
         this.keyLayout = language[this.properties.lang];
         this.recognition.lang = speechLang[this.properties.lang];
-
+        //toggle
+        if (this.speechIsOn) {
+            // this.speechIsOn = false;
+            this._speechInput(e);
+            // this._speechInput(e);
+        }
         this.elements.keys.forEach((key) => {
             let code = key.getAttribute("data-code");
             let keyObj = this.keyLayout.find((keyL) => keyL.code === code);
