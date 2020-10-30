@@ -333,4 +333,9 @@ export default [
         shift: null,
         code: "Lang",
     },
+    {
+        small: "Sound ",
+        shift: null,
+        code: "Sound",
+    },
 ];
