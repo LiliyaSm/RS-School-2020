@@ -1,5 +1,5 @@
 body {
-    display: flex;
+    /* display: flex; */
     flex-direction: column;
     /* align-items: center; */
     width: 1200px;
@@ -10,10 +10,10 @@ body {
 }
 
 .input-container {
-    display: flex;
-    width: 80%;
-    flex-direction: column;
-
+    /* display: flex; */
+    min-width: 495px;
+    height: auto;
+    /* flex-direction: column; */
 }
 
 .keyboard {
@@ -55,8 +55,8 @@ body {
     padding: 0;
     -webkit-tap-highlight-color: transparent;
     position: relative;
-     transition: all .07s ease;
-     box-shadow: 0px 5px 0px rgba(0, 0, 0, 0.2);
+    transition: all 0.07s ease;
+    box-shadow: 0px 5px 0px rgba(0, 0, 0, 0.2);
 }
 
 .keyboard__key:active {
@@ -68,10 +68,13 @@ body {
 }
 
 .keyboard__key--extra-wide {
-    width: 39%;
-    max-width: 570px;
+    max-width: 32%;
+    width: 475px;
 }
 
+.keyboard__key--middle {
+    width: 11%;
+}
 .keyboard__key--activatable::after {
     content: "";
     top: 10px;
@@ -94,6 +97,7 @@ body {
 .use-keyboard-input {
     min-height: 45vh;
     font-size: 24px;
+    width: 100%;
     resize: none;
     /* border: none; */
     outline: none;
@@ -104,14 +108,47 @@ body {
 
 .pressed-button {
     background: rgba(255, 255, 255, 0.12);
-
 }
 
 .playing {
-  transform: scale(1.1);
-  /* border-color: #ffc600; */
-  box-shadow: 0 0 1rem #ffc600;
+    transform: scale(1.1);
+    /* border-color: #ffc600; */
+    box-shadow: 0 0 1rem #ffc600;
 }
 
-@keyframes spin1 { 100% { transform:rotate(360deg); } }
-@keyframes spin2 { 100% { transform:rotate(-360deg); } }
+@media screen and (max-width: 950px) {
+    .use-keyboard-input {
+        font-size: 16px;
+    }
+    .keyboard__key {
+        font-size: 14px;
+        /* width: 100%; */
+        width: 5%;
+    }
+    .keyboard__key--wide {
+        width: 15%;
+    }
+
+    .keyboard__key--middle {
+        width: 8%;
+    }
+
+    .keyboard__key {
+        margin: 2px;
+    }
+
+    .keyboard__key--extra-wide {
+        width: 27%;
+    }
+}
+
+@keyframes spin1 {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+@keyframes spin2 {
+    100% {
+        transform: rotate(-360deg);
+    }
+}

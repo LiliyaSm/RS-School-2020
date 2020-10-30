@@ -141,6 +141,7 @@ const Keyboard = {
         this.elements.main.classList.add("keyboard", "keyboard--hidden");
         this.elements.keysContainer.classList.add("keyboard__keys");
         this.elements.inputField.classList.add("use-keyboard-input");
+        this.elements.inputField.setAttribute("cols", "120");
         inputContainer.classList.add("input-container");
         this.elements.keysContainer.appendChild(this._createKeys());
         this.elements.title.textContent = "Virtual keyboard";
@@ -371,8 +372,9 @@ const Keyboard = {
 
                             keyElement.addEventListener("click", () => {
                                 this.soundIsOn = !this.soundIsOn;
-                                keyElement
-                                    .classList.toggle("keyboard__key--dark");
+                                keyElement.classList.toggle(
+                                    "keyboard__key--dark"
+                                );
                             });
 
                             break;
@@ -392,20 +394,19 @@ const Keyboard = {
 
                         case "ArrowUp":
                         case "ArrowDown":
-                        case "AltLeft":
-                        case "AltRight":
+                            case "AltLeft":
+                            case "AltRight":
+                            keyElement.addEventListener("click", () => {
+                                this.setFocus();
+                            });
+                            break;
+
                         case "ControlRight":
                         case "ControlLeft":
+                            // keyElement.classList.add("keyboard__key--middle");
                             keyElement.addEventListener("click", () => {
-                                let caretPos = this.elements.inputField
-                                    .selectionStart;
-                                this.elements.inputField.focus();
-                                this.elements.inputField.setSelectionRange(
-                                    caretPos,
-                                    caretPos
-                                );
+                                this.setFocus();
                             });
-
                             break;
 
                         case "CapsLock":
@@ -421,7 +422,7 @@ const Keyboard = {
                             break;
 
                         case "Enter":
-                            keyElement.classList.add("keyboard__key--wide");
+                            keyElement.classList.add("keyboard__key--middle");
 
                             keyElement.addEventListener("click", (e) => {
                                 this.characterInput("\n");
@@ -430,7 +431,7 @@ const Keyboard = {
                             break;
 
                         case "Tab":
-                            keyElement.classList.add("keyboard__key--wide");
+                            keyElement.classList.add("keyboard__key--middle");
 
                             keyElement.addEventListener("click", (e) => {
                                 this.characterInput("\t");
@@ -451,7 +452,7 @@ const Keyboard = {
 
                         case "Done":
                             keyElement.classList.add(
-                                "keyboard__key--wide",
+                                "keyboard__key--wide"
                                 // "keyboard__key--dark"
                             );
                             // keyElement.innerHTML = createIconHTML(
@@ -475,7 +476,7 @@ const Keyboard = {
                         case "ShiftLeft":
                         case "ShiftRight":
                             keyElement.classList.add(
-                                "keyboard__key--wide",
+                                "keyboard__key--middle",
                                 "keyboard__key--activatable"
                             );
                             keyElement.addEventListener("click", (e) => {
