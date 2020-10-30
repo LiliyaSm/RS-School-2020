@@ -78,6 +78,8 @@ const rowsOrder = [
     ],
 ];
 
+const speechLang = { ru: "ru-RU", en: "en-US" };
+
 const Keyboard = {
     elements: {
         main: null,
@@ -93,6 +95,9 @@ const Keyboard = {
     },
 
     keyLayout: null,
+
+    recognition: null,
+    speechIsOn: false,
 
     properties: {
         value: "",
@@ -135,6 +140,42 @@ const Keyboard = {
         document.body.appendChild(this.elements.inputField);
         document.body.appendChild(this.elements.main);
 
+        const SpeechRecognition =
+            window.speechRecognition || window.webkitSpeechRecognition;
+
+        let recognition = new SpeechRecognition();
+
+        recognition.continuous = true;
+        // recognition.lang = "en-US";
+        recognition.lang = speechLang[this.lang];
+        recognition.onstart = function () {
+            console.log("Recognition started");
+        };
+
+        recognition.onerror = function (e) {
+            console.log("Error");
+        };
+
+        recognition.addEventListener("end", (e) => {
+            // recognition.start();
+            this.elements.keysContainer
+                .querySelector(`[data-code*="Speech"]`)
+                .classList.remove("keyboard__key--dark");
+            console.log("Speech recognition ended");
+        });
+
+        recognition.addEventListener("result", (e) => {
+            if (e.results.length > 0) {
+                console.log(e.results[e.results.length - 1]);
+                this.properties.value +=
+                    e.results[e.results.length - 1][0].transcript;
+                console.log(e.results.length);
+                this._triggerEvent("oninput");
+            }
+        });
+
+        this.recognition = recognition;
+
         document.addEventListener("keydown", (e) => {
             if (e.which == 20 || e.keyCode == 20) {
                 this._toggleCapsLock();
@@ -160,9 +201,6 @@ const Keyboard = {
 
             if (!isFuncButton) {
                 let symbol = pressedBtn.textContent;
-                // symbol = this.isUpper()
-                //     ? symbol.toLocaleUpperCase()
-                //     : symbol.toLocaleLowerCase();
                 event.preventDefault();
                 this.characterInput(symbol);
             }
@@ -175,7 +213,7 @@ const Keyboard = {
             pressedBtn.classList.remove("pressed-button");
 
             //synchronization after entering by physical keyboard
-            Keyboard.properties.value = document.querySelector(
+            this.properties.value = document.querySelector(
                 ".use-keyboard-input"
             ).value;
         });
@@ -365,12 +403,10 @@ const Keyboard = {
 
                         case "Speech":
                             keyElement.innerHTML = createIconHTML("mic");
-                             keyElement.addEventListener("click", () => {
-                                 this._speechInput()
-                             });
-                        break;
-                        
-
+                            keyElement.addEventListener("click", (e) => {
+                                this._speechInput(e);
+                            });
+                            break;
 
                         case "ShiftLeft":
                         case "ShiftRight":
@@ -497,6 +533,7 @@ const Keyboard = {
     _toggleLang(e) {
         this.properties.lang = this.properties.lang === "en" ? "ru" : "en";
         this.keyLayout = language[this.properties.lang];
+        this.recognition.lang = speechLang[this.properties.lang];
 
         this.elements.keys.forEach((key) => {
             let code = key.getAttribute("data-code");
@@ -507,16 +544,18 @@ const Keyboard = {
         });
     },
 
-    _speechInput(){
-        const SpeechRecognition =
-            window.SpeechRecognition || window.webkitSpeechRecognition;
-        let recognition = new SpeechRecognition();
-        recognition.onresult = function (event) {
-            if (event.results.length > 0) {
-                query.value = event.results[0][0].transcript;
-                query.form.submit();
-            }
-        };
+    _speechInput(e) {
+        console.log("receive a command.");
+        this.setFocus(); 
+        this.speechIsOn = !this.speechIsOn;
+        this.elements.keysContainer
+            .querySelector(`[data-code*="Speech"]`)
+            .classList.toggle("keyboard__key--dark");
+        if (this.speechIsOn) {
+            this.recognition.start();
+        } else {
+            this.recognition.stop();
+        }
     },
 
     _toggleShift(e) {
@@ -547,6 +586,12 @@ const Keyboard = {
                 "keyboard__key--active",
                 this.properties.capsLock
             );
+    },
+    setFocus() {
+        let caretPos = this.elements.inputField.selectionStart;
+        this.elements.inputField.focus();
+
+        this.elements.inputField.setSelectionRange(caretPos, caretPos);
     },
 
     open(initialValue, oninput, onclose) {
