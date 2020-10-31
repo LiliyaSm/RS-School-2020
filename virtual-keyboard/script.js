@@ -96,6 +96,7 @@ const Keyboard = {
         keys: [],
         inputField: null,
         title: null,
+        text: null,
     },
 
     eventHandlers: {
@@ -124,16 +125,12 @@ const Keyboard = {
         this.elements.main = document.createElement("div");
         this.elements.keysContainer = document.createElement("div");
         this.elements.inputField = document.createElement("textarea");
+        this.elements.inputField.setAttribute("placeholder", "Enter text");
         let inputContainer = document.createElement("div");
         this.elements.title = document.createElement("h1");
 
-        //CHECK IF USER ALREADY HAS CAPSLOCK ON
-        // this.elements.inputField.addEventListener("click", (event) => {
-        //     if (event.getModifierState("CapsLock")) {
-        //         this.properties.capsLock = true;
-        //     }
-        // });
-        //   <audio data-key="65" src="sounds/clap.wav"></audio>;
+        this.elements.text = document.createElement("span");
+        this.elements.text.classList.add("text");
 
         let audios = this.createAudio();
 
@@ -159,6 +156,7 @@ const Keyboard = {
         document.body.appendChild(inputContainer);
         document.body.appendChild(this.elements.main);
         document.body.appendChild(audios);
+        document.body.appendChild(this.elements.text);
 
         const SpeechRecognition =
             window.speechRecognition || window.webkitSpeechRecognition;
@@ -186,10 +184,8 @@ const Keyboard = {
 
         recognition.addEventListener("result", (e) => {
             if (e.results.length > 0) {
-                console.log(e.results[e.results.length - 1]);
                 this.properties.value +=
                     e.results[e.results.length - 1][0].transcript;
-                // console.log(e.results.length);
                 this._triggerEvent("oninput");
             }
         });
@@ -205,6 +201,12 @@ const Keyboard = {
         document.addEventListener("keydown", (e) => {
             if (e.shiftKey) {
                 this._toggleShift();
+            }
+        });
+
+        document.addEventListener("keydown", (e) => {
+            if (e.altKey) {
+                e.preventDefault();
             }
         });
 
@@ -270,10 +272,24 @@ const Keyboard = {
                 ? (audio = document.querySelector(`audio[src*="allBtns"]`))
                 : (audio = document.querySelector(`audio[src*="allBtnsRU"]`));
         }
-        // e.target.style.animation = "spin2 0.3s linear forwards";
         audio.currentTime = 0;
         audio.play();
-        // e.target.classList.remove("playing");
+    },
+
+    addAnimation(serviceStatus, service) {
+        if (this.elements.text.classList.contains("zoom")) {
+            this.elements.text.classList.remove("zoom");
+        }
+        //force browser to play animation again, set to null styles
+        void this.elements.text.offsetWidth;
+
+        if (serviceStatus) {
+            this.elements.text.textContent = `${service} is on`;
+            this.elements.text.classList.add("zoom");
+        } else {
+            this.elements.text.textContent = `${service} is off`;
+            this.elements.text.classList.add("zoom");
+        }
     },
 
     _createKeys() {
@@ -295,12 +311,6 @@ const Keyboard = {
 
                 keyElement.setAttribute("type", "button");
                 keyElement.classList.add("keyboard__key");
-                // keyElement.addEventListener("click", (e) => {
-                //     this.playSound();
-                // });
-
-                // keyElement.addEventListener("click", (event) => {
-                //     var x = event.getModifierState("CapsLock");})
 
                 let keyObj = this.keyLayout.find((key) => key.code === code);
 
@@ -332,6 +342,8 @@ const Keyboard = {
                                         str.substring(0, start) +
                                         str.substring(end);
                                     this._triggerEvent("oninput");
+
+                                    
                                     this.elements.inputField.focus();
 
                                     this.elements.inputField.setSelectionRange(
@@ -372,6 +384,7 @@ const Keyboard = {
 
                             keyElement.addEventListener("click", () => {
                                 this.soundIsOn = !this.soundIsOn;
+                                this.addAnimation(this.soundIsOn, "Sound");
                                 keyElement.classList.toggle(
                                     "keyboard__key--dark"
                                 );
@@ -597,9 +610,7 @@ const Keyboard = {
         this.recognition.lang = speechLang[this.properties.lang];
         //toggle
         if (this.speechIsOn) {
-            // this.speechIsOn = false;
             this._speechInput(e);
-            // this._speechInput(e);
         }
         this.elements.keys.forEach((key) => {
             let code = key.getAttribute("data-code");
@@ -611,9 +622,9 @@ const Keyboard = {
     },
 
     _speechInput(e) {
-        console.log("receive a command.");
         this.setFocus();
         this.speechIsOn = !this.speechIsOn;
+        this.addAnimation(this.speechIsOn, "Voice input");
         this.elements.keysContainer
             .querySelector(`[data-code*="Speech"]`)
             .classList.toggle("keyboard__key--dark");
@@ -656,7 +667,6 @@ const Keyboard = {
     setFocus() {
         let caretPos = this.elements.inputField.selectionStart;
         this.elements.inputField.focus();
-
         this.elements.inputField.setSelectionRange(caretPos, caretPos);
     },
 
@@ -669,8 +679,6 @@ const Keyboard = {
 
     close() {
         this.properties.value = "";
-        // this.eventHandlers.oninput = oninput;
-        // this.eventHandlers.onclose = onclose;
         this.elements.main.classList.add("keyboard--hidden");
     },
 };
