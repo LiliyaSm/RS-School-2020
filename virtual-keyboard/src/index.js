@@ -1,3 +1,4 @@
+import "./scss/style.scss";
 import language from "./layouts/index.js"; // { en, ru }
 
 const rowsOrder = [
@@ -254,7 +255,7 @@ const Keyboard = {
         const fragment = document.createDocumentFragment();
         sounds.forEach((sound) => {
             let audio = document.createElement("audio");
-            audio.setAttribute("src", `./assets/${sound}`);
+            audio.setAttribute("src", `./assets/sounds/${sound}`);
             fragment.appendChild(audio);
         });
 
