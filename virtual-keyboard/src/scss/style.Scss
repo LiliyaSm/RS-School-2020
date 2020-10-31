@@ -36,7 +36,7 @@ body {
     width: 6%;
     max-width: 90px;
     margin: 3px;
-    border-radius: 4px;
+    border-radius: 7px;
     border: 1px black solid;
     /* background: rgba(255, 255, 255, 0.2); */
     background-size: 200% 100%;
@@ -47,7 +47,7 @@ body {
         #04c0fec4,
         #3f85edcb
     );
-    box-shadow: 0 4px 15px 0 rgba(49, 196, 190, 0.75);
+    box-shadow: 0 4px 1px 0 #25a9e1d0;
     color: white;
     font-size: 16px;
     outline: none;
@@ -70,6 +70,7 @@ body {
         #65cef1c4,
         #83adebcb
     );
+    transform: scale(0.98);
 }
 
 .keyboard__key--wide {
@@ -95,6 +96,7 @@ body {
     border-radius: 50%;
 }
 
+// round indicator
 .keyboard__key--active::after {
     background: #fbff01;
 }
@@ -123,12 +125,12 @@ body {
         #65cef1c4,
         #83adebcb
     );
+    transform: scale(0.99);
 }
 
 .zoom {
     animation: zoom 1s;
-    color: #042763c9;
-    /* animation-iteration-count: 1; */
+    color: black;
     animation-fill-mode: both;
     content: attr(data-num);
     cursor: default;
@@ -140,6 +142,11 @@ body {
     text-align: center;
     /* margin-left: -24px; */
     opacity: 0;
+}
+
+
+.fs20{
+    font-size: 20px;
 }
 
 @keyframes zoom {
@@ -155,12 +162,6 @@ body {
     100% {
         opacity: 0;
     }
-}
-
-.playing {
-    transform: scale(1.1);
-    /* border-color: #ffc600; */
-    box-shadow: 0 0 1rem #ffc600;
 }
 
 @media screen and (max-width: 950px) {
@@ -188,18 +189,15 @@ body {
     }
 
     .zoom {
-
-    font-size: 40px;
-    top: 30%;
-    left: 32%;
-
-}
-
+        font-size: 40px;
+        top: 30%;
+        left: 32%;
+    }
 }
 
 @media screen and (max-width: 735px) {
     .keyboard__key {
-        width: 5%;
+        width: 5.4%;
     }
     .keyboard__key--wide {
         width: 15%;
@@ -210,17 +208,12 @@ body {
     }
 
     .keyboard__key--extra-wide {
-        width: 28%;
+        width: 30%;
     }
-}
 
-@keyframes spin1 {
-    100% {
-        transform: rotate(360deg);
-    }
-}
-@keyframes spin2 {
-    100% {
-        transform: rotate(-360deg);
+    .zoom {
+        font-size: 40px;
+        top: 30%;
+        left: 25%;
     }
 }

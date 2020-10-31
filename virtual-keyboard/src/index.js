@@ -1,5 +1,6 @@
 import "./scss/style.scss";
-import language from "./layouts/index.js"; // { en, ru }
+import language from "./layouts/layout.js"; // { en, ru }
+import create from "./layouts/create.js"; // { en, ru }
 
 const rowsOrder = [
     [
@@ -123,24 +124,33 @@ const Keyboard = {
         this.lang = langCode;
         this.properties.lang = langCode;
         // Create main elements
-        this.elements.main = document.createElement("div");
-        this.elements.keysContainer = document.createElement("div");
-        this.elements.inputField = document.createElement("textarea");
-        this.elements.inputField.setAttribute("placeholder", "Enter text");
-        let inputContainer = document.createElement("div");
-        this.elements.title = document.createElement("h1");
-
-        this.elements.text = document.createElement("span");
-        this.elements.text.classList.add("text");
+        this.elements.main = create("div", "keyboard keyboard--hidden");
+        this.elements.keysContainer = create(
+            "div",
+            "keyboard__keys",
+            this.elements.main
+        );
+        let inputContainer = create("div", "input-container");
+        this.elements.inputField = create(
+            "textarea",
+            "use-keyboard-input",
+            inputContainer,
+            ["placeholder", "Enter text"],
+            ["cols", "120"]
+        );
+        // this.elements.inputField.setAttribute("placeholder", "Enter text");
+        // this.elements.inputField.setAttribute("cols", "120");
+        
+        this.elements.title = create("h1");
+        this.elements.text = create("span", "text");
 
         let audios = this.createAudio();
 
         // Setup main elements
-        this.elements.main.classList.add("keyboard", "keyboard--hidden");
-        this.elements.keysContainer.classList.add("keyboard__keys");
-        this.elements.inputField.classList.add("use-keyboard-input");
-        this.elements.inputField.setAttribute("cols", "120");
-        inputContainer.classList.add("input-container");
+        // this.elements.main.classList.add("keyboard", "keyboard--hidden");
+        // this.elements.keysContainer.classList.add("keyboard__keys");
+        // this.elements.inputField.classList.add("use-keyboard-input");
+        // inputContainer.classList.add("input-container");
         this.elements.keysContainer.appendChild(this._createKeys());
         this.elements.title.textContent = "Virtual keyboard";
 
@@ -148,8 +158,18 @@ const Keyboard = {
             ".keyboard__key"
         );
 
+        this.elements.keys.forEach((key) => {
+            let code = key.getAttribute("data-code");
+            let keyObj = this.keyLayout.find((keyL) => keyL.code === code);
+            let isFuncButton = keyObj.shift ? false : true;
+
+            if (!isFuncButton) {
+                key.classList.add("fs20")
+            }
+        });
+
         // Add to DOM
-        this.elements.main.appendChild(this.elements.keysContainer);
+        // this.elements.main.appendChild(this.elements.keysContainer);
         inputContainer.appendChild(this.elements.title);
         inputContainer.appendChild(this.elements.inputField);
 
@@ -215,7 +235,8 @@ const Keyboard = {
             let pressedBtn = document.querySelector(
                 `[data-code= ${event.code}]`
             );
-            pressedBtn.classList.add("pressed-button");
+
+            if (pressedBtn) pressedBtn.classList.add("pressed-button");
 
             let keyObj = this.keyLayout.find((key) => key.code === event.code);
 
@@ -233,7 +254,7 @@ const Keyboard = {
             let pressedBtn = document.querySelector(
                 `[data-code= ${event.code}]`
             );
-            pressedBtn.classList.remove("pressed-button");
+            if (pressedBtn) pressedBtn.classList.remove("pressed-button");
 
             //synchronization after entering by physical keyboard
             this.properties.value = document.querySelector(
@@ -344,7 +365,6 @@ const Keyboard = {
                                         str.substring(end);
                                     this._triggerEvent("oninput");
 
-                                    
                                     this.elements.inputField.focus();
 
                                     this.elements.inputField.setSelectionRange(
@@ -385,7 +405,7 @@ const Keyboard = {
 
                             keyElement.addEventListener("click", () => {
                                 this.soundIsOn = !this.soundIsOn;
-                                this.addAnimation(this.soundIsOn, "Sound");
+                                this.addAnimation(this.soundIsOn, "Key sound");
                                 keyElement.classList.toggle(
                                     "keyboard__key--dark"
                                 );
@@ -469,9 +489,6 @@ const Keyboard = {
                                 "keyboard__key--wide"
                                 // "keyboard__key--dark"
                             );
-                            // keyElement.innerHTML = createIconHTML(
-                            //     "check_circle"
-                            // );
 
                             keyElement.addEventListener("click", () => {
                                 this.close();
