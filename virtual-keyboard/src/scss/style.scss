@@ -3,7 +3,6 @@ body {
     margin: 0 auto;
     height: 100%;
     text-align: center;
-    align-items: center;
     max-width: 1380px;
     background-color: #f1fbff;
 }
@@ -13,11 +12,13 @@ body {
 }
 
 .keyboard {
+    width: 1100px;
+    padding: 15px 0;
+    border-radius: 14px;
+    margin-left: -550px;
+    left: 50%;
     position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    padding: 5px 0;
+    bottom: 10px;
     background: #393e46;
     box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
     user-select: none;
@@ -34,7 +35,7 @@ body {
 
 .keyboard__key {
     font-weight: bold;
-    height: 45px;
+    height: 47px;
     width: 6%;
     max-width: 90px;
     margin: 3px;
@@ -110,7 +111,7 @@ body {
 .use-keyboard-input {
     min-height: 45vh;
     font-size: 24px;
-    max-width: 95%;
+    max-width: 80%;
     resize: none;
     outline: none;
     border-radius: 20px;
@@ -162,6 +163,14 @@ body {
 
     100% {
         opacity: 0;
+    }
+}
+
+@media screen and (max-width: 1110px) {
+    .keyboard {
+        width: 100%;
+        left: 0;
+        margin-left: 0;
     }
 }
 
