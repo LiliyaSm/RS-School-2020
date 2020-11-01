@@ -7,7 +7,7 @@ export default function create(el, classNames, parent, ...dataAttr) {
         throw new Error(`Unable to create HTMLElement with ${el} tag name`);
     }
 
-    if (classNames) element.classList.add(...classNames.split(" ")); // "class1 class2 class3"
+    if (classNames) element.classList.add(...classNames); 
 
     if (parent) {
         parent.appendChild(element);

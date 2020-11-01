@@ -1,6 +1,6 @@
 import "./scss/style.scss";
 import language from "./layouts/layout.js"; // { en, ru }
-import create from "./layouts/create.js"; // { en, ru }
+import create from "./layouts/create.js"; // creates DOM elements
 
 const rowsOrder = [
     [
@@ -84,7 +84,7 @@ const rowsOrder = [
 const speechLang = { ru: "ru-RU", en: "en-US" };
 const sounds = [
     "allBtns.wav",
-    "allBtnsRU.wav",
+    "rus.wav",
     "Enter.wav",
     "CapsLock.wav",
     "Backspace.wav",
@@ -121,36 +121,34 @@ const Keyboard = {
 
     init(langCode) {
         this.keyLayout = language[langCode];
-        this.lang = langCode;
+        // this.lang = langCode;
         this.properties.lang = langCode;
-        // Create main elements
-        this.elements.main = create("div", "keyboard keyboard--hidden");
+
+        this.elements.main = create(
+            "div",
+            ["keyboard", "keyboard--hidden"],
+            document.body
+        );
         this.elements.keysContainer = create(
             "div",
-            "keyboard__keys",
+            ["keyboard__keys"],
             this.elements.main
         );
-        let inputContainer = create("div", "input-container");
+        let inputContainer = create("div", ["input-container"], document.body);
+        this.elements.title = create("h1", null, inputContainer);
         this.elements.inputField = create(
             "textarea",
-            "use-keyboard-input",
+            ["use-keyboard-input"],
             inputContainer,
             ["placeholder", "Enter text"],
             ["cols", "120"]
         );
-        // this.elements.inputField.setAttribute("placeholder", "Enter text");
-        // this.elements.inputField.setAttribute("cols", "120");
-        
-        this.elements.title = create("h1");
-        this.elements.text = create("span", "text");
+
+        this.elements.text = create("span", ["text"], document.body);
 
         let audios = this.createAudio();
+        document.body.appendChild(audios);
 
-        // Setup main elements
-        // this.elements.main.classList.add("keyboard", "keyboard--hidden");
-        // this.elements.keysContainer.classList.add("keyboard__keys");
-        // this.elements.inputField.classList.add("use-keyboard-input");
-        // inputContainer.classList.add("input-container");
         this.elements.keysContainer.appendChild(this._createKeys());
         this.elements.title.textContent = "Virtual keyboard";
 
@@ -164,28 +162,18 @@ const Keyboard = {
             let isFuncButton = keyObj.shift ? false : true;
 
             if (!isFuncButton) {
-                key.classList.add("fs20")
+                key.classList.add("fs20");
             }
         });
 
-        // Add to DOM
-        // this.elements.main.appendChild(this.elements.keysContainer);
-        inputContainer.appendChild(this.elements.title);
-        inputContainer.appendChild(this.elements.inputField);
-
-        // document.body.appendChild(this.elements.title);
-        document.body.appendChild(inputContainer);
-        document.body.appendChild(this.elements.main);
-        document.body.appendChild(audios);
-        document.body.appendChild(this.elements.text);
-
+        //voice input
         const SpeechRecognition =
             window.speechRecognition || window.webkitSpeechRecognition;
 
         let recognition = new SpeechRecognition();
 
         recognition.continuous = true;
-        // recognition.lang = "en-US";
+        // recognition lang "en-US";
         recognition.lang = speechLang[this.lang];
         recognition.onstart = function () {
             console.log("Recognition started");
@@ -236,7 +224,9 @@ const Keyboard = {
                 `[data-code= ${event.code}]`
             );
 
-            if (pressedBtn) pressedBtn.classList.add("pressed-button");
+            if (!pressedBtn) return
+            
+            pressedBtn.classList.add("pressed-button");
 
             let keyObj = this.keyLayout.find((key) => key.code === event.code);
 
@@ -290,9 +280,11 @@ const Keyboard = {
             audio = document.querySelector(`audio[src*="Shift"]`);
         }
         if (!audio) {
-            this.properties.lang === "en"
-                ? (audio = document.querySelector(`audio[src*="allBtns"]`))
-                : (audio = document.querySelector(`audio[src*="allBtnsRU"]`));
+            if (this.properties.lang === "en") {
+                audio = document.querySelector(`audio[src*="allBtns"]`);
+            } else {
+                audio = document.querySelector(`audio[src*="rus"]`);
+            }
         }
         audio.currentTime = 0;
         audio.play();

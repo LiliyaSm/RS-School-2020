@@ -1,9 +1,11 @@
 body {
-    min-width: 495px;
+    min-width: 475px;
     margin: 0 auto;
     height: 100%;
     text-align: center;
     align-items: center;
+    max-width: 1380px;
+    background-color: #f1fbff;
 }
 
 .input-container {
@@ -108,13 +110,15 @@ body {
 .use-keyboard-input {
     min-height: 45vh;
     font-size: 24px;
-    max-width: 80%;
+    max-width: 95%;
     resize: none;
-    /* border: none; */
     outline: none;
     border-radius: 20px;
     padding: 5px;
     background-color: #ffffff;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border: none;
+    transition: all 0.5s;
 }
 
 .pressed-button {
@@ -137,15 +141,12 @@ body {
     font-size: 80px;
     position: absolute;
     top: 30%;
-    left: 30%;
-    /* transform: translateX(-40%); */
+    left: 32%;
     text-align: center;
-    /* margin-left: -24px; */
     opacity: 0;
 }
 
-
-.fs20{
+.fs20 {
     font-size: 20px;
 }
 
@@ -167,6 +168,7 @@ body {
 @media screen and (max-width: 950px) {
     .use-keyboard-input {
         font-size: 16px;
+        width: 90%;
     }
     .keyboard__key {
         font-size: 14px;
