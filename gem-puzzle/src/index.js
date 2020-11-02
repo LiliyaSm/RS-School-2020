@@ -1,3 +1,5 @@
+import create from "./utils/create.js"; // creates DOM elements
+
 const body = document.querySelector("body");
 
 const PUZZLE_DIFFICULTY = 4;
@@ -5,8 +7,7 @@ const SIZE = 80; //width, height
 const minShuffle = 100;
 const maxShuffle = 300;
 
-
-const DRAG_SENSITIVITY = 6
+const DRAG_SENSITIVITY = 6;
 
 const startPosition = {
     x: 0,
@@ -15,22 +16,13 @@ const startPosition = {
 
 body.setAttribute("class", "container-fluid");
 
-let first_row = document.createElement("div");
-let second_row = document.createElement("div");
-let div = document.createElement("div");
-let beginAgain = document.createElement("button");
-beginAgain.setAttribute("class", "beginAgain");
+let first_row = create("div", ["row"], body);
+let second_row = create("div", ["row", "justify-content-center"], body);
+let third_row = create("div", ["row"], body);
+let beginAgain = create("button", ["beginAgain"], first_row);
+let time = create("time", ["time"], second_row);
+
 beginAgain.innerHTML = "Begin again";
-
-first_row.setAttribute("class", "row");
-first_row.appendChild(beginAgain);
-body.appendChild(first_row);
-second_row.setAttribute("class", "row");
-body.appendChild(second_row);
-
-// div.setAttribute("class", "col-lg-12 col-md-6 col-sm-6 align-self-center");
-
-// second_row.appendChild(div);
 
 class Game {
     constructor() {
@@ -39,33 +31,66 @@ class Game {
         this.canvas = document.createElement("canvas");
         this.context = this.canvas.getContext("2d");
         this.rect = this.canvas.getBoundingClientRect(); // abs. size of element
-        
-        
+
+        this.time = null;
+        this.totalSeconds = 0;
+        this.myInterval = null;
+
         this.drag = {
-            started : false,
-            position : null,
-            startX : 0,
-            startY : 0,
+            started: false,
+            position: null,
+            startX: 0,
+            startY: 0,
             x: 0,
             y: 0,
-        }
+        };
     }
-    shuffleArray = this.shuffleArray;
+    // shuffleArray = this.shuffleArray;
 
     start() {
         this.canvas.width = SIZE * PUZZLE_DIFFICULTY;
         this.canvas.height = SIZE * PUZZLE_DIFFICULTY;
+        // this.showTime();
+        this.myInterval = setInterval(() => this.showTime(), 1000);
+
 
         // document.body.insertBefore(this.canvas, document.body.childNodes[0]);
 
-        second_row.appendChild(this.canvas);
-        // this.createTiles(array);
+        third_row.appendChild(this.canvas);
         //updates every 20th millisecond (50 times per second)
         return setInterval(this.createTiles.bind(this), 20);
     }
 
-    set shuffleArray(newArray) {
-        this.shuffleArray = newArray;
+    // set shuffleArray(newArray) {
+    //     this.shuffleArray = newArray;
+    // }
+
+    showTime() {
+
+        const sec = (this.totalSeconds % 60);
+        const min = (parseInt(this.totalSeconds / 60));
+        const hour = (parseInt(this.totalSeconds / 360));
+
+        // Output Time
+        time.innerHTML = `${hour}<span>:</span>${addZero(
+            min
+        )}<span>:</span>${addZero(sec)}`;
+        
+        ++this.totalSeconds;
+
+        function pad(val) {
+            var valString = val + "";
+            if (valString.length < 2) {
+                return "0" + valString;
+            } else {
+                return valString;
+            }
+        }
+
+        function addZero(n) {
+            return (parseInt(n, 10) < 10 ? "0" : "") + n;
+        }
+
     }
 
     createWinMap() {
@@ -187,8 +212,17 @@ class Game {
         this.shuffleArray[emptyTilePosition - PUZZLE_DIFFICULTY] = 0;
     }
 
+    resetTimer(){
+        clearInterval(this.myInterval);
+        this.totalSeconds = 0;
+        this.showTime();
+        this.myInterval = setInterval(() => this.showTime(), 1000);
+    }
+
+
     beginAgainFunc() {
         this.shuffleArray = this.shuffleTiles(this.winMap);
+        this.resetTimer();
     }
 
     clear() {
@@ -206,9 +240,10 @@ class Game {
             }
 
             if (this.drag.started && this.drag.position === i) {
-                // console.log("x: " + this.drag.x + " y:" + this.drag.y);
+                // draw separately dragging tile
                 continue;
             }
+
             // i:         0 1 2 3 4 5 itc
             // i / 4      0 0 0 0
             //            1 1 1 1
@@ -249,23 +284,25 @@ class Game {
 
         if (diffX > DRAG_SENSITIVITY || diffY > DRAG_SENSITIVITY) {
             this.drag.started = true;
-        }
-
-        if (this.drag.started) {
-            // console.log("move");
             this.drag.x = e.pageX - this.rect.left;
             this.drag.y = e.pageY - this.rect.top;
+        } else {
+            return;
         }
+
+        // if (this.drag.started) {
+        // console.log("move");
+        // }
         // detect mouse outside the canvas
-        if (
-            e.pageX < this.rect.left ||
-            e.pageX > this.rect.right ||
-            e.pageY < this.rect.top ||
-            e.pageY > this.rect.bottom
-        ) {
-            console.log("x", this.drag.x, "y", this.drag.y);
-            this.myUp(e);
-        }
+        // if (
+        //     e.pageX < this.rect.left ||
+        //     e.pageX > this.rect.right ||
+        //     e.pageY < this.rect.top ||
+        //     e.pageY > this.rect.bottom
+        // ) {
+        //     console.log("x", this.drag.x, "y", this.drag.y);
+        //     this.myUp(e);
+        // }
     }
 
     myDown(event) {
@@ -306,12 +343,12 @@ class Game {
     }
 
     myUp(event) {
-
+        //measure the difference between start and end drag
         const diffX = Math.abs(event.pageX - this.drag.startX);
         const diffY = Math.abs(event.pageY - this.drag.startY);
 
         if (diffX < 6 && diffY < 6) {
-            this.handleClick(event) ;           
+            this.handleClick(event);
         }
 
         let x = event.clientX - this.rect.left;
@@ -338,7 +375,6 @@ class Game {
     }
 }
 
-
 function component(ctx, size, text, x, y) {
     ctx.fillStyle = "#EB5E55";
     ctx.shadowColor = "#000000";
@@ -355,8 +391,8 @@ function component(ctx, size, text, x, y) {
     this.y = y;
     ctx.draggable = true;
     //compute text position
-    xNumber = x + 35;
-    yNumber = y + 45;
+    let xNumber = x + 35;
+    let yNumber = y + 45;
     ctx.fillText(text, xNumber, yNumber);
 
     this.update = function () {};
@@ -379,10 +415,6 @@ function arraysEqual(a, b) {
 document.body.onload = function () {
     let game = new Game();
     game.start();
-
-    const delta = 6;
-    let startX;
-    let startY;    
 
     game.canvas.addEventListener("mousedown", (e) => game.myDown(e));
     game.canvas.addEventListener("mouseout", (e) => game.myUp(e));
