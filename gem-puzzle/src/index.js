@@ -1,4 +1,5 @@
 import create from "./utils/create.js"; // creates DOM elements
+import createField from "./utils/createField.js"; // creates canvas field
 
 const body = document.querySelector("body");
 
@@ -9,18 +10,23 @@ const maxShuffle = 300;
 
 const DRAG_SENSITIVITY = 6;
 
-const startPosition = {
-    x: 0,
-    y: 0,
-};
+// const startPosition = {
+//     x: 0,
+//     y: 0,
+// };
 
 body.setAttribute("class", "container-fluid");
 
 let first_row = create("div", ["row"], body);
 let second_row = create("div", ["row", "justify-content-center"], body);
 let third_row = create("div", ["row"], body);
+let fourth_row = create("div", ["row"], body);
+
 let beginAgain = create("button", ["beginAgain"], first_row);
 let time = create("time", ["time"], second_row);
+let select = create("select", ["select"], fourth_row);
+let option = create("option", null, select);
+option.t;
 
 beginAgain.innerHTML = "Begin again";
 
@@ -28,9 +34,9 @@ class Game {
     constructor() {
         this.winMap = this.createWinMap();
         this.shuffleArray = this.shuffleTiles(this.winMap);
-        this.canvas = document.createElement("canvas");
-        this.context = this.canvas.getContext("2d");
-        this.rect = this.canvas.getBoundingClientRect(); // abs. size of element
+        // this.context = null;
+        this.canvas = null;
+        this.rect = null; // abs. size of element
 
         this.time = null;
         this.totalSeconds = 0;
@@ -48,34 +54,37 @@ class Game {
     // shuffleArray = this.shuffleArray;
 
     start() {
-        this.canvas.width = SIZE * PUZZLE_DIFFICULTY;
-        this.canvas.height = SIZE * PUZZLE_DIFFICULTY;
+        this.tileRendering = new createField(SIZE, PUZZLE_DIFFICULTY);
+        this.tileRendering.init();
+        this.canvas = this.tileRendering.canvas;
+        this.rect = this.canvas.getBoundingClientRect(); // abs. size of element
+
         // this.showTime();
         this.myInterval = setInterval(() => this.showTime(), 1000);
 
-
-        // document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-
         third_row.appendChild(this.canvas);
         //updates every 20th millisecond (50 times per second)
-        return setInterval(this.createTiles.bind(this), 20);
+        setInterval(() => {
+            this.tileRendering.createTiles(
+                this.shuffleArray,
+                this.drag.started,
+                this.drag.position,
+                this.drag.x, 
+                this.drag.y 
+            );
+        }, 20);
     }
 
-    // set shuffleArray(newArray) {
-    //     this.shuffleArray = newArray;
-    // }
-
     showTime() {
-
-        const sec = (this.totalSeconds % 60);
-        const min = (parseInt(this.totalSeconds / 60));
-        const hour = (parseInt(this.totalSeconds / 360));
+        const sec = this.totalSeconds % 60;
+        const min = parseInt(this.totalSeconds / 60);
+        const hour = parseInt(this.totalSeconds / 3600);
 
         // Output Time
         time.innerHTML = `${hour}<span>:</span>${addZero(
             min
         )}<span>:</span>${addZero(sec)}`;
-        
+
         ++this.totalSeconds;
 
         function pad(val) {
@@ -90,7 +99,6 @@ class Game {
         function addZero(n) {
             return (parseInt(n, 10) < 10 ? "0" : "") + n;
         }
-
     }
 
     createWinMap() {
@@ -179,7 +187,6 @@ class Game {
             }
         }
 
-        // myGameArea.createTiles(this.shuffleArray);
         if (arraysEqual(this.winMap, this.shuffleArray)) {
             console.log("win");
         }
@@ -212,70 +219,18 @@ class Game {
         this.shuffleArray[emptyTilePosition - PUZZLE_DIFFICULTY] = 0;
     }
 
-    resetTimer(){
+    resetTimer() {
         clearInterval(this.myInterval);
         this.totalSeconds = 0;
         this.showTime();
         this.myInterval = setInterval(() => this.showTime(), 1000);
     }
 
-
     beginAgainFunc() {
         this.shuffleArray = this.shuffleTiles(this.winMap);
         this.resetTimer();
     }
 
-    clear() {
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    }
-
-    //draws tiles for array [1, 3, 2, ...]
-    createTiles() {
-        let array = this.shuffleArray;
-        this.clear();
-        for (let i = 0; i < array.length; i++) {
-            //empty tile
-            if (array[i] === 0) {
-                continue;
-            }
-
-            if (this.drag.started && this.drag.position === i) {
-                // draw separately dragging tile
-                continue;
-            }
-
-            // i:         0 1 2 3 4 5 itc
-            // i / 4      0 0 0 0
-            //            1 1 1 1
-            let row = Math.floor(i / PUZZLE_DIFFICULTY);
-            // i % 4      0 1 2 3 0 1 2 3
-            let col = i % PUZZLE_DIFFICULTY;
-            new component(
-                this.context,
-                SIZE,
-                array[i],
-                startPosition.x + col * SIZE,
-                startPosition.y + row * SIZE
-            );
-        }
-
-        if (this.drag.started) {
-            // console.log(
-            //     this.context,
-            //     SIZE,
-            //     this.shuffleArray[this.drag.position],
-            //     this.drag.x - SIZE / 2,
-            //     this.drag.y - SIZE / 2
-            // );
-            new component(
-                this.context,
-                SIZE,
-                this.shuffleArray[this.drag.position],
-                this.drag.x - SIZE / 2,
-                this.drag.y - SIZE / 2
-            );
-        }
-    }
 
     myMove(e) {
         // prevent dragging tile without sensible mouse moving
@@ -289,20 +244,6 @@ class Game {
         } else {
             return;
         }
-
-        // if (this.drag.started) {
-        // console.log("move");
-        // }
-        // detect mouse outside the canvas
-        // if (
-        //     e.pageX < this.rect.left ||
-        //     e.pageX > this.rect.right ||
-        //     e.pageY < this.rect.top ||
-        //     e.pageY > this.rect.bottom
-        // ) {
-        //     console.log("x", this.drag.x, "y", this.drag.y);
-        //     this.myUp(e);
-        // }
     }
 
     myDown(event) {
@@ -373,29 +314,6 @@ class Game {
         this.canvas.onmousemove = null;
         this.canvas.onmouseup = null;
     }
-}
-
-function component(ctx, size, text, x, y) {
-    ctx.fillStyle = "#EB5E55";
-    ctx.shadowColor = "#000000";
-    ctx.shadowBlur = 4;
-    ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = 2;
-    ctx.fillRect(x + 5, y + 5, size - 10, size - 10);
-    ctx.shadowColor = "transparent";
-    ctx.fillStyle = "#FFFFFF";
-    ctx.font = "20px Arial";
-    this.width = size;
-    this.height = size;
-    this.x = x;
-    this.y = y;
-    ctx.draggable = true;
-    //compute text position
-    let xNumber = x + 35;
-    let yNumber = y + 45;
-    ctx.fillText(text, xNumber, yNumber);
-
-    this.update = function () {};
 }
 
 function arraysEqual(a, b) {
