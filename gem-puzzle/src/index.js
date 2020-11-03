@@ -170,12 +170,26 @@ class Game {
         return this.shuffleArray;
     }
 
-    handleClick(event) {
+    getColRow(clientX, clientY) {
+        let x = clientX - this.rect.left;
+        let y = clientY - this.rect.top;
+        return { col: Math.floor(x / SIZE), row: Math.floor(y / SIZE) };
+    }
+
+    getPosition(pos) {
         //mouse position subtracted from the parent element's offset position, mouse position you are getting is relative to the client window
-        let x = event.clientX - this.rect.left;
-        let y = event.clientY - this.rect.top;
-        let col = Math.floor(x / SIZE);
-        let row = Math.floor(y / SIZE);
+
+        return pos.row * this.PUZZLE_DIFFICULTY + pos.col;
+    }
+
+    handleClick(e) {
+        //mouse position subtracted from the parent element's offset position, mouse position you are getting is relative to the client window
+        // let x = e.clientX - this.rect.left;
+        // let y = e.clientY - this.rect.top;
+        // let col = Math.floor(x / SIZE);
+        // let row = Math.floor(y / SIZE);
+
+        let { col, row } = this.getColRow(e.clientX, e.clientY);
 
         let emptyTilePosition = this.shuffleArray.indexOf(0);
         // let shuffleArray = this.shuffleArray;
@@ -216,6 +230,27 @@ class Game {
         }
     }
 
+    handleMove(e) {
+        // let x = e.clientX - this.rect.left;
+        // let y = e.clientY - this.rect.top;
+        // let col = Math.floor(x / SIZE);
+        // let row = Math.floor(y / SIZE);
+
+        // let position = row * this.PUZZLE_DIFFICULTY + col;
+
+        let position = this.getPosition(this.getColRow(e.clientX, e.clientY));
+
+        let emptyTilePosition = this.shuffleArray.indexOf(0);
+
+        if (this.drag.started && position === emptyTilePosition) {
+            this.shuffleArray[emptyTilePosition] = this.shuffleArray[
+                this.drag.position
+            ];
+            this.shuffleArray[this.drag.position] = 0;
+            this.increaseCounter();
+        }
+    }
+
     left(emptyTilePosition) {
         this.shuffleArray[emptyTilePosition] = this.shuffleArray[
             emptyTilePosition - 1
@@ -247,7 +282,6 @@ class Game {
         this.shuffleArray = this.shuffleTiles(this.winMap);
         this.resetCounter();
         this.timer.resetTimer();
-
     }
 
     myMove(e) {
@@ -264,22 +298,18 @@ class Game {
         }
     }
 
-    myDown(event) {
-        //detect drag or click
-        this.drag.startX = event.pageX;
-        this.drag.startY = event.pageY;
+    myDown(e) {
+        //save start drag position
+        this.drag.startX = e.pageX;
+        this.drag.startY = e.pageY;
 
         let rect = this.canvas.getBoundingClientRect(); // abs. size of element
         this.rect = rect;
         // let rect = this.rect;
 
         console.log(rect);
-        //mouse position subtracted from the parent element's offset position, mouse position you are getting is relative to the client window
-        let x = event.clientX - rect.left;
-        let y = event.clientY - rect.top;
-        let col = Math.floor(x / SIZE);
-        let row = Math.floor(y / SIZE);
-        let position = row * this.PUZZLE_DIFFICULTY + col;
+
+        let position = this.getPosition(this.getColRow(e.clientX, e.clientY));
 
         let emptyTilePosition = this.shuffleArray.indexOf(0);
 
@@ -295,9 +325,10 @@ class Game {
             return;
         }
         console.log(position);
-
-        this.drag.x = event.clientX - rect.left;
-        this.drag.y = event.clientY - rect.top;
+        //initial plsce of motential moving
+        this.drag.x = e.clientX - rect.left;
+        this.drag.y = e.clientY - rect.top;
+        
         this.drag.position = position;
         this.canvas.onmousemove = (e) => this.myMove(e);
         this.canvas.onmouseup = (e) => this.myUp(e);
@@ -308,26 +339,13 @@ class Game {
         const diffX = Math.abs(event.pageX - this.drag.startX);
         const diffY = Math.abs(event.pageY - this.drag.startY);
 
-        if (diffX < 6 && diffY < 6) {
+        if (diffX < DRAG_SENSITIVITY && diffY < DRAG_SENSITIVITY) {
             this.handleClick(event);
+        } else {
+            this.handleMove(event);
         }
 
-        let x = event.clientX - this.rect.left;
-        let y = event.clientY - this.rect.top;
-        let col = Math.floor(x / SIZE);
-        let row = Math.floor(y / SIZE);
-        let position = row * this.PUZZLE_DIFFICULTY + col;
-
-        let emptyTilePosition = this.shuffleArray.indexOf(0);
-
-        if (position === emptyTilePosition) {
-            this.shuffleArray[emptyTilePosition] = this.shuffleArray[
-                this.drag.position
-            ];
-            this.shuffleArray[this.drag.position] = 0;
-            // this.increaseCounter();
-        }
-
+        // set to initial values
         this.drag.started = false;
         this.drag.position = null;
         this.drag.x = 0;
