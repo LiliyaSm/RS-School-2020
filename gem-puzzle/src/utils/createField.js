@@ -28,16 +28,17 @@ const startPosition = {
 //   const keyButton = new Key(keyObj);
 
 export default class createField {
-    constructor(SIZE, PUZZLE_DIFFICULTY) {
-        this.context =  null;
-        this.canvas = null;
-        this.SIZE = SIZE;
-        this.PUZZLE_DIFFICULTY = PUZZLE_DIFFICULTY;
-    }
-    
-    init() {
+    constructor() {
         this.canvas = document.createElement("canvas");
         this.context = this.canvas.getContext("2d");
+        // this.context = null;
+        this.SIZE = null;
+        this.PUZZLE_DIFFICULTY = null;
+    }
+
+    init(SIZE, PUZZLE_DIFFICULTY) {
+        this.PUZZLE_DIFFICULTY = PUZZLE_DIFFICULTY;
+        this.SIZE = SIZE;
         this.canvas.width = this.SIZE * this.PUZZLE_DIFFICULTY;
         this.canvas.height = this.SIZE * this.PUZZLE_DIFFICULTY;
     }

@@ -1,19 +1,16 @@
 import create from "./utils/create.js"; // creates DOM elements
 import createField from "./utils/createField.js"; // creates canvas field
+import Timer from "./utils/timer.js"; // creates canvas field
 
 const body = document.querySelector("body");
 
-const PUZZLE_DIFFICULTY = 4;
+
 const SIZE = 80; //width, height
 const minShuffle = 100;
 const maxShuffle = 300;
 
 const DRAG_SENSITIVITY = 6;
 
-// const startPosition = {
-//     x: 0,
-//     y: 0,
-// };
 
 body.setAttribute("class", "container-fluid");
 
@@ -23,24 +20,41 @@ let third_row = create("div", ["row"], body);
 let fourth_row = create("div", ["row"], body);
 
 let beginAgain = create("button", ["beginAgain"], first_row);
-let time = create("time", ["time"], second_row);
 let select = create("select", ["select"], fourth_row);
-let option = create("option", null, select);
-option.t;
+
+let option1 = create(
+    "option",
+    null,
+    select,
+    ["selected", ""],
+    ["selected", "selected"],
+    ["disabled", "disabled"],
+    ["hidden", "hidden"]
+);
+let option2 = create("option", null, select, ["value", "3"]);
+let option3 = create("option", null, select, ["value", "4"]);
+let option4 = create("option", null, select, ["value", "5"]);
+
+option1.textContent = "Change field size ";
+option2.textContent = "3x3";
+option3.textContent = "4x4 ";
+option4.textContent = "5x5";
 
 beginAgain.innerHTML = "Begin again";
 
 class Game {
-    constructor() {
+    constructor(PUZZLE_DIFFICULTY) {
+        this.PUZZLE_DIFFICULTY = Number(PUZZLE_DIFFICULTY);
         this.winMap = this.createWinMap();
         this.shuffleArray = this.shuffleTiles(this.winMap);
         // this.context = null;
         this.canvas = null;
         this.rect = null; // abs. size of element
 
-        this.time = null;
-        this.totalSeconds = 0;
         this.myInterval = null;
+
+        this.timer = null;
+
 
         this.drag = {
             started: false,
@@ -51,16 +65,18 @@ class Game {
             y: 0,
         };
     }
-    // shuffleArray = this.shuffleArray;
 
     start() {
-        this.tileRendering = new createField(SIZE, PUZZLE_DIFFICULTY);
-        this.tileRendering.init();
+        this.tileRendering = new createField();
+        this.tileRendering.init(SIZE, this.PUZZLE_DIFFICULTY);
         this.canvas = this.tileRendering.canvas;
         this.rect = this.canvas.getBoundingClientRect(); // abs. size of element
 
-        // this.showTime();
-        this.myInterval = setInterval(() => this.showTime(), 1000);
+        select.addEventListener("change", (e) => this.logValue(e));
+
+        let time = create("time", ["time"], second_row);
+        this.timer = new Timer(time);
+        this.timer.start();
 
         third_row.appendChild(this.canvas);
         //updates every 20th millisecond (50 times per second)
@@ -69,41 +85,29 @@ class Game {
                 this.shuffleArray,
                 this.drag.started,
                 this.drag.position,
-                this.drag.x, 
-                this.drag.y 
+                this.drag.x,
+                this.drag.y
             );
         }, 20);
     }
 
-    showTime() {
-        const sec = this.totalSeconds % 60;
-        const min = parseInt(this.totalSeconds / 60);
-        const hour = parseInt(this.totalSeconds / 3600);
+    restart() {
+        this.winMap = this.createWinMap();
+        this.shuffleArray = this.shuffleTiles(this.winMap);
+        this.tileRendering.init(SIZE, this.PUZZLE_DIFFICULTY);
+        this.canvas = this.tileRendering.canvas;
+        this.rect = this.canvas.getBoundingClientRect(); // abs. size of element
+        this.timer.resetTimer();
+    }
 
-        // Output Time
-        time.innerHTML = `${hour}<span>:</span>${addZero(
-            min
-        )}<span>:</span>${addZero(sec)}`;
-
-        ++this.totalSeconds;
-
-        function pad(val) {
-            var valString = val + "";
-            if (valString.length < 2) {
-                return "0" + valString;
-            } else {
-                return valString;
-            }
-        }
-
-        function addZero(n) {
-            return (parseInt(n, 10) < 10 ? "0" : "") + n;
-        }
+    logValue(e) {
+        this.PUZZLE_DIFFICULTY = Number(e.target.value);
+        this.restart();
     }
 
     createWinMap() {
         //  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0];
-        let arraySize = PUZZLE_DIFFICULTY * PUZZLE_DIFFICULTY;
+        let arraySize = this.PUZZLE_DIFFICULTY * this.PUZZLE_DIFFICULTY;
         let result = [...Array(arraySize + 1).keys()].slice(1);
         result[arraySize - 1] = 0;
         return result;
@@ -122,8 +126,8 @@ class Game {
             let operation = shifts[randOperation];
             let emptyTilePosition = this.shuffleArray.indexOf(0);
 
-            let row = Math.floor(emptyTilePosition / PUZZLE_DIFFICULTY);
-            let col = emptyTilePosition % PUZZLE_DIFFICULTY;
+            let row = Math.floor(emptyTilePosition / this.PUZZLE_DIFFICULTY);
+            let col = emptyTilePosition % this.PUZZLE_DIFFICULTY;
             switch (operation) {
                 case "left":
                     if (col !== 0) {
@@ -132,7 +136,7 @@ class Game {
                     break;
 
                 case "right":
-                    if (col !== PUZZLE_DIFFICULTY - 1) {
+                    if (col !== this.PUZZLE_DIFFICULTY - 1) {
                         this.right(emptyTilePosition);
                     }
                     break;
@@ -142,7 +146,7 @@ class Game {
                     }
                     break;
                 case "down":
-                    if (row !== PUZZLE_DIFFICULTY - 1) {
+                    if (row !== this.PUZZLE_DIFFICULTY - 1) {
                         this.down(emptyTilePosition);
                     }
                     break;
@@ -153,7 +157,7 @@ class Game {
 
     handleClick(event) {
         let rect = this.canvas.getBoundingClientRect(); // abs. size of element
-        console.log(rect);
+        // console.log(rect);
         //mouse position subtracted from the parent element's offset position, mouse position you are getting is relative to the client window
         let x = event.clientX - rect.left;
         let y = event.clientY - rect.top;
@@ -162,8 +166,10 @@ class Game {
 
         let emptyTilePosition = this.shuffleArray.indexOf(0);
         // let shuffleArray = this.shuffleArray;
-        let rowEmptyTile = Math.floor(emptyTilePosition / PUZZLE_DIFFICULTY);
-        let colEmptyTile = emptyTilePosition % PUZZLE_DIFFICULTY;
+        let rowEmptyTile = Math.floor(
+            emptyTilePosition / this.PUZZLE_DIFFICULTY
+        );
+        let colEmptyTile = emptyTilePosition % this.PUZZLE_DIFFICULTY;
 
         if (
             col === colEmptyTile &&
@@ -188,6 +194,7 @@ class Game {
         }
 
         if (arraysEqual(this.winMap, this.shuffleArray)) {
+            this.timer.stop();
             console.log("win");
         }
     }
@@ -207,30 +214,22 @@ class Game {
 
     down(emptyTilePosition) {
         this.shuffleArray[emptyTilePosition] = this.shuffleArray[
-            emptyTilePosition + PUZZLE_DIFFICULTY
+            emptyTilePosition + this.PUZZLE_DIFFICULTY
         ];
-        this.shuffleArray[emptyTilePosition + PUZZLE_DIFFICULTY] = 0;
+        this.shuffleArray[emptyTilePosition + this.PUZZLE_DIFFICULTY] = 0;
     }
 
     up(emptyTilePosition) {
         this.shuffleArray[emptyTilePosition] = this.shuffleArray[
-            emptyTilePosition - PUZZLE_DIFFICULTY
+            emptyTilePosition - this.PUZZLE_DIFFICULTY
         ];
-        this.shuffleArray[emptyTilePosition - PUZZLE_DIFFICULTY] = 0;
-    }
-
-    resetTimer() {
-        clearInterval(this.myInterval);
-        this.totalSeconds = 0;
-        this.showTime();
-        this.myInterval = setInterval(() => this.showTime(), 1000);
+        this.shuffleArray[emptyTilePosition - this.PUZZLE_DIFFICULTY] = 0;
     }
 
     beginAgainFunc() {
         this.shuffleArray = this.shuffleTiles(this.winMap);
-        this.resetTimer();
+        this.timer.resetTimer();
     }
-
 
     myMove(e) {
         // prevent dragging tile without sensible mouse moving
@@ -259,15 +258,15 @@ class Game {
         let y = event.clientY - rect.top;
         let col = Math.floor(x / SIZE);
         let row = Math.floor(y / SIZE);
-        let position = row * PUZZLE_DIFFICULTY + col;
+        let position = row * this.PUZZLE_DIFFICULTY + col;
 
         let emptyTilePosition = this.shuffleArray.indexOf(0);
 
         // check if shifting is available
         if (
             !(
-                position === emptyTilePosition + PUZZLE_DIFFICULTY ||
-                position === emptyTilePosition - PUZZLE_DIFFICULTY ||
+                position === emptyTilePosition + this.PUZZLE_DIFFICULTY ||
+                position === emptyTilePosition - this.PUZZLE_DIFFICULTY ||
                 position === emptyTilePosition - 1 ||
                 position === emptyTilePosition + 1
             )
@@ -296,7 +295,7 @@ class Game {
         let y = event.clientY - this.rect.top;
         let col = Math.floor(x / SIZE);
         let row = Math.floor(y / SIZE);
-        let position = row * PUZZLE_DIFFICULTY + col;
+        let position = row * this.PUZZLE_DIFFICULTY + col;
 
         let emptyTilePosition = this.shuffleArray.indexOf(0);
 
@@ -331,7 +330,7 @@ function arraysEqual(a, b) {
 // }
 
 document.body.onload = function () {
-    let game = new Game();
+    let game = new Game(4);
     game.start();
 
     game.canvas.addEventListener("mousedown", (e) => game.myDown(e));
