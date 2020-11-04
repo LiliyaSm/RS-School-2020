@@ -46,7 +46,7 @@ export default class createField {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    createTiles(array, dragStarted, dragPosition, dragX, dragY) {
+    createTiles(array, animationed, dragPosition, dragX, dragY) {
         this.clear();
         for (let i = 0; i < array.length; i++) {
             //empty tile
@@ -54,7 +54,7 @@ export default class createField {
                 continue;
             }
 
-            if (dragStarted && dragPosition === i) {
+            if (animationed && dragPosition === i) {
                 // draw separately dragging tile
                 continue;
             }
@@ -74,21 +74,12 @@ export default class createField {
             );
         }
 
-        if (dragStarted) {
-            // console.log(
-            //     this.context,
-            //     SIZE,
-            //     this.shuffleArray[this.drag.position],
-            //     this.drag.x - SIZE / 2,
-            //     this.drag.y - SIZE / 2
-            // );
+        if (animationed) {
             new component(
                 this.context,
                 this.SIZE,
                 array[dragPosition],
-                // dragX - this.SIZE / 2,
-                // dragY - this.SIZE / 2
-                dragX ,
+                dragX,
                 dragY
             );
         }

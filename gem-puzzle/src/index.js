@@ -67,10 +67,9 @@ class Game {
         };
 
         this.animation = {
-            totalFrames: 40,
-            started: false,
-            position: null,
-         };
+            // Frames per second
+            frameRate: 100,
+        };
     }
 
     start() {
@@ -85,24 +84,7 @@ class Game {
         this.timer = new Timer(time);
         this.timer.start();
 
-         this.tileRendering.createTiles(
-                this.shuffleArray,
-                this.drag.started,
-                this.drag.position,
-                this.drag.x,
-                this.drag.y
-            );
-
-        //updates every 20th millisecond (50 times per second)
-        // setInterval(() => {
-        //     this.tileRendering.createTiles(
-        //         this.shuffleArray,
-        //         this.drag.started,
-        //         this.drag.position,
-        //         this.drag.x,
-        //         this.drag.y
-        //     );
-        // }, 20);
+        this.tileRendering.createTiles(this.shuffleArray);
         this.rect = this.canvas.getBoundingClientRect(); // abs. size of element. After loading ALL DOM elements!
     }
 
@@ -113,14 +95,7 @@ class Game {
         this.canvas = this.tileRendering.canvas;
         this.rect = this.canvas.getBoundingClientRect(); // abs. size of element
 
-       
-         this.tileRendering.createTiles(
-             this.shuffleArray,
-             this.drag.started,
-             this.drag.position,
-             this.drag.x,
-             this.drag.y
-         );
+        this.tileRendering.createTiles(this.shuffleArray);
 
         this.resetCounter();
 
@@ -207,8 +182,8 @@ class Game {
     handleClick(e) {
         let { col, row } = this.getColRow(e.clientX, e.clientY);
 
-        this.animation.position = this.getPosition({ col: col, row: row }); 
-        this.animation.started = true;
+        // this.animation.position = this.getPosition({ col: col, row: row });
+        this.drag.started = true;
 
         let emptyTilePosition = this.shuffleArray.indexOf(0);
         let rowEmptyTile = Math.floor(
@@ -226,7 +201,7 @@ class Game {
                 this.createAnimation(
                     { from: col * SIZE, to: col * SIZE },
                     { from: row * SIZE, to: row * SIZE - SIZE },
-                    10,
+                    100,
                     // call to change array only after animation
                     () => this.down(emptyTilePosition)
                 );
@@ -234,7 +209,7 @@ class Game {
                 this.createAnimation(
                     { from: col * SIZE, to: col * SIZE },
                     { from: row * SIZE, to: row * SIZE + SIZE },
-                    60,
+                    100,
                     // call to change array only after animation
                     () => this.up(emptyTilePosition)
                 );
@@ -247,19 +222,19 @@ class Game {
 
             if (colEmptyTile + 1 === col) {
                 // сдвиг вправо пустой!!!!
-                
+
                 this.createAnimation(
                     { from: col * SIZE, to: col * SIZE - SIZE },
                     { from: row * SIZE, to: row * SIZE },
-                    60, 
+                    100,
                     // call to change array only after animation
-                    ()=>this.right(emptyTilePosition)
-                    );
+                    () => this.right(emptyTilePosition)
+                );
             } else {
                 this.createAnimation(
                     { from: col * SIZE, to: col * SIZE + SIZE },
                     { from: row * SIZE, to: row * SIZE },
-                    60,
+                    100,
                     // call to change array only after animation
                     () => this.left(emptyTilePosition)
                 );
@@ -270,20 +245,23 @@ class Game {
 
     createAnimation(x, y, duration, callback) {
         let currFrame = 0;
+        // Calculate total frames for current animation based on frameRate
+        const totalFrames = (duration * this.animation.frameRate) / 1000;
+
         // this func is recursively called to draw each frame
         var drawFrame = () => {
             // calculate new currPos
             let currPosX =
                 x.from +
-                (x.to - x.from) * currFrame / this.animation.totalFrames;
+                ((x.to - x.from) * currFrame) / totalFrames;
             let currPosY =
                 y.from +
-                (y.to - y.from) * currFrame / this.animation.totalFrames;
+                ((y.to - y.from) * currFrame) / totalFrames;
             // call render function to update the screen
             this.tileRendering.createTiles(
                 this.shuffleArray,
-                this.animation.started,
-                this.animation.position,
+                this.drag.started,
+                this.drag.position,
                 currPosX,
                 currPosY
             );
@@ -292,11 +270,11 @@ class Game {
             currFrame++;
             // check if we not exceed totalFrame - set a timeout to call drawFrame
             // after the desired delay
-            if (currFrame <= this.animation.totalFrames) {
-                setTimeout(drawFrame, duration / this.animation.totalFrames);
+            if (currFrame <= totalFrames) {
+                setTimeout(drawFrame, duration / totalFrames);
             } else {
-                this.animation.started = false;
-                callback()
+                this.drag.started = false;
+                if (callback) callback();
             }
         };
         // call drawFrame to start animation (draw the first frame)
@@ -304,17 +282,44 @@ class Game {
     }
 
     handleMove(e) {
-        let position = this.getPosition(this.getColRow(e.clientX, e.clientY));
+        let { col, row } = this.getColRow(e.clientX, e.clientY);
+        let position = this.getPosition({ col: col, row: row });
+
+        let { col: initialCol, row: initialRow } = this.getColRow(
+            this.drag.startX,
+            this.drag.startY
+        );
 
         let emptyTilePosition = this.shuffleArray.indexOf(0);
 
         if (this.drag.started && position === emptyTilePosition) {
-            this.shuffleArray[emptyTilePosition] = this.shuffleArray[
-                this.drag.position
-            ];
-            this.shuffleArray[this.drag.position] = 0;
-            this.increaseCounter();
+            this.createAnimation(
+                { from: e.clientX - this.rect.left - SIZE / 2, to: col * SIZE },
+                { from: e.clientY - this.rect.top - SIZE / 2, to: row * SIZE },
+                300,
+                () => {
+                    this.shuffleArray[emptyTilePosition] = this.shuffleArray[
+                        this.drag.position
+                    ];
+                    this.shuffleArray[this.drag.position] = 0;
+                    this.increaseCounter();
+                }
+            );
+        } else {
+            this.createAnimation(
+                {
+                    from: e.clientX - this.rect.left - SIZE / 2,
+                    to: initialCol * SIZE,
+                },
+                {
+                    from: e.clientY - this.rect.top - SIZE / 2,
+                    to: initialRow * SIZE,
+                },
+                400
+            );
         }
+
+        // this.tileRendering.createTiles(this.shuffleArray);
     }
 
     left(emptyTilePosition) {
@@ -359,13 +364,23 @@ class Game {
             this.drag.started = true;
             this.drag.x = e.pageX - this.rect.left;
             this.drag.y = e.pageY - this.rect.top;
+
+            this.tileRendering.createTiles(
+                this.shuffleArray,
+                this.drag.started,
+                this.drag.position,
+                //shift for centering on cursor
+                this.drag.x - SIZE / 2,
+                this.drag.y - SIZE / 2
+            );
         } else {
             return;
         }
     }
 
     myDown(e) {
-        //save start drag position
+        //initial place of potential moving
+
         this.drag.startX = e.pageX;
         this.drag.startY = e.pageY;
 
@@ -377,7 +392,7 @@ class Game {
         let emptyTilePosition = this.shuffleArray.indexOf(0);
 
         // check if shifting is available
-        if (this.animation.started){
+        if (this.drag.started) {
             return;
         }
 
@@ -392,11 +407,11 @@ class Game {
             return;
         }
         console.log(position);
-        //initial place of motential moving
+
         this.drag.x = e.clientX - rect.left;
         this.drag.y = e.clientY - rect.top;
-
         this.drag.position = position;
+
         this.canvas.onmousemove = (e) => this.myMove(e);
         this.canvas.onmouseup = (e) => this.myUp(e);
     }
@@ -418,8 +433,8 @@ class Game {
         }
 
         // set to initial values
-        this.drag.started = false;
-        this.drag.position = null;
+        // this.drag.started = false;
+        // this.drag.position = null;
         this.drag.x = 0;
         this.drag.y = 0;
         this.canvas.onmousemove = null;
