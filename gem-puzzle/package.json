@@ -6,7 +6,8 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "publish": "webpack --mode production",
-        "start": "webpack-dev-server -d --open --content-base ./dist"
+        "start": "webpack-dev-server -d --open --content-base ./dist",
+         "lint": "eslint --fix --ext .js,.jsx ."
     },
     "author": "",
     "license": "ISC",
