@@ -19,7 +19,6 @@ function component(ctx, size, text, x, y) {
     this.update = function () {};
 }
 
-
 const startPosition = {
     x: 0,
     y: 0,
@@ -87,8 +86,10 @@ export default class createField {
                 this.context,
                 this.SIZE,
                 array[dragPosition],
-                dragX - this.SIZE / 2,
-                dragY - this.SIZE / 2
+                // dragX - this.SIZE / 2,
+                // dragY - this.SIZE / 2
+                dragX ,
+                dragY
             );
         }
     }

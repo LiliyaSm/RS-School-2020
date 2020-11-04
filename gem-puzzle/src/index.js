@@ -1,6 +1,8 @@
 import create from "./utils/create.js"; // creates DOM elements
 import createField from "./utils/createField.js"; // creates canvas field
 import Timer from "./utils/timer.js"; // creates canvas field
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 
 const body = document.querySelector("body");
 
@@ -18,8 +20,8 @@ let third_row = create("div", ["row"], body);
 let fourth_row = create("div", ["row"], body);
 
 let beginAgain = create("button", ["beginAgain"], first_row);
-let select = create("select", ["select"], fourth_row);
-let counter = create("span", ["counter"], fourth_row);
+let select = create("select", ["select", "col-4"], fourth_row);
+let counter = create("span", ["counter", "col-4"], fourth_row);
 counter.textContent = 0;
 
 let option1 = create(
@@ -63,6 +65,12 @@ class Game {
             x: 0,
             y: 0,
         };
+
+        this.animation = {
+            totalFrames: 40,
+            started: false,
+            position: null,
+         };
     }
 
     start() {
@@ -77,16 +85,24 @@ class Game {
         this.timer = new Timer(time);
         this.timer.start();
 
-        //updates every 20th millisecond (50 times per second)
-        setInterval(() => {
-            this.tileRendering.createTiles(
+         this.tileRendering.createTiles(
                 this.shuffleArray,
                 this.drag.started,
                 this.drag.position,
                 this.drag.x,
                 this.drag.y
             );
-        }, 20);
+
+        //updates every 20th millisecond (50 times per second)
+        // setInterval(() => {
+        //     this.tileRendering.createTiles(
+        //         this.shuffleArray,
+        //         this.drag.started,
+        //         this.drag.position,
+        //         this.drag.x,
+        //         this.drag.y
+        //     );
+        // }, 20);
         this.rect = this.canvas.getBoundingClientRect(); // abs. size of element. After loading ALL DOM elements!
     }
 
@@ -97,8 +113,14 @@ class Game {
         this.canvas = this.tileRendering.canvas;
         this.rect = this.canvas.getBoundingClientRect(); // abs. size of element
 
-        this.moveCounter = 0;
-        counter.textContent = this.moveCounter;
+       
+         this.tileRendering.createTiles(
+             this.shuffleArray,
+             this.drag.started,
+             this.drag.position,
+             this.drag.x,
+             this.drag.y
+         );
 
         this.resetCounter();
 
@@ -183,16 +205,12 @@ class Game {
     }
 
     handleClick(e) {
-        //mouse position subtracted from the parent element's offset position, mouse position you are getting is relative to the client window
-        // let x = e.clientX - this.rect.left;
-        // let y = e.clientY - this.rect.top;
-        // let col = Math.floor(x / SIZE);
-        // let row = Math.floor(y / SIZE);
-
         let { col, row } = this.getColRow(e.clientX, e.clientY);
 
+        this.animation.position = this.getPosition({ col: col, row: row }); 
+        this.animation.started = true;
+
         let emptyTilePosition = this.shuffleArray.indexOf(0);
-        // let shuffleArray = this.shuffleArray;
         let rowEmptyTile = Math.floor(
             emptyTilePosition / this.PUZZLE_DIFFICULTY
         );
@@ -203,41 +221,89 @@ class Game {
             (rowEmptyTile + 1 === row || rowEmptyTile - 1 === row)
         ) {
             // shift in column
-            this.increaseCounter();
 
             if (rowEmptyTile + 1 === row) {
-                this.down(emptyTilePosition);
+                this.createAnimation(
+                    { from: col * SIZE, to: col * SIZE },
+                    { from: row * SIZE, to: row * SIZE - SIZE },
+                    10,
+                    // call to change array only after animation
+                    () => this.down(emptyTilePosition)
+                );
             } else {
-                this.up(emptyTilePosition);
+                this.createAnimation(
+                    { from: col * SIZE, to: col * SIZE },
+                    { from: row * SIZE, to: row * SIZE + SIZE },
+                    60,
+                    // call to change array only after animation
+                    () => this.up(emptyTilePosition)
+                );
             }
         } else if (
             row === rowEmptyTile &&
             (colEmptyTile + 1 === col || colEmptyTile - 1 === col)
         ) {
             // shift in row
-            this.increaseCounter();
 
             if (colEmptyTile + 1 === col) {
-                this.right(emptyTilePosition);
+                // сдвиг вправо пустой!!!!
+                
+                this.createAnimation(
+                    { from: col * SIZE, to: col * SIZE - SIZE },
+                    { from: row * SIZE, to: row * SIZE },
+                    60, 
+                    // call to change array only after animation
+                    ()=>this.right(emptyTilePosition)
+                    );
             } else {
-                this.left(emptyTilePosition);
+                this.createAnimation(
+                    { from: col * SIZE, to: col * SIZE + SIZE },
+                    { from: row * SIZE, to: row * SIZE },
+                    60,
+                    // call to change array only after animation
+                    () => this.left(emptyTilePosition)
+                );
             }
         }
+        this.increaseCounter();
+    }
 
-        if (arraysEqual(this.winMap, this.shuffleArray)) {
-            this.timer.stop();
-            console.log("win");
-        }
+    createAnimation(x, y, duration, callback) {
+        let currFrame = 0;
+        // this func is recursively called to draw each frame
+        var drawFrame = () => {
+            // calculate new currPos
+            let currPosX =
+                x.from +
+                (x.to - x.from) * currFrame / this.animation.totalFrames;
+            let currPosY =
+                y.from +
+                (y.to - y.from) * currFrame / this.animation.totalFrames;
+            // call render function to update the screen
+            this.tileRendering.createTiles(
+                this.shuffleArray,
+                this.animation.started,
+                this.animation.position,
+                currPosX,
+                currPosY
+            );
+
+            // increment current frame number
+            currFrame++;
+            // check if we not exceed totalFrame - set a timeout to call drawFrame
+            // after the desired delay
+            if (currFrame <= this.animation.totalFrames) {
+                setTimeout(drawFrame, duration / this.animation.totalFrames);
+            } else {
+                this.animation.started = false;
+                callback()
+            }
+        };
+        // call drawFrame to start animation (draw the first frame)
+        drawFrame();
     }
 
     handleMove(e) {
-        // let x = e.clientX - this.rect.left;
-        // let y = e.clientY - this.rect.top;
-        // let col = Math.floor(x / SIZE);
-        // let row = Math.floor(y / SIZE);
-
-        // let position = row * this.PUZZLE_DIFFICULTY + col;
-
         let position = this.getPosition(this.getColRow(e.clientX, e.clientY));
 
         let emptyTilePosition = this.shuffleArray.indexOf(0);
@@ -278,11 +344,11 @@ class Game {
         this.shuffleArray[emptyTilePosition - this.PUZZLE_DIFFICULTY] = 0;
     }
 
-    beginAgainFunc() {
-        this.shuffleArray = this.shuffleTiles(this.winMap);
-        this.resetCounter();
-        this.timer.resetTimer();
-    }
+    // beginAgainFunc() {
+    //     this.shuffleArray = this.shuffleTiles(this.winMap);
+    //     this.resetCounter();
+    //     this.timer.resetTimer();
+    // }
 
     myMove(e) {
         // prevent dragging tile without sensible mouse moving
@@ -305,15 +371,16 @@ class Game {
 
         let rect = this.canvas.getBoundingClientRect(); // abs. size of element
         this.rect = rect;
-        // let rect = this.rect;
-
-        console.log(rect);
 
         let position = this.getPosition(this.getColRow(e.clientX, e.clientY));
 
         let emptyTilePosition = this.shuffleArray.indexOf(0);
 
         // check if shifting is available
+        if (this.animation.started){
+            return;
+        }
+
         if (
             !(
                 position === emptyTilePosition + this.PUZZLE_DIFFICULTY ||
@@ -325,10 +392,10 @@ class Game {
             return;
         }
         console.log(position);
-        //initial plsce of motential moving
+        //initial place of motential moving
         this.drag.x = e.clientX - rect.left;
         this.drag.y = e.clientY - rect.top;
-        
+
         this.drag.position = position;
         this.canvas.onmousemove = (e) => this.myMove(e);
         this.canvas.onmouseup = (e) => this.myUp(e);
@@ -343,6 +410,11 @@ class Game {
             this.handleClick(event);
         } else {
             this.handleMove(event);
+        }
+
+        if (arraysEqual(this.winMap, this.shuffleArray)) {
+            this.timer.stop();
+            console.log("win");
         }
 
         // set to initial values
@@ -363,12 +435,6 @@ function arraysEqual(a, b) {
     return true;
 }
 
-// function updateGameArea() {
-// myGameArea.clear();
-// myGamePiece.x += 1;
-// myGamePiece.update();
-// }
-
 document.body.onload = function () {
     let game = new Game(4);
     game.start();
@@ -376,5 +442,5 @@ document.body.onload = function () {
     game.canvas.addEventListener("mousedown", (e) => game.myDown(e));
     game.canvas.addEventListener("mouseout", (e) => game.myUp(e));
     // game.canvas.onmousedown = game.myDown;
-    beginAgain.addEventListener("click", (e) => game.beginAgainFunc(e));
+    beginAgain.addEventListener("click", (e) => game.restart(e));
 };
