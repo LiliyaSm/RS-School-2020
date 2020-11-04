@@ -193,8 +193,8 @@ const Keyboard = {
 
         recognition.addEventListener("result", (e) => {
             if (e.results.length > 0) {
-                this.properties.value +=
-                    e.results[e.results.length - 1][0].transcript;
+                let inputSpeech = e.results[e.results.length - 1][0].transcript;
+                this.characterInput(inputSpeech, inputSpeech.length);
                 this._triggerEvent("oninput");
             }
         });
@@ -383,10 +383,11 @@ const Keyboard = {
                             keyElement.addEventListener("click", () => {
                                 let caretPos = this.elements.inputField
                                     .selectionStart;
+                                caretPos = caretPos - 1 >= 0 ? caretPos - 1 : 0;
                                 this.elements.inputField.focus();
                                 this.elements.inputField.setSelectionRange(
-                                    caretPos - 1,
-                                    caretPos - 1
+                                    caretPos,
+                                    caretPos
                                 );
                             });
 
@@ -560,7 +561,7 @@ const Keyboard = {
         return keyElement;
     },
 
-    characterInput(symbol) {
+    characterInput(symbol, length = 1) {
         let selectionText = document.getSelection().toString();
         let caretPos = this.elements.inputField.selectionStart;
         let str = this.properties.value;
@@ -579,7 +580,10 @@ const Keyboard = {
 
         // Start: This parameter holds the index of the first selected character. The index value greater than the length of the element pointing to the end value.
         // End: This parameter holds the index of the character after the last selected character. The index value greater than the length of the element pointing to the end value.
-        this.elements.inputField.setSelectionRange(caretPos + 1, caretPos + 1);
+        this.elements.inputField.setSelectionRange(
+            caretPos + length,
+            caretPos + length
+        );
     },
 
     _triggerEvent(handlerName) {
