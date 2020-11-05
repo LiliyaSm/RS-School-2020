@@ -43,17 +43,13 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             hash: false,
-            // favicon: "./src/imgfavicon.ico",
+            // favicon: "./src/favicon.ico",
             template: "./src/index.html",
             // filename: "./src/index.html",
         }),
         new CopyWebpackPlugin({
             patterns: [
                 { from: "./src/assets", to: "assets" },
-                // {
-                //     from: "./src/assets/owfont-master/fonts",
-                //     to: "assets/fonts",
-                // },
             ],
         }),
     ],

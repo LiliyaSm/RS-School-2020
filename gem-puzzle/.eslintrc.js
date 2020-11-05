@@ -11,7 +11,8 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 12,
     sourceType: 'module',
-  },
+  },  
+  indent: ['error', 2],
   rules: {
     'no-plusplus': 'off',
     'no-continue': 'off',

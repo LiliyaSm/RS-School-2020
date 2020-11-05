@@ -24,6 +24,13 @@ const select = create('select', ['select', 'col-4'], fourthRow);
 const counter = create('span', ['counter', 'col-4'], fourthRow);
 counter.textContent = 0;
 
+const DirectionEnum = {
+    UP: 1,
+    RIGHT: 2,
+    DOWN: 3,
+    LEFT: 4
+}
+
 const option1 = create(
   'option',
   null,
@@ -96,7 +103,6 @@ class Game {
     this.timer = new Timer(time);
     this.timer.start();
 
-    // this.tileRendering.createTiles(this.shuffleArray);
     // abs. size of element. After loading ALL DOM elements!
     this.rect = this.canvas.getBoundingClientRect();
   }
@@ -111,8 +117,6 @@ class Game {
     );
     this.canvas = this.tileRendering.canvas;
     this.rect = this.canvas.getBoundingClientRect(); // abs. size of element
-
-    // this.tileRendering.createTiles(this.shuffleArray);
 
     this.resetCounter();
 
@@ -153,6 +157,7 @@ class Game {
     Array.from(Array(rand)).forEach(() => {
       // get random number between 0 and 3
       const randOperation = Math.floor(Math.random() * shifts.length);
+      
       const operation = shifts[randOperation];
       const emptyTilePosition = this.shuffleArray.indexOf(0);
 
@@ -161,23 +166,23 @@ class Game {
       switch (operation) {
         case 'left':
           if (col !== 0) {
-            this.left(emptyTilePosition);
+            this.moveToDir(DirectionEnum.LEFT);
           }
           break;
 
         case 'right':
           if (col !== this.PUZZLE_DIFFICULTY - 1) {
-            this.right(emptyTilePosition);
+            this.moveToDir(DirectionEnum.RIGHT);
           }
           break;
         case 'up':
-          if (row !== 0) {
-            this.up(emptyTilePosition);
+          if (row !== 0) {              
+            this.moveToDir(DirectionEnum.UP);
           }
           break;
         case 'down':
           if (row !== this.PUZZLE_DIFFICULTY - 1) {
-            this.down(emptyTilePosition);
+            this.moveToDir(DirectionEnum.DOWN);
           }
           break;
 
@@ -203,6 +208,7 @@ class Game {
 
   handleClick(e) {
     const { col, row } = this.getColRow(e.clientX, e.clientY);
+    if (col<0||row<0) return
 
     // this.animation.position = this.getPosition({ col: col, row: row });
     this.drag.started = true;
@@ -225,15 +231,15 @@ class Game {
           { from: row * SIZE, to: row * SIZE - SIZE },
           100,
           // call to change array only after animation
-          () => this.down(emptyTilePosition),
+          () => this.doTurnToDir(DirectionEnum.DOWN),
         );
       } else {
         this.createAnimation(
-          { from: col * SIZE, to: col * SIZE },
-          { from: row * SIZE, to: row * SIZE + SIZE },
-          100,
-          // call to change array only after animation
-          () => this.up(emptyTilePosition),
+            { from: col * SIZE, to: col * SIZE },
+            { from: row * SIZE, to: row * SIZE + SIZE },
+            100,
+            // call to change array only after animation
+            () => this.doTurnToDir(DirectionEnum.UP)
         );
       }
     } else if (
@@ -246,23 +252,22 @@ class Game {
         // сдвиг вправо пустой!!!!
 
         this.createAnimation(
-          { from: col * SIZE, to: col * SIZE - SIZE },
-          { from: row * SIZE, to: row * SIZE },
-          100,
-          // call to change array only after animation
-          () => this.right(emptyTilePosition),
+            { from: col * SIZE, to: col * SIZE - SIZE },
+            { from: row * SIZE, to: row * SIZE },
+            100,
+            // call to change array only after animation
+            () => this.doTurnToDir(DirectionEnum.RIGHT)
         );
       } else {
         this.createAnimation(
-          { from: col * SIZE, to: col * SIZE + SIZE },
-          { from: row * SIZE, to: row * SIZE },
-          100,
-          // call to change array only after animation
-          () => this.left(emptyTilePosition),
+            { from: col * SIZE, to: col * SIZE + SIZE },
+            { from: row * SIZE, to: row * SIZE },
+            100,
+            // call to change array only after animation
+            () => this.doTurnToDir(DirectionEnum.LEFT)
         );
       }
     }
-    this.increaseCounter();
   }
 
   createAnimation(x, y, duration, callback) {
@@ -301,6 +306,8 @@ class Game {
 
   handleMove(e) {
     const { col, row } = this.getColRow(e.clientX, e.clientY);
+    if (col < 0 || row < 0) return;
+
     const position = this.getPosition({ col, row });
 
     const { col: initialCol, row: initialRow } = this.getColRow(
@@ -309,20 +316,12 @@ class Game {
     );
 
     const emptyTilePosition = this.shuffleArray.indexOf(0);
-
     if (this.drag.started && position === emptyTilePosition) {
       this.createAnimation(
         { from: e.clientX - this.rect.left - SIZE / 2, to: col * SIZE },
         { from: e.clientY - this.rect.top - SIZE / 2, to: row * SIZE },
         300,
-        () => {
-          this.shuffleArray[emptyTilePosition] = this.shuffleArray[
-            this.drag.position
-          ];
-          this.shuffleArray[this.drag.position] = 0;
-          this.increaseCounter();
-        },
-      );
+        () => this.doTurnToPos(this.drag.position));
     } else {
       this.createAnimation(
         {
@@ -338,41 +337,49 @@ class Game {
     }
 
     // this.tileRendering.createTiles(this.shuffleArray);
+  }  
+
+  moveToDir(direction) {
+      //use for shuffling
+      //just get targetMove
+      const emptyTilePosition = this.shuffleArray.indexOf(0);
+      const targetMove = this.useDirection(emptyTilePosition, direction);
+      this.moveToPos(targetMove);
   }
 
-  left(emptyTilePosition) {
-    this.shuffleArray[emptyTilePosition] = this.shuffleArray[
-      emptyTilePosition - 1
-    ];
-    this.shuffleArray[emptyTilePosition - 1] = 0;
+  moveToPos(tilePos){
+    const emptyTilePosition = this.shuffleArray.indexOf(0);
+    this.shuffleArray[emptyTilePosition] = this.shuffleArray[tilePos];
+    this.shuffleArray[tilePos] = 0;
   }
 
-  right(emptyTilePosition) {
-    this.shuffleArray[emptyTilePosition] = this.shuffleArray[
-      emptyTilePosition + 1
-    ];
-    this.shuffleArray[emptyTilePosition + 1] = 0;
+  useDirection(tile, direction){
+      switch(direction){
+          case DirectionEnum.RIGHT:
+              return tile + 1;
+          case DirectionEnum.LEFT:
+              return tile - 1;
+          case DirectionEnum.UP:
+              return tile - this.PUZZLE_DIFFICULTY;
+          case DirectionEnum.DOWN:
+              return tile + this.PUZZLE_DIFFICULTY;
+      }
   }
 
-  down(emptyTilePosition) {
-    this.shuffleArray[emptyTilePosition] = this.shuffleArray[
-      emptyTilePosition + this.PUZZLE_DIFFICULTY
-    ];
-    this.shuffleArray[emptyTilePosition + this.PUZZLE_DIFFICULTY] = 0;
+  doTurnToDir(direction){
+      // player turn
+    const emptyTilePosition = this.shuffleArray.indexOf(0);
+    const targetPos = this.useDirection(emptyTilePosition, direction);
+    this.doTurnToPos(targetPos);
   }
 
-  up(emptyTilePosition) {
-    this.shuffleArray[emptyTilePosition] = this.shuffleArray[
-      emptyTilePosition - this.PUZZLE_DIFFICULTY
-    ];
-    this.shuffleArray[emptyTilePosition - this.PUZZLE_DIFFICULTY] = 0;
-  }
+   doTurnToPos(pos){
+       // player turn
+       this.moveToPos(pos);
+       this.increaseCounter();
+       this.checkIfWin();
+   }
 
-  // beginAgainFunc() {
-  //     this.shuffleArray = this.shuffleTiles(this.winMap);
-  //     this.resetCounter();
-  //     this.timer.resetTimer();
-  // }
 
   myMove(e) {
     // prevent dragging tile without sensible mouse moving
@@ -396,41 +403,60 @@ class Game {
   }
 
   myDown(e) {
-    // initial place of potential moving
+      // initial place of potential moving
 
-    this.drag.startX = e.pageX;
-    this.drag.startY = e.pageY;
+      this.drag.startX = e.pageX;
+      this.drag.startY = e.pageY;
 
-    const rect = this.canvas.getBoundingClientRect(); // abs. size of element
-    this.rect = rect;
+      const rect = this.canvas.getBoundingClientRect(); // abs. size of element
+      this.rect = rect;
 
-    const position = this.getPosition(this.getColRow(e.clientX, e.clientY));
+      const position = this.getPosition(this.getColRow(e.clientX, e.clientY));
 
-    const emptyTilePosition = this.shuffleArray.indexOf(0);
+      const emptyTilePosition = this.shuffleArray.indexOf(0);
 
-    // check if shifting is available
-    if (this.drag.started) {
-      return;
+      const x = e.clientX - this.rect.left;
+      const y = e.clientY - this.rect.top;
+
+      //prevent - clicking on edge of field causes a bug
+      if (
+          x < 5 ||
+          x > this.rect.width - 5 ||
+          y < 5 ||
+          y > this.rect.height - 5
+      ) {
+          return;
+      }
+      if (this.drag.started) {
+          // check if shifting is available
+          return;
+      }
+
+      if (
+          !(
+              position === emptyTilePosition + this.PUZZLE_DIFFICULTY ||
+              position === emptyTilePosition - this.PUZZLE_DIFFICULTY ||
+              position === emptyTilePosition - 1 ||
+              position === emptyTilePosition + 1
+          )
+      ) {
+          return;
+      }
+      console.log(position);
+
+      this.drag.x = e.clientX - rect.left;
+      this.drag.y = e.clientY - rect.top;
+      this.drag.position = position;
+
+      this.canvas.onmousemove = (event) => this.myMove(event);
+      this.canvas.onmouseup = (event) => this.myUp(event);
+  }
+
+  checkIfWin() {
+    if (arraysEqual(this.winMap, this.shuffleArray)) {
+      this.timer.stop();
+      console.log('win');
     }
-
-    if (
-      !(
-        position === emptyTilePosition + this.PUZZLE_DIFFICULTY
-                || position === emptyTilePosition - this.PUZZLE_DIFFICULTY
-                || position === emptyTilePosition - 1
-                || position === emptyTilePosition + 1
-      )
-    ) {
-      return;
-    }
-    console.log(position);
-
-    this.drag.x = e.clientX - rect.left;
-    this.drag.y = e.clientY - rect.top;
-    this.drag.position = position;
-
-    this.canvas.onmousemove = (event) => this.myMove(event);
-    this.canvas.onmouseup = (event) => this.myUp(event);
   }
 
   myUp(event) {
@@ -441,11 +467,6 @@ class Game {
     if (diffX < DRAG_SENSITIVITY && diffY < DRAG_SENSITIVITY) {
       this.handleClick(event);
     } else if (this.drag.started) this.handleMove(event);
-
-    if (arraysEqual(this.winMap, this.shuffleArray)) {
-      this.timer.stop();
-      console.log('win');
-    }
 
     // set to initial values
     // this.drag.started = false;
