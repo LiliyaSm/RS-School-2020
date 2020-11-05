@@ -47,14 +47,14 @@ module.exports = {
             template: "./src/index.html",
             // filename: "./src/index.html",
         }),
-        // new CopyWebpackPlugin({
-            // patterns: [
-                // { from: "./src/assets/images", to: "assets/images" },
+        new CopyWebpackPlugin({
+            patterns: [
+                { from: "./src/assets", to: "assets" },
                 // {
                 //     from: "./src/assets/owfont-master/fonts",
                 //     to: "assets/fonts",
                 // },
-            // ],
-        // }),
+            ],
+        }),
     ],
 };

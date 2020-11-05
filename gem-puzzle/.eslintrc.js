@@ -1,3 +1,5 @@
+// eslint no-plusplus: ["error", { "allowForLoopAfterthoughts": true }]
+
 module.exports = {
   env: {
     browser: true,
@@ -11,5 +13,14 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
+    'no-plusplus': 'off',
+    'no-continue': 'off',
+  },
+  settings: {
+    'import/resolver': {
+      webpack: {
+        config: 'webpack.config.js',
+      },
+    },
   },
 };

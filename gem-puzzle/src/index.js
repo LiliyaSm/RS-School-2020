@@ -44,11 +44,19 @@ option4.textContent = '5x5';
 
 beginAgain.innerHTML = 'Begin again';
 
+function arraysEqual(a, b) {
+  // check if arrays are equal
+  for (let i = 0; i < a.length; ++i) {
+    if (a[i] !== b[i]) return false;
+  }
+  return true;
+}
+
 class Game {
   constructor(PUZZLE_DIFFICULTY) {
     this.PUZZLE_DIFFICULTY = Number(PUZZLE_DIFFICULTY);
     this.winMap = this.createWinMap();
-    this.shuffleArray = this.shuffleTiles(this.winMap);
+    this.shuffleArray = this.shuffleTiles();
     // this.context = null;
     this.canvas = null;
     this.rect = null; // abs. size of element
@@ -74,7 +82,11 @@ class Game {
 
   start() {
     this.tileRendering = new CreateField();
-    this.tileRendering.init(SIZE, this.PUZZLE_DIFFICULTY);
+    this.tileRendering.init(
+      SIZE,
+      this.PUZZLE_DIFFICULTY,
+      this.shuffleArray,
+    );
     this.canvas = this.tileRendering.canvas;
     thirdRow.appendChild(this.canvas);
 
@@ -84,19 +96,23 @@ class Game {
     this.timer = new Timer(time);
     this.timer.start();
 
-    this.tileRendering.createTiles(this.shuffleArray);
+    // this.tileRendering.createTiles(this.shuffleArray);
     // abs. size of element. After loading ALL DOM elements!
     this.rect = this.canvas.getBoundingClientRect();
   }
 
   restart() {
     this.winMap = this.createWinMap();
-    this.shuffleArray = this.shuffleTiles(this.winMap);
-    this.tileRendering.init(SIZE, this.PUZZLE_DIFFICULTY);
+    this.shuffleArray = this.shuffleTiles();
+    this.tileRendering.init(
+      SIZE,
+      this.PUZZLE_DIFFICULTY,
+      this.shuffleArray,
+    );
     this.canvas = this.tileRendering.canvas;
     this.rect = this.canvas.getBoundingClientRect(); // abs. size of element
 
-    this.tileRendering.createTiles(this.shuffleArray);
+    // this.tileRendering.createTiles(this.shuffleArray);
 
     this.resetCounter();
 
@@ -126,7 +142,7 @@ class Game {
     return result;
   }
 
-  shuffleTiles(winMap) {
+  shuffleTiles() {
     this.shuffleArray = [...this.winMap];
     const shifts = ['left', 'right', 'up', 'down'];
     const rand = Math.floor(
@@ -135,7 +151,8 @@ class Game {
 
     // repeat rand times
     Array.from(Array(rand)).forEach(() => {
-      const randOperation = Math.floor(Math.random() * shifts.length); // get random number between 0 and 3
+      // get random number between 0 and 3
+      const randOperation = Math.floor(Math.random() * shifts.length);
       const operation = shifts[randOperation];
       const emptyTilePosition = this.shuffleArray.indexOf(0);
 
@@ -163,6 +180,9 @@ class Game {
             this.down(emptyTilePosition);
           }
           break;
+
+        default:
+          throw new Error('Unexpected value');
       }
     });
     return this.shuffleArray;
@@ -175,7 +195,8 @@ class Game {
   }
 
   getPosition(pos) {
-    // mouse position subtracted from the parent element's offset position, mouse position you are getting is relative to the client window
+    // mouse position subtracted from the parent element's offset position, mouse position you are
+    // getting is relative to the client window
 
     return pos.row * this.PUZZLE_DIFFICULTY + pos.col;
   }
@@ -250,12 +271,10 @@ class Game {
     const totalFrames = (duration * this.animation.frameRate) / 1000;
 
     // this func is recursively called to draw each frame
-    var drawFrame = () => {
+    const drawFrame = () => {
       // calculate new currPos
-      const currPosX = x.from
-                + ((x.to - x.from) * currFrame) / totalFrames;
-      const currPosY = y.from
-                + ((y.to - y.from) * currFrame) / totalFrames;
+      const currPosX = x.from + ((x.to - x.from) * currFrame) / totalFrames;
+      const currPosY = y.from + ((y.to - y.from) * currFrame) / totalFrames;
       // call render function to update the screen
       this.tileRendering.createTiles(
         this.shuffleArray,
@@ -266,7 +285,7 @@ class Game {
       );
 
       // increment current frame number
-      currFrame++;
+      currFrame += 1;
       // check if we not exceed totalFrame - set a timeout to call drawFrame
       // after the desired delay
       if (currFrame <= totalFrames) {
@@ -373,8 +392,6 @@ class Game {
         this.drag.x - SIZE / 2,
         this.drag.y - SIZE / 2,
       );
-    } else {
-
     }
   }
 
@@ -412,8 +429,8 @@ class Game {
     this.drag.y = e.clientY - rect.top;
     this.drag.position = position;
 
-    this.canvas.onmousemove = (e) => this.myMove(e);
-    this.canvas.onmouseup = (e) => this.myUp(e);
+    this.canvas.onmousemove = (event) => this.myMove(event);
+    this.canvas.onmouseup = (event) => this.myUp(event);
   }
 
   myUp(event) {
@@ -423,9 +440,7 @@ class Game {
 
     if (diffX < DRAG_SENSITIVITY && diffY < DRAG_SENSITIVITY) {
       this.handleClick(event);
-    } else {
-      this.handleMove(event);
-    }
+    } else if (this.drag.started) this.handleMove(event);
 
     if (arraysEqual(this.winMap, this.shuffleArray)) {
       this.timer.stop();
@@ -442,15 +457,7 @@ class Game {
   }
 }
 
-function arraysEqual(a, b) {
-  // check if arrays are equal
-  for (let i = 0; i < a.length; ++i) {
-    if (a[i] !== b[i]) return false;
-  }
-  return true;
-}
-
-document.body.onload = function () {
+document.body.onload = function load() {
   const game = new Game(4);
   game.start();
 

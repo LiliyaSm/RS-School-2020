@@ -1,23 +1,4 @@
-function component(ctx, size, text, x, y) {
-  ctx.fillStyle = '#EB5E55';
-  ctx.shadowColor = '#000000';
-  ctx.shadowBlur = 4;
-  ctx.shadowOffsetX = 0;
-  ctx.shadowOffsetY = 2;
-  ctx.fillRect(x + 5, y + 5, size - 10, size - 10);
-  ctx.shadowColor = 'transparent';
-  ctx.fillStyle = '#FFFFFF';
-  ctx.font = '20px Arial';
-  this.width = size;
-  this.height = size;
-  ctx.draggable = true;
-  // compute text position
-  const xNumber = x + 35;
-  const yNumber = y + 45;
-  ctx.fillText(text, xNumber, yNumber);
-
-  this.update = function () {};
-}
+import images from './images.js';
 
 const startPosition = {
   x: 0,
@@ -33,20 +14,50 @@ export default class CreateField {
     // this.context = null;
     this.SIZE = null;
     this.PUZZLE_DIFFICULTY = null;
+    this.pieces = [];
+    this.img = null;
+    this.initArray = null;
   }
 
-  init(SIZE, PUZZLE_DIFFICULTY) {
+  init(SIZE, PUZZLE_DIFFICULTY, array) {
     this.PUZZLE_DIFFICULTY = PUZZLE_DIFFICULTY;
     this.SIZE = SIZE;
     this.canvas.width = this.SIZE * this.PUZZLE_DIFFICULTY;
     this.canvas.height = this.SIZE * this.PUZZLE_DIFFICULTY;
+
+    this.img = new Image();
+    this.img.src = '../assets/29.jpg';
+    this.img.addEventListener('load', (e) => this.loadImage(e));
+    this.initArray = array;
+
+    this.pieces = [];
   }
 
   clear() {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
-  createTiles(array, animationed, dragPosition, dragX, dragY) {
+  loadImage() {
+    this.pieceWidth = Math.floor(this.img.width / this.PUZZLE_DIFFICULTY);
+    this.pieceHeight = Math.floor(this.img.height / this.PUZZLE_DIFFICULTY);
+
+    let i;
+    let piece;
+
+    for (i = 0; i < this.PUZZLE_DIFFICULTY * this.PUZZLE_DIFFICULTY; i++) {
+      piece = {};
+      const row = Math.floor(i / this.PUZZLE_DIFFICULTY);
+      // i % 4      0 1 2 3 0 1 2 3
+      const col = i % this.PUZZLE_DIFFICULTY;
+
+      piece.sx = startPosition.x + col * this.pieceWidth;
+      piece.sy = startPosition.y + row * this.pieceHeight;
+      this.pieces.push(piece);
+    }
+    this.createTiles(this.initArray);
+  }
+
+  createTiles(array, animated, dragPosition, dragX, dragY) {
     this.clear();
     for (let i = 0; i < array.length; i++) {
       // empty tile
@@ -54,7 +65,7 @@ export default class CreateField {
         continue;
       }
 
-      if (animationed && dragPosition === i) {
+      if (animated && dragPosition === i) {
         // draw separately dragging tile
         continue;
       }
@@ -65,8 +76,7 @@ export default class CreateField {
       const row = Math.floor(i / this.PUZZLE_DIFFICULTY);
       // i % 4      0 1 2 3 0 1 2 3
       const col = i % this.PUZZLE_DIFFICULTY;
-      new component(
-        this.context,
+      this.drawTile(
         this.SIZE,
         array[i],
         startPosition.x + col * this.SIZE,
@@ -74,14 +84,41 @@ export default class CreateField {
       );
     }
 
-    if (animationed) {
-      new component(
-        this.context,
-        this.SIZE,
-        array[dragPosition],
-        dragX,
-        dragY,
-      );
+    if (animated) {
+      this.drawTile(this.SIZE, array[dragPosition], dragX, dragY);
     }
+  }
+
+  drawTile(size, text, x, y) {
+    const ctx = this.context;
+    ctx.fillStyle = '#EB5E55';
+    ctx.shadowColor = '#000000';
+    ctx.shadowBlur = 4;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 2;
+    // ctx.fillRect(x + 5, y + 5, size - 5, size - 5);
+    const imgCoords = this.pieces[text - 1];
+
+    // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+    ctx.drawImage(
+      this.img,
+      imgCoords.sx,
+      imgCoords.sy,
+      this.pieceWidth,
+      this.pieceHeight,
+      x + 5,
+      y + 5,
+      size - 10,
+      size - 10,
+    );
+    ctx.shadowColor = 'transparent';
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = '20px Arial';
+    ctx.draggable = true;
+
+    // compute text position
+    const xNumber = x + 35;
+    const yNumber = y + 45;
+    ctx.fillText(text, xNumber, yNumber);
   }
 }
