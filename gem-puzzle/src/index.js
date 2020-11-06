@@ -7,7 +7,6 @@ import "regenerator-runtime/runtime";
 
 const body = document.querySelector("body");
 
-const SIZE = 80; // width, height
 const minShuffle = 100;
 const maxShuffle = 300;
 
@@ -21,6 +20,7 @@ const thirdRow = create("div", ["row"], body);
 const fourthRow = create("div", ["row"], body);
 
 const beginAgain = create("button", ["beginAgain"], firstRow);
+const pause = create("button", ["Pause/Menu"], firstRow);
 const select = create("select", ["select", "col-4"], fourthRow);
 const counter = create("span", ["counter", "col-4"], fourthRow);
 counter.textContent = 0;
@@ -41,16 +41,16 @@ const option1 = create(
     ["disabled", "disabled"],
     ["hidden", "hidden"]
 );
-const option2 = create("option", null, select, ["value", "3"]);
-const option3 = create("option", null, select, ["value", "4"]);
-const option4 = create("option", null, select, ["value", "5"]);
+
 
 option1.textContent = "Change field size ";
-option2.textContent = "3x3";
-option3.textContent = "4x4 ";
-option4.textContent = "5x5";
+for (let i = 3; i <= 8; i++) {
+    const option = create("option", null, select, ["value", i]);
+    option.textContent = i + "x" + i;
+}
 
 beginAgain.innerHTML = "Begin again";
+pause.innerHTML = "pause game /show menu";
 
 function arraysEqual(a, b) {
     // check if arrays are equal
@@ -73,6 +73,9 @@ class Game {
 
         this.timer = null;
 
+        this.fieldSize = 500;
+        this.SIZE = this.fieldSize / this.PUZZLE_DIFFICULTY;
+
         this.drag = {
             started: false,
             position: null,
@@ -81,6 +84,8 @@ class Game {
             x: 0,
             y: 0,
         };
+
+        this.overlay = null;
 
         this.animation = {
             // Frames per second
@@ -93,17 +98,24 @@ class Game {
         this.audio = new Audio(body);
         this.audio.init();
         this.tileRendering.init(
-            SIZE,
+            this.SIZE,
             this.PUZZLE_DIFFICULTY,
             this.shuffleArray
         );
         this.canvas = this.tileRendering.canvas;
         thirdRow.appendChild(this.canvas);
 
+        this.overlay = create("div", ["overlay", "hide"], body);
+        this.menu__container = create("div", ["menu__container"], this.overlay);
+        this.btn1 = create("button", null, this.menu__container);
+        this.btn1.innerHTML = "Exit";
+
+        this.btn1.addEventListener("click", (e) => this.resumeGame(e));
+
         select.addEventListener("change", (e) => this.logValue(e));
 
-        const time = create("time", ["time"], secondRow);
-        this.timer = new Timer(time);
+        this.time = create("time", ["time"], secondRow);
+        this.timer = new Timer(this.time);
         this.timer.start();
 
         // abs. size of element. After loading ALL DOM elements!
@@ -114,7 +126,7 @@ class Game {
         this.winMap = this.createWinMap();
         this.shuffleArray = this.shuffleTiles();
         this.tileRendering.init(
-            SIZE,
+            this.SIZE,
             this.PUZZLE_DIFFICULTY,
             this.shuffleArray
         );
@@ -128,6 +140,7 @@ class Game {
 
     logValue(e) {
         this.PUZZLE_DIFFICULTY = Number(e.target.value);
+        this.SIZE = this.fieldSize / this.PUZZLE_DIFFICULTY;
         this.restart();
     }
 
@@ -199,7 +212,10 @@ class Game {
     getColRow(clientX, clientY) {
         const x = clientX - this.rect.left;
         const y = clientY - this.rect.top;
-        return { col: Math.floor(x / SIZE), row: Math.floor(y / SIZE) };
+        return {
+            col: Math.floor(x / this.SIZE),
+            row: Math.floor(y / this.SIZE),
+        };
     }
 
     getPosition(pos) {
@@ -211,7 +227,6 @@ class Game {
 
     handleClick(e) {
         const { col, row } = this.getColRow(e.clientX, e.clientY);
-
 
         // this.animation.position = this.getPosition({ col: col, row: row });
         this.drag.started = true;
@@ -230,16 +245,16 @@ class Game {
 
             if (rowEmptyTile + 1 === row) {
                 this.createAnimation(
-                    { from: col * SIZE, to: col * SIZE },
-                    { from: row * SIZE, to: row * SIZE - SIZE },
+                    { from: col * this.SIZE, to: col * this.SIZE },
+                    { from: row * this.SIZE, to: row * this.SIZE - this.SIZE },
                     100,
                     // call to change array only after animation
                     () => this.doTurnToDir(DirectionEnum.DOWN)
                 );
             } else {
                 this.createAnimation(
-                    { from: col * SIZE, to: col * SIZE },
-                    { from: row * SIZE, to: row * SIZE + SIZE },
+                    { from: col * this.SIZE, to: col * this.SIZE },
+                    { from: row * this.SIZE, to: row * this.SIZE + this.SIZE },
                     100,
                     // call to change array only after animation
                     () => this.doTurnToDir(DirectionEnum.UP)
@@ -255,16 +270,16 @@ class Game {
                 // сдвиг вправо пустой!!!!
 
                 this.createAnimation(
-                    { from: col * SIZE, to: col * SIZE - SIZE },
-                    { from: row * SIZE, to: row * SIZE },
+                    { from: col * this.SIZE, to: col * this.SIZE - this.SIZE },
+                    { from: row * this.SIZE, to: row * this.SIZE },
                     100,
                     // call to change array only after animation
                     () => this.doTurnToDir(DirectionEnum.RIGHT)
                 );
             } else {
                 this.createAnimation(
-                    { from: col * SIZE, to: col * SIZE + SIZE },
-                    { from: row * SIZE, to: row * SIZE },
+                    { from: col * this.SIZE, to: col * this.SIZE + this.SIZE },
+                    { from: row * this.SIZE, to: row * this.SIZE },
                     100,
                     // call to change array only after animation
                     () => this.doTurnToDir(DirectionEnum.LEFT)
@@ -312,7 +327,6 @@ class Game {
     handleMove(e) {
         const { col, row } = this.getColRow(e.clientX, e.clientY);
 
-
         const position = this.getPosition({ col, row });
 
         const { col: initialCol, row: initialRow } = this.getColRow(
@@ -323,20 +337,26 @@ class Game {
         const emptyTilePosition = this.shuffleArray.indexOf(0);
         if (this.drag.started && position === emptyTilePosition) {
             this.createAnimation(
-                { from: e.clientX - this.rect.left - SIZE / 2, to: col * SIZE },
-                { from: e.clientY - this.rect.top - SIZE / 2, to: row * SIZE },
+                {
+                    from: e.clientX - this.rect.left - this.SIZE / 2,
+                    to: col * this.SIZE,
+                },
+                {
+                    from: e.clientY - this.rect.top - this.SIZE / 2,
+                    to: row * this.SIZE,
+                },
                 300,
                 () => this.doTurnToPos(this.drag.position)
             );
         } else {
             this.createAnimation(
                 {
-                    from: e.clientX - this.rect.left - SIZE / 2,
-                    to: initialCol * SIZE,
+                    from: e.clientX - this.rect.left - this.SIZE / 2,
+                    to: initialCol * this.SIZE,
                 },
                 {
-                    from: e.clientY - this.rect.top - SIZE / 2,
-                    to: initialRow * SIZE,
+                    from: e.clientY - this.rect.top - this.SIZE / 2,
+                    to: initialRow * this.SIZE,
                 },
                 400
             );
@@ -402,8 +422,8 @@ class Game {
                 this.drag.started,
                 this.drag.position,
                 // shift for centering on cursor
-                this.drag.x - SIZE / 2,
-                this.drag.y - SIZE / 2
+                this.drag.x - this.SIZE / 2,
+                this.drag.y - this.SIZE / 2
             );
         }
     }
@@ -411,17 +431,16 @@ class Game {
     myDown(e) {
         // initial place of potential moving
 
-        
         const rect = this.canvas.getBoundingClientRect(); // abs. size of element
         this.rect = rect;
-        
+
         const position = this.getPosition(this.getColRow(e.clientX, e.clientY));
-        
+
         const emptyTilePosition = this.shuffleArray.indexOf(0);
-        
+
         const x = e.clientX - this.rect.left;
         const y = e.clientY - this.rect.top;
-        
+
         //prevent - clicking on edge of field causes a bug
         if (
             x < 5 ||
@@ -430,7 +449,7 @@ class Game {
             y > this.rect.height - 5
         ) {
             console.log("prevent!");
-            this.audio.playSound("badClick")
+            this.audio.playSound("badClick");
             return;
         }
         if (this.drag.started) {
@@ -486,6 +505,34 @@ class Game {
         this.canvas.onmousemove = null;
         this.canvas.onmouseup = null;
     }
+
+    //logic for menu
+    showMenu(e) {
+        this.timer.stop();
+        this.overlay.classList.remove("hide");
+    }
+
+    resumeGame(e) {
+        this.timer.start();
+        this.overlay.classList.add("hide");
+    }
+
+    resizeField(e) {
+        if (window.screen.width > 500) {
+            this.fieldSize = 500;
+            this.SIZE = this.fieldSize / this.PUZZLE_DIFFICULTY;
+        } else {
+            this.fieldSize = 320;
+            this.SIZE = this.fieldSize / this.PUZZLE_DIFFICULTY;
+        }
+        this.tileRendering.init(
+            this.SIZE,
+            this.PUZZLE_DIFFICULTY,
+            this.shuffleArray
+        );
+
+        console.log(window.screen.width);
+    }
 }
 
 document.body.onload = function load() {
@@ -496,4 +543,6 @@ document.body.onload = function load() {
     game.canvas.addEventListener("mouseout", (e) => game.myUp(e));
     // game.canvas.onmousedown = game.myDown;
     beginAgain.addEventListener("click", (e) => game.restart(e));
+    pause.addEventListener("click", (e) => game.showMenu(e));
+    window.addEventListener("resize", (e) => game.resizeField(e));
 };
