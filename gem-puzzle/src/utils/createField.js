@@ -5,6 +5,7 @@ const startPosition = {
   y: 0,
 };
 
+
 //   const keyButton = new Key(keyObj);
 
 export default class CreateField {
@@ -106,10 +107,10 @@ export default class CreateField {
       imgCoords.sy,
       this.pieceWidth,
       this.pieceHeight,
-      x + 5,
-      y + 5,
-      size - 10,
-      size - 10,
+      x + 3,
+      y + 3,
+      size - 7,
+      size - 7,
     );
     ctx.shadowColor = 'transparent';
     ctx.fillStyle = '#FFFFFF';

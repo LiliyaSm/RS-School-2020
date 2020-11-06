@@ -43,7 +43,7 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             hash: false,
-            // favicon: "./src/favicon.ico",
+            favicon: "./src/assets/favicon.ico",
             template: "./src/index.html",
             // filename: "./src/index.html",
         }),
