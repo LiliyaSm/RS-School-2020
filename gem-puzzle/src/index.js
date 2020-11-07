@@ -14,15 +14,15 @@ const DRAG_SENSITIVITY = 6;
 
 body.setAttribute("class", "container-fluid");
 
-const firstRow = create("div", ["row"], body);
+const header = create("header", null, body);
 const secondRow = create("div", ["row", "justify-content-center"], body);
 const thirdRow = create("div", ["row"], body);
-const fourthRow = create("div", ["row"], body);
+const footer = create("footer", null, body);
 
-const beginAgain = create("button", ["beginAgain"], firstRow);
-const pause = create("button", ["Pause/Menu"], firstRow);
-const select = create("select", ["select", "col-4"], fourthRow);
-const counter = create("span", ["counter", "col-4"], fourthRow);
+const beginAgain = create("button", ["beginAgain"], header);
+const pause = create("button", ["Pause/Menu"], footer);
+const select = create("select", ["select"], footer);
+const counter = create("span", ["counter"], header);
 counter.textContent = 0;
 
 const DirectionEnum = {
@@ -41,7 +41,6 @@ const option1 = create(
     ["disabled", "disabled"],
     ["hidden", "hidden"]
 );
-
 
 option1.textContent = "Change field size ";
 for (let i = 3; i <= 8; i++) {
@@ -73,6 +72,8 @@ class Game {
 
         this.timer = null;
 
+        this.isLarge = true;
+
         this.fieldSize = 500;
         this.SIZE = this.fieldSize / this.PUZZLE_DIFFICULTY;
 
@@ -103,20 +104,36 @@ class Game {
             this.shuffleArray
         );
         this.canvas = this.tileRendering.canvas;
+
         thirdRow.appendChild(this.canvas);
 
         this.overlay = create("div", ["overlay", "hide"], body);
         this.menu__container = create("div", ["menu__container"], this.overlay);
+        this.sound = create("button", null, this.menu__container);
         this.btn1 = create("button", null, this.menu__container);
+        this.saveGame = create("button", null, this.menu__container);
+        this.loadGame = create("button", null, this.menu__container);
         this.btn1.innerHTML = "Exit";
+        this.sound.innerHTML = "Sound: On";
+        this.saveGame.innerHTML = "Save Game";
 
         this.btn1.addEventListener("click", (e) => this.resumeGame(e));
+        this.saveGame.addEventListener("click", (e) => this.saveGame(e));
+        this.sound.addEventListener("click", (e) => {
+            this.audio.toggleSound(e);
+            this.sound.innerHTML =
+                this.sound.innerHTML === "Sound: Off"
+                    ? "Sound: On"
+                    : "Sound: Off";
+        });
 
         select.addEventListener("change", (e) => this.logValue(e));
 
-        this.time = create("time", ["time"], secondRow);
+        this.time = create("time", ["time"], header);
         this.timer = new Timer(this.time);
         this.timer.start();
+
+        this.resizeField();
 
         // abs. size of element. After loading ALL DOM elements!
         this.rect = this.canvas.getBoundingClientRect();
@@ -329,11 +346,6 @@ class Game {
 
         const position = this.getPosition({ col, row });
 
-        const { col: initialCol, row: initialRow } = this.getColRow(
-            this.drag.startX,
-            this.drag.startY
-        );
-
         const emptyTilePosition = this.shuffleArray.indexOf(0);
         if (this.drag.started && position === emptyTilePosition) {
             this.createAnimation(
@@ -349,20 +361,34 @@ class Game {
                 () => this.doTurnToPos(this.drag.position)
             );
         } else {
-            this.createAnimation(
-                {
-                    from: e.clientX - this.rect.left - this.SIZE / 2,
-                    to: initialCol * this.SIZE,
-                },
-                {
-                    from: e.clientY - this.rect.top - this.SIZE / 2,
-                    to: initialRow * this.SIZE,
-                },
-                400
-            );
+            this.animateReturn(e);
         }
 
         // this.tileRendering.createTiles(this.shuffleArray);
+    }
+
+    animateReturn(e) {
+        const { col: initialCol, row: initialRow } = this.getColRow(
+            this.drag.startX,
+            this.drag.startY
+        );
+        this.createAnimation(
+            {
+                from: e.clientX - this.rect.left - this.SIZE / 2,
+                to: initialCol * this.SIZE,
+            },
+            {
+                from: e.clientY - this.rect.top - this.SIZE / 2,
+                to: initialRow * this.SIZE,
+            },
+            400,
+            () => {
+                this.drag.started = false;
+                this.drag.x = 0;
+                this.drag.y = 0;
+                this.drag.position = null;
+            }
+        );
     }
 
     moveToDir(direction) {
@@ -479,6 +505,7 @@ class Game {
 
         this.canvas.onmousemove = (event) => this.myMove(event);
         this.canvas.onmouseup = (event) => this.myUp(event);
+        this.canvas.onmouseout = (e) => this.myOut(e);
     }
 
     checkIfWin() {
@@ -504,6 +531,14 @@ class Game {
         this.drag.y = 0;
         this.canvas.onmousemove = null;
         this.canvas.onmouseup = null;
+        this.canvas.onmouseout = null;
+    }
+
+    myOut(e) {
+        this.canvas.onmousemove = null;
+        this.canvas.onmouseup = null;
+        this.canvas.onmouseout = null;
+        this.animateReturn(e);
     }
 
     //logic for menu
@@ -517,14 +552,23 @@ class Game {
         this.overlay.classList.add("hide");
     }
 
-    resizeField(e) {
-        if (window.screen.width > 500) {
+    resizeField() {
+        if (
+            (window.screen.width > 500 && this.isLarge) ||
+            (window.screen.width <= 500 && !this.isLarge)
+        ) {
+            return;
+        }
+
+        if (window.screen.width > 500 && !this.isLarge) {
             this.fieldSize = 500;
-            this.SIZE = this.fieldSize / this.PUZZLE_DIFFICULTY;
+            this.isLarge = true;
         } else {
             this.fieldSize = 320;
-            this.SIZE = this.fieldSize / this.PUZZLE_DIFFICULTY;
+            this.isLarge = false;
         }
+        this.SIZE = this.fieldSize / this.PUZZLE_DIFFICULTY;
+
         this.tileRendering.init(
             this.SIZE,
             this.PUZZLE_DIFFICULTY,
@@ -540,7 +584,6 @@ document.body.onload = function load() {
     game.start();
 
     game.canvas.addEventListener("mousedown", (e) => game.myDown(e));
-    game.canvas.addEventListener("mouseout", (e) => game.myUp(e));
     // game.canvas.onmousedown = game.myDown;
     beginAgain.addEventListener("click", (e) => game.restart(e));
     pause.addEventListener("click", (e) => game.showMenu(e));

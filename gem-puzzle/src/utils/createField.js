@@ -100,6 +100,8 @@ export default class CreateField {
     // ctx.fillRect(x + 5, y + 5, size - 5, size - 5);
     const imgCoords = this.pieces[text - 1];
 
+    if(!imgCoords) debugger;
+
     // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
     ctx.drawImage(
       this.img,

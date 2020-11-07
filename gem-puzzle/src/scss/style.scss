@@ -27,7 +27,7 @@ canvas {
 }
 
 .time {
-    font-size: 74px;
+    font-size: 44px;
 }
 
 // button
@@ -76,3 +76,14 @@ canvas {
     align-items: center;
     width: 80%;
     margin: 8% auto 0px}
+
+
+    header, footer {
+    min-height: 75px;
+    max-width: 430px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-bottom: 10px;
+}

@@ -3,6 +3,7 @@ const sounds = ["click.wav", "badClick.wav"];
 export default class Audio {
     constructor(parent) {
         this.parent = parent;
+        this.soundOn = true;
     }
 
     init() {
@@ -21,6 +22,8 @@ export default class Audio {
     }
 
     playSound(code) {
+
+        if (!this.soundOn) return;
         // if (!this.soundIsOn) return;
         let audio = document.querySelector(`audio[src*=${code}]`);
 
@@ -29,5 +32,9 @@ export default class Audio {
         }
         audio.currentTime = 0;
         audio.play();
+    }
+
+    toggleSound() {
+        this.soundOn = this.soundOn ? false : true;
     }
 }
