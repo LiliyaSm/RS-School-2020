@@ -4,6 +4,7 @@ import Timer from "./utils/timer.js"; // creates canvas field
 import Audio from "./utils/audio.js"; // creates canvas field
 import "core-js/stable";
 import "regenerator-runtime/runtime";
+import * as storage from "./utils/storage.js";
 
 const body = document.querySelector("body");
 
@@ -48,7 +49,7 @@ for (let i = 3; i <= 8; i++) {
     option.textContent = i + "x" + i;
 }
 
-beginAgain.innerHTML = "Begin again";
+beginAgain.innerHTML = "New game";
 pause.innerHTML = "pause game /show menu";
 
 function arraysEqual(a, b) {
@@ -116,9 +117,11 @@ class Game {
         this.btn1.innerHTML = "Exit";
         this.sound.innerHTML = "Sound: On";
         this.saveGame.innerHTML = "Save Game";
+        this.loadGame.innerHTML = "Load Game";
 
-        this.btn1.addEventListener("click", (e) => this.resumeGame(e));
-        this.saveGame.addEventListener("click", (e) => this.saveGame(e));
+        this.btn1.addEventListener("click", () => this.resumeGame());
+        this.saveGame.addEventListener("click", (e) => this.saveGameHandler(e));
+        this.loadGame.addEventListener("click", (e) => this.loadGameHandler(e));
         this.sound.addEventListener("click", (e) => {
             this.audio.toggleSound(e);
             this.sound.innerHTML =
@@ -153,6 +156,36 @@ class Game {
         this.resetCounter();
 
         this.timer.resetTimer();
+    }
+
+    saveGameHandler() {
+        storage.set("15gameObject", {
+            shuffleArray: this.shuffleArray,
+            timer: this.timer.getSeconds(),
+            counter: this.moveCounter,
+            PUZZLE_DIFFICULTY: this.PUZZLE_DIFFICULTY,
+        });
+    }
+
+    loadGameHandler() {
+        const savedGameObject = storage.get("15gameObject")
+        this.shuffleArray = savedGameObject.shuffleArray;
+        this.PUZZLE_DIFFICULTY = savedGameObject.PUZZLE_DIFFICULTY;
+        this.SIZE = this.fieldSize / this.PUZZLE_DIFFICULTY;
+
+        this.tileRendering.init(
+            this.SIZE,
+            this.PUZZLE_DIFFICULTY,
+            this.shuffleArray
+        );
+
+        this.moveCounter = savedGameObject.counter;
+        counter.textContent = this.moveCounter;
+
+        this.resumeGame(savedGameObject.timer);
+
+        this.canvas = this.tileRendering.canvas;
+        this.rect = this.canvas.getBoundingClientRect(); // abs. size of element
     }
 
     logValue(e) {
@@ -387,6 +420,7 @@ class Game {
                 this.drag.x = 0;
                 this.drag.y = 0;
                 this.drag.position = null;
+                this.audio.playSound("badClick");
             }
         );
     }
@@ -535,6 +569,7 @@ class Game {
     }
 
     myOut(e) {
+        //mouse outside the field
         this.canvas.onmousemove = null;
         this.canvas.onmouseup = null;
         this.canvas.onmouseout = null;
@@ -547,8 +582,8 @@ class Game {
         this.overlay.classList.remove("hide");
     }
 
-    resumeGame(e) {
-        this.timer.start();
+    resumeGame(newTime) {
+        this.timer.start(newTime);
         this.overlay.classList.add("hide");
     }
 

@@ -5,7 +5,11 @@ export default class Timer {
         this.myInterval = null;
     }
 
-    start() {
+    start(newTime) {
+        if (newTime) {
+            this.totalSeconds = newTime;
+        }
+
         this.showTime();
         this.myInterval = setInterval(() => this.showTime(), 1000);
     }
@@ -40,5 +44,10 @@ export default class Timer {
 
     stop() {
         clearInterval(this.myInterval);
+    }
+
+    getSeconds() {
+        //already was increased
+        return this.totalSeconds-1;
     }
 }
