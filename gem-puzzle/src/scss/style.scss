@@ -1,3 +1,5 @@
+$base-color: #4568ffc2;
+
 html {
     font-size: 14px;
 }
@@ -23,26 +25,49 @@ canvas {
     border: 1px solid #d3d3d3;
     background-color: #f1f1f1;
     margin: auto;
-    margin-top: 60px;
 }
 
+.mt30 {
+
+    margin-top: 30px;
+}
 .time {
-    font-size: 44px;
+    font-size: 34px;
+    font-weight: 300;
 }
 
 // button
-.beginAgain {
+.beginAgain,
+.menuBtn {
     padding: 10px;
+    border-radius: 6px;
+    background-color: $base-color;
+    border: none;
+    outline: none;
+    color: white;
+    font-weight: 500;
+    font-size: 18px;
+}
+
+.beginAgain {
+    margin-bottom: 8px;
 }
 
 .select {
-    font-size: 24px;
+    font-size: 18px;
+    border-radius: 5px;
+    background-color: $base-color;
+    color: white;
+    padding: 10px;
+    border: none;
 }
 
 .counter {
-    color: black;
+    color: white;
     font-weight: bold;
     font-size: 34px;
+    text-align: end;
+    font-weight: 300;
 }
 
 .overlay {
@@ -67,7 +92,6 @@ canvas {
     display: none;
 }
 
-
 .menu__container {
     position: relative;
     display: flex;
@@ -75,15 +99,53 @@ canvas {
     justify-content: center;
     align-items: center;
     width: 80%;
-    margin: 8% auto 0px}
+    margin: 8% auto 0px;
+}
 
-
-    header, footer {
+header,
+footer {
     min-height: 75px;
-    max-width: 430px;
+    max-width: 490px;
     margin: auto;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    padding-bottom: 10px;
+}
+
+.menu__container button {
+    margin: 10px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 2px 2px 5px #000;
+    cursor: pointer;
+    outline: none;
+}
+
+.menu__container button:hover {
+    color: rgb(212, 208, 208);
+}
+
+.headerTime {
+    font-size: 24px;
+}
+
+.headerTime,
+.headerMoves {
+    font-size: 18px;
+    text-transform: uppercase;
+    margin: 0;
+
+    text-align: end;
+}
+
+header {
+    min-height: 130px;
+}
+
+header > div {
+    text-align: end;
 }

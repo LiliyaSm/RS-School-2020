@@ -6,25 +6,10 @@ import "core-js/stable";
 import "regenerator-runtime/runtime";
 import * as storage from "./utils/storage.js";
 
-const body = document.querySelector("body");
-
-const minShuffle = 100;
-const maxShuffle = 300;
+const minShuffle = 1;
+const maxShuffle = 3;
 
 const DRAG_SENSITIVITY = 6;
-
-body.setAttribute("class", "container-fluid");
-
-const header = create("header", null, body);
-const secondRow = create("div", ["row", "justify-content-center"], body);
-const thirdRow = create("div", ["row"], body);
-const footer = create("footer", null, body);
-
-const beginAgain = create("button", ["beginAgain"], header);
-const pause = create("button", ["Pause/Menu"], footer);
-const select = create("select", ["select"], footer);
-const counter = create("span", ["counter"], header);
-counter.textContent = 0;
 
 const DirectionEnum = {
     UP: 1,
@@ -32,25 +17,6 @@ const DirectionEnum = {
     DOWN: 3,
     LEFT: 4,
 };
-
-const option1 = create(
-    "option",
-    null,
-    select,
-    ["selected", ""],
-    ["selected", "selected"],
-    ["disabled", "disabled"],
-    ["hidden", "hidden"]
-);
-
-option1.textContent = "Change field size ";
-for (let i = 3; i <= 8; i++) {
-    const option = create("option", null, select, ["value", i]);
-    option.textContent = i + "x" + i;
-}
-
-beginAgain.innerHTML = "New game";
-pause.innerHTML = "pause game /show menu";
 
 function arraysEqual(a, b) {
     // check if arrays are equal
@@ -72,6 +38,8 @@ class Game {
         this.moveCounter = 0;
 
         this.timer = null;
+
+        this.isWin = false;
 
         this.isLarge = true;
 
@@ -95,29 +63,58 @@ class Game {
         };
     }
 
-    start() {
-        this.tileRendering = new CreateField();
-        this.audio = new Audio(body);
-        this.audio.init();
-        this.tileRendering.init(
-            this.SIZE,
-            this.PUZZLE_DIFFICULTY,
-            this.shuffleArray
+    createHTML() {
+        this.body = document.querySelector("body");
+        this.body.setAttribute("class", "container-fluid");
+
+        const header = create("header", null, this.body);
+        const secondRow = create(
+            "div",
+            ["row", "justify-content-center"],
+            this.body
         );
-        this.canvas = this.tileRendering.canvas;
+        const thirdRow = create("div", ["row"], this.body);
+        const footer = create("footer", null, this.body);
+
+        const beginAgain = create("button", ["beginAgain"], header);
+        this.counterContainer = create("div", null, header);
+        this.timeContainer = create("div", null, header);
+
+        const headerTime = create("h1", ["headerTime"], this.timeContainer);
+        this.time = create("time", ["time"], this.timeContainer);
+
+        const pause = create("button", ["menuBtn"], footer);
+        const select = create("select", ["select"], footer);
+
+        const headerMoves = create(
+            "h1",
+            ["headerMoves"],
+            this.counterContainer
+        );
+
+        this.counter = create("span", ["counter"], this.counterContainer);
+
+        this.counter.textContent = 0;
 
         thirdRow.appendChild(this.canvas);
 
-        this.overlay = create("div", ["overlay", "hide"], body);
+        this.canvas.classList.add("mt30");
+
+        this.overlay = create("div", ["overlay", "hide"], this.body);
         this.menu__container = create("div", ["menu__container"], this.overlay);
-        this.sound = create("button", null, this.menu__container);
-        this.btn1 = create("button", null, this.menu__container);
         this.saveGame = create("button", null, this.menu__container);
         this.loadGame = create("button", null, this.menu__container);
-        this.btn1.innerHTML = "Exit";
-        this.sound.innerHTML = "Sound: On";
-        this.saveGame.innerHTML = "Save Game";
-        this.loadGame.innerHTML = "Load Game";
+        this.sound = create("button", null, this.menu__container);
+        this.bestScore = create("button", null, this.menu__container);
+        this.btn1 = create("button", null, this.menu__container);
+
+        this.btn1.textContent = "Resume game";
+        this.sound.textContent = "Sound: On";
+        this.bestScore.textContent = "10 best scores";
+        this.saveGame.textContent = "Save Game";
+        this.loadGame.textContent = "Load Game";
+        headerMoves.textContent = "moves";
+        headerTime.textContent = "time";
 
         this.btn1.addEventListener("click", () => this.resumeGame());
         this.saveGame.addEventListener("click", (e) => this.saveGameHandler(e));
@@ -132,7 +129,42 @@ class Game {
 
         select.addEventListener("change", (e) => this.logValue(e));
 
-        this.time = create("time", ["time"], header);
+        const option1 = create(
+            "option",
+            null,
+            select,
+            ["selected", ""],
+            ["selected", "selected"],
+            ["disabled", "disabled"],
+            ["hidden", "hidden"]
+        );
+
+        option1.textContent = "Change field size ";
+        for (let i = 3; i <= 8; i++) {
+            const option = create("option", null, select, ["value", i]);
+            option.textContent = i + "x" + i;
+        }
+
+        beginAgain.innerHTML = "new game";
+        pause.innerHTML = "pause/menu";
+
+        beginAgain.addEventListener("click", () => this.restart());
+        pause.addEventListener("click", (e) => this.showMenu(e));
+    }
+
+    start() {
+        this.tileRendering = new CreateField();
+        this.canvas = this.tileRendering.canvas;
+
+        this.createHTML();
+        this.audio = new Audio(this.body);
+        this.audio.init();
+        this.tileRendering.init(
+            this.SIZE,
+            this.PUZZLE_DIFFICULTY,
+            this.shuffleArray
+        );
+
         this.timer = new Timer(this.time);
         this.timer.start();
 
@@ -142,13 +174,17 @@ class Game {
         this.rect = this.canvas.getBoundingClientRect();
     }
 
-    restart() {
+    restart(saveImage) {
+        if (this.isWin) {
+            this.isWin = false;
+        }
         this.winMap = this.createWinMap();
         this.shuffleArray = this.shuffleTiles();
         this.tileRendering.init(
             this.SIZE,
             this.PUZZLE_DIFFICULTY,
-            this.shuffleArray
+            this.shuffleArray,
+            saveImage
         );
         this.canvas = this.tileRendering.canvas;
         this.rect = this.canvas.getBoundingClientRect(); // abs. size of element
@@ -164,23 +200,27 @@ class Game {
             timer: this.timer.getSeconds(),
             counter: this.moveCounter,
             PUZZLE_DIFFICULTY: this.PUZZLE_DIFFICULTY,
+            imageNumber: this.tileRendering.getImage(),
         });
     }
 
     loadGameHandler() {
-        const savedGameObject = storage.get("15gameObject")
+        const savedGameObject = storage.get("15gameObject");
         this.shuffleArray = savedGameObject.shuffleArray;
         this.PUZZLE_DIFFICULTY = savedGameObject.PUZZLE_DIFFICULTY;
         this.SIZE = this.fieldSize / this.PUZZLE_DIFFICULTY;
 
+        this.tileRendering.setImage(savedGameObject.imageNumber);
+
         this.tileRendering.init(
             this.SIZE,
             this.PUZZLE_DIFFICULTY,
-            this.shuffleArray
+            this.shuffleArray,
+            true
         );
 
         this.moveCounter = savedGameObject.counter;
-        counter.textContent = this.moveCounter;
+        this.counter.textContent = this.moveCounter;
 
         this.resumeGame(savedGameObject.timer);
 
@@ -191,17 +231,17 @@ class Game {
     logValue(e) {
         this.PUZZLE_DIFFICULTY = Number(e.target.value);
         this.SIZE = this.fieldSize / this.PUZZLE_DIFFICULTY;
-        this.restart();
+        this.restart(true);
     }
 
     increaseCounter() {
         ++this.moveCounter;
-        counter.textContent = this.moveCounter;
+        this.counter.textContent = this.moveCounter;
     }
 
     resetCounter() {
         this.moveCounter = 0;
-        counter.textContent = this.moveCounter;
+        this.counter.textContent = this.moveCounter;
     }
 
     createWinMap() {
@@ -512,7 +552,7 @@ class Game {
             this.audio.playSound("badClick");
             return;
         }
-        if (this.drag.started) {
+        if (this.drag.started || this.isWin) {
             // check if shifting is available
             this.audio.playSound("badClick");
             return;
@@ -544,7 +584,17 @@ class Game {
 
     checkIfWin() {
         if (arraysEqual(this.winMap, this.shuffleArray)) {
+            this.isWin = true;
             this.timer.stop();
+            this.tileRendering.winField(
+                this.SIZE,
+                this.PUZZLE_DIFFICULTY,
+                this.fieldSize,
+                this.moveCounter,
+                this.timer.getSeconds()
+            );
+            this.canvas.classList.remove("mt30");
+
             console.log("win");
         }
     }
@@ -604,13 +654,25 @@ class Game {
         }
         this.SIZE = this.fieldSize / this.PUZZLE_DIFFICULTY;
 
+        if (this.isWin) {
+            this.tileRendering.winField(
+                this.SIZE,
+                this.PUZZLE_DIFFICULTY,
+                this.fieldSize,
+                this.moveCounter,
+                this.timer.getSeconds()
+            );
+
+            return;
+        }
+
         this.tileRendering.init(
             this.SIZE,
             this.PUZZLE_DIFFICULTY,
-            this.shuffleArray
+            this.shuffleArray,
+            true
         );
-
-        console.log(window.screen.width);
+        // console.log(window.screen.width);
     }
 }
 
@@ -620,7 +682,6 @@ document.body.onload = function load() {
 
     game.canvas.addEventListener("mousedown", (e) => game.myDown(e));
     // game.canvas.onmousedown = game.myDown;
-    beginAgain.addEventListener("click", (e) => game.restart(e));
-    pause.addEventListener("click", (e) => game.showMenu(e));
+
     window.addEventListener("resize", (e) => game.resizeField(e));
 };
