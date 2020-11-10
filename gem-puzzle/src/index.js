@@ -6,8 +6,8 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import * as storage from './utils/storage';
 
-const minShuffle = 1;
-const maxShuffle = 3;
+const minShuffle = 800;
+const maxShuffle = 1000;
 
 const DRAG_SENSITIVITY = 6;
 
@@ -32,7 +32,9 @@ class Game {
   constructor(PUZZLE_DIFFICULTY) {
     this.PUZZLE_DIFFICULTY = Number(PUZZLE_DIFFICULTY);
     this.winMap = this.createWinMap();
+    this.conditions = [[...this.winMap]];
     this.shuffleArray = this.shuffleTiles();
+
     // this.context = null;
     this.canvas = null;
     this.rect = null; // abs. size of element
@@ -75,7 +77,7 @@ class Game {
     const thirdRow = create('div', ['row'], this.body);
     const footer = create('footer', null, this.body);
 
-    const beginAgain = create('button', ['beginAgain'], header);
+    const solution = create('button', ['solution'], header);
     this.counterContainer = create('div', null, header);
     this.timeContainer = create('div', null, header);
 
@@ -114,6 +116,7 @@ class Game {
 
     this.back = create('button', null, this.bestScoresContainer);
 
+    const beginAgain = create('button', null, this.menu__container);
     this.saveGame = create('button', null, this.menu__container);
     this.loadGame = create('button', null, this.menu__container);
     this.sound = create('button', null, this.menu__container);
@@ -159,11 +162,19 @@ class Game {
       const option = create('option', null, select, ['value', i]);
       option.textContent = `${i}x${i}`;
     }
-
     beginAgain.innerHTML = 'new game';
+    solution.innerHTML = 'Solve';
     pause.innerHTML = 'pause/menu';
 
-    beginAgain.addEventListener('click', () => this.restart());
+    beginAgain.addEventListener('click', () => {
+      this.resumeGame();
+      this.restart();
+    });
+
+    solution.addEventListener('click', () => {
+      this.showSolution();
+    });
+
     pause.addEventListener('click', (e) => this.showMenu(e));
 
     tableHeader.forEach((name) => {
@@ -202,6 +213,8 @@ class Game {
       this.isWin = false;
     }
     this.winMap = this.createWinMap();
+    this.conditions = [[...this.winMap]];
+
     this.shuffleArray = this.shuffleTiles();
     this.tileRendering.init(
       this.SIZE,
@@ -283,42 +296,59 @@ class Game {
     ); // get random number between 50 and 100
 
     // repeat rand times
-    Array.from(Array(rand)).forEach(() => {
+    let prevOperation;
+    for (let i = 0; i <= rand; i++) {
       // get random number between 0 and 3
       const randOperation = Math.floor(Math.random() * shifts.length);
 
       const operation = shifts[randOperation];
+
+      if (prevOperation) {
+        if ((operation === 'right' && prevOperation === 'left')
+        || (operation === 'left' && prevOperation === 'right')
+        || (operation === 'up' && prevOperation === 'down')
+        || (operation === 'down' && prevOperation === 'up')) {
+          continue;
+        }
+      }
+
       const emptyTilePosition = this.shuffleArray.indexOf(0);
 
       const row = Math.floor(emptyTilePosition / this.PUZZLE_DIFFICULTY);
       const col = emptyTilePosition % this.PUZZLE_DIFFICULTY;
       switch (operation) {
       case 'left':
-        if (col !== 0) {
-          this.moveToDir(DirectionEnum.LEFT);
+        if (col === 0) {
+          continue;
         }
+        this.moveToDir(DirectionEnum.LEFT);
         break;
 
       case 'right':
-        if (col !== this.PUZZLE_DIFFICULTY - 1) {
-          this.moveToDir(DirectionEnum.RIGHT);
+        if (col === this.PUZZLE_DIFFICULTY - 1) {
+          continue;
         }
+        this.moveToDir(DirectionEnum.RIGHT);
         break;
       case 'up':
-        if (row !== 0) {
-          this.moveToDir(DirectionEnum.UP);
+        if (row === 0) {
+          continue;
         }
+        this.moveToDir(DirectionEnum.UP);
         break;
       case 'down':
-        if (row !== this.PUZZLE_DIFFICULTY - 1) {
-          this.moveToDir(DirectionEnum.DOWN);
+        if (row === this.PUZZLE_DIFFICULTY - 1) {
+          continue;
         }
+        this.moveToDir(DirectionEnum.DOWN);
         break;
 
       default:
         throw new Error('Unexpected value');
       }
-    });
+
+      prevOperation = operation;
+    }
     return this.shuffleArray;
   }
 
@@ -338,8 +368,15 @@ class Game {
     return pos.row * this.PUZZLE_DIFFICULTY + pos.col;
   }
 
-  handleClick(e) {
-    const { col, row } = this.getColRow(e.clientX, e.clientY);
+  handleClick(e, prevCol, prevRow) {
+    let col;
+    let row;
+    if (typeof prevRow !== 'undefined' && typeof prevCol !== 'undefined') {
+      col = prevCol;
+      row = prevRow;
+    } else {
+      ({ col, row } = this.getColRow(e.clientX, e.clientY));
+    }
 
     // this.animation.position = this.getPosition({ col: col, row: row });
     this.drag.started = true;
@@ -498,6 +535,8 @@ class Game {
     const emptyTilePosition = this.shuffleArray.indexOf(0);
     this.shuffleArray[emptyTilePosition] = this.shuffleArray[tilePos];
     this.shuffleArray[tilePos] = 0;
+    this.conditions.push([...this.shuffleArray]);
+    console.log(this.conditions);
   }
 
   useDirection(tile, direction) {
@@ -628,7 +667,9 @@ class Game {
       const min = today.getMinutes();
       const sec = today.getSeconds();
 
-      let currScores = storage.get(`topScoresFor${this.PUZZLE_DIFFICULTY}`);
+      let currScores = storage.get(
+        `topScoresFor${this.PUZZLE_DIFFICULTY}`,
+      );
 
       const newRecord = {
         date: `${dayMonth}.${month}.${year}`,
@@ -673,7 +714,6 @@ class Game {
       this.table.deleteRow(1);
     }
     if (!bestScores) {
-
       const div = create('div', ['temporary'], this.bestScoresContainer);
       this.bestScoresContainer.insertBefore(div, this.back);
       div.textContent = 'No records!';
@@ -735,6 +775,22 @@ class Game {
   resumeGame(newTime) {
     this.timer.start(newTime);
     this.overlay.classList.add('hide');
+  }
+
+  showSolution() {
+    const conditions = [...this.conditions];
+    for (let i = 2; i <= this.conditions.length; i++) {
+      setTimeout(() => {
+        const prevArray = conditions[conditions.length - i];
+        const prevMovePosition = prevArray.indexOf(0);
+        const prevRow = Math.floor(
+          prevMovePosition / this.PUZZLE_DIFFICULTY,
+        );
+        const prevCol = prevMovePosition % this.PUZZLE_DIFFICULTY;
+        this.drag.position = prevMovePosition;
+        this.handleClick(null, prevCol, prevRow);
+      }, i * 200);
+    }
   }
 
   resizeField() {
