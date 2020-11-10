@@ -1,4 +1,5 @@
 $base-color: #4568ffc2;
+$red-color: #d43131;
 
 html {
     font-size: 14px;
@@ -39,7 +40,7 @@ canvas {
 // button
 .beginAgain,
 .menuBtn {
-    padding: 10px;
+    padding: 8px;
     border-radius: 6px;
     background-color: $base-color;
     border: none;
@@ -78,7 +79,7 @@ canvas {
     position: fixed;
     width: 100vw;
     height: 100vh;
-    background: rgba(41, 41, 41, 0.6);
+    background: rgba(41, 41, 41, 0.75);
 }
 
 .hide {
@@ -110,7 +111,8 @@ footer {
     align-items: flex-end;
 }
 
-.menu__container button {
+.menu__container button,
+.bestScoresContainer button {
     margin: 10px;
     padding: 0;
     background: transparent;
@@ -152,9 +154,9 @@ header > div {
     min-height: 40px;
     max-width: 490px;
     margin: 0 auto;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 300;
-    color: #d43131;
+    color: $red-color;
     font-weight: bold;
     text-align: center;
 }
@@ -162,5 +164,25 @@ header > div {
 table,
 th,
 td {
-    border: 1px solid black;
+    // border: 1px solid black;
+}
+
+th, td {
+    padding: 10px;
+    // padding: 0;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 2px 2px 5px #000;
+    cursor: pointer;
+    outline: none;
+}
+
+.temporary {
+    font-size: 24px;
+    font-weight: bold;
+    color:$red-color;
+    text-shadow: 0px 1px 2px #000;
 }

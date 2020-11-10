@@ -5,17 +5,15 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: [
-    'airbnb-base',
-  ],
+  extends: ['airbnb-base'],
   parserOptions: {
     ecmaVersion: 12,
     sourceType: 'module',
-  },  
-  indent: ['error', 2],
+  },
   rules: {
     'no-plusplus': 'off',
     'no-continue': 'off',
+    indent: ['error', 2],
   },
   settings: {
     'import/resolver': {
