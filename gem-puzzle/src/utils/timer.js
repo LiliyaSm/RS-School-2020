@@ -1,7 +1,7 @@
 export default class Timer {
     constructor(time) {
         this.time = time;
-        this.totalSeconds = 0;
+        this.totalSeconds = -1;
         this.myInterval = null;
     }
 
@@ -14,26 +14,27 @@ export default class Timer {
         this.myInterval = setInterval(() => this.showTime(), 1000);
     }
 
-    showTime() {
-        const sec = this.totalSeconds % 60;
-        const min = parseInt(this.totalSeconds / 60);
+    formatTime() {
+        const sec = this.totalSeconds % 3600 % 60;
+        const min = parseInt(this.totalSeconds % 3600 / 60);
         const hour = parseInt(this.totalSeconds / 3600);
-
-        // Output Time
-        this.time.innerHTML = `${hour}<span>:</span>${addZero(
-            min
-        )}<span>:</span>${addZero(sec)}`;
-
-        ++this.totalSeconds;
-
         function addZero(n) {
             return (parseInt(n, 10) < 10 ? "0" : "") + n;
         }
+        // Output Time
+        return `${hour}<span>:</span>${addZero(min)}<span>:</span>${addZero(
+            sec
+        )}`;
+    }
+
+    showTime() {
+        ++this.totalSeconds;
+        this.time.innerHTML = this.formatTime();
     }
 
     resetTimer() {
         clearInterval(this.myInterval);
-        this.totalSeconds = 0;
+        this.totalSeconds = -1;
         this.showTime();
         this.myInterval = setInterval(() => this.showTime(), 1000);
     }
@@ -48,6 +49,6 @@ export default class Timer {
 
     getSeconds() {
         //already was increased
-        return this.totalSeconds-1;
+        return this.totalSeconds -1;
     }
 }

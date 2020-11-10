@@ -139,7 +139,7 @@ export default class CreateField {
 
     winField(PUZZLE_DIFFICULTY, SIZE, fieldSize, counter, timer) {
         this.clear();
-        
+
         this.PUZZLE_DIFFICULTY = PUZZLE_DIFFICULTY;
         this.SIZE = SIZE;
 
@@ -147,9 +147,9 @@ export default class CreateField {
         this.canvas.height = this.SIZE * this.PUZZLE_DIFFICULTY;
 
         this.context.drawImage(this.img, 0, 0, fieldSize, fieldSize);
-        const sec = this.totalSeconds % 60;
-        const min = parseInt(this.totalSeconds / 60);
-        const text = `Ура! Вы решили головоломку за ${min}:${sec} и ${counter} ходов`;
-        this.context.fillText(text, 15, 45);
+        // const sec = this.totalSeconds % 60;
+        // const min = parseInt(this.totalSeconds / 60);
+        // const text = `Ура! Вы решили головоломку за ${min}:${sec} и ${counter} ходов`;
+        // this.context.fillText(text, 15, 45);
     }
 }

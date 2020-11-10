@@ -18,6 +18,8 @@ const DirectionEnum = {
     LEFT: 4,
 };
 
+const tableHeader = ["date", "moves", "time"];
+
 function arraysEqual(a, b) {
     // check if arrays are equal
     for (let i = 0; i < a.length; ++i) {
@@ -73,6 +75,7 @@ class Game {
             ["row", "justify-content-center"],
             this.body
         );
+        this.winContainer = create("div", ["winContainer"], this.body);
         const thirdRow = create("div", ["row"], this.body);
         const footer = create("footer", null, this.body);
 
@@ -98,13 +101,27 @@ class Game {
 
         thirdRow.appendChild(this.canvas);
 
-        this.canvas.classList.add("mt30");
-
         this.overlay = create("div", ["overlay", "hide"], this.body);
         this.menu__container = create("div", ["menu__container"], this.overlay);
+        this.bestScoresContainer = create(
+            "div",
+            ["bestScoresContainer", "hide"],
+            this.overlay
+        );
+
+        this.table = create(
+            "table",
+            ["bestScoresContainer"],
+            this.bestScoresContainer
+        );
+        let tr = create("tr", null, this.table);
+
+        this.back = create("button", null, this.bestScoresContainer);
+
         this.saveGame = create("button", null, this.menu__container);
         this.loadGame = create("button", null, this.menu__container);
         this.sound = create("button", null, this.menu__container);
+
         this.bestScore = create("button", null, this.menu__container);
         this.btn1 = create("button", null, this.menu__container);
 
@@ -113,12 +130,15 @@ class Game {
         this.bestScore.textContent = "10 best scores";
         this.saveGame.textContent = "Save Game";
         this.loadGame.textContent = "Load Game";
+        this.back.textContent = "Back";
         headerMoves.textContent = "moves";
         headerTime.textContent = "time";
 
         this.btn1.addEventListener("click", () => this.resumeGame());
+        this.bestScore.addEventListener("click", () => this.showBestScores());
         this.saveGame.addEventListener("click", (e) => this.saveGameHandler(e));
         this.loadGame.addEventListener("click", (e) => this.loadGameHandler(e));
+        this.back.addEventListener("click", (e) => this.returnMenu(e));
         this.sound.addEventListener("click", (e) => {
             this.audio.toggleSound(e);
             this.sound.innerHTML =
@@ -150,6 +170,11 @@ class Game {
 
         beginAgain.addEventListener("click", () => this.restart());
         pause.addEventListener("click", (e) => this.showMenu(e));
+
+        tableHeader.forEach((name) => {
+            let th = create("th", null, tr);
+            th.textContent = name;
+        });
     }
 
     start() {
@@ -172,10 +197,15 @@ class Game {
 
         // abs. size of element. After loading ALL DOM elements!
         this.rect = this.canvas.getBoundingClientRect();
+
+        // set empty best scores
+        storage.set("topScores", [            
+        ]);
     }
 
     restart(saveImage) {
         if (this.isWin) {
+            this.winContainer.textContent = "";
             this.isWin = false;
         }
         this.winMap = this.createWinMap();
@@ -589,15 +619,71 @@ class Game {
             this.tileRendering.winField(
                 this.SIZE,
                 this.PUZZLE_DIFFICULTY,
-                this.fieldSize,
-                this.moveCounter,
-                this.timer.getSeconds()
+                this.fieldSize
             );
-            this.canvas.classList.remove("mt30");
+
+            const time = this.timer.formatTime();
+
+            this.timer.getSeconds();
+            this.winContainer.innerHTML = `Ура! Вы решили головоломку за ${time} и ${this.moveCounter} ходов`;
+
+            const today = new Date();
+            const year = today.getFullYear()
+            const month = today.getMonth() + 1;
+            const dayMonth = today.getDate();
+            const hour = today.getHours();
+            const min = today.getMinutes();
+            const sec = today.getSeconds();
+
+
+            let currScores = storage.get("topScores");
+
+            currScores.forEach((el, index)=>{
+                if(this.moveCounter > el.moves){
+                    let newRecord = {
+                        date: `${dayMonth}.${month}.${year}`,
+                        moves: this.moveCounter,
+                        time: time,
+                    };
+                    currScores.splice(newRecord, 1, index);
+                    if (currScores.length> 10) {
+                        currScores = slice(0, 10);
+                    }
+                }
+            });           
+
+
+            storage.set("topScores", currScores);
 
             console.log("win");
         }
     }
+
+    showBestScores() {
+        this.menu__container.classList.add("hide");
+        this.bestScoresContainer.classList.remove("hide");
+
+        let bestScores = storage.get("topScores");
+
+        //clear previous information
+        var rowCount = this.table.rows.length;
+        while (this.table.rows.length > 1) {
+            this.table.deleteRow(1);
+        }
+
+        bestScores.forEach((el) => {
+            let tr = create("tr", null, this.table);
+            tableHeader.forEach((name) => {
+                let td = create("td", null, tr);
+                td.innerHTML += `${el[name]} `;
+            });
+        });
+    }
+
+    returnMenu(e){
+        this.menu__container.classList.remove("hide");
+        e.target.parentNode.classList.add("hide")
+    };
 
     myUp(event) {
         // measure the difference between start and end drag
@@ -658,9 +744,7 @@ class Game {
             this.tileRendering.winField(
                 this.SIZE,
                 this.PUZZLE_DIFFICULTY,
-                this.fieldSize,
-                this.moveCounter,
-                this.timer.getSeconds()
+                this.fieldSize
             );
 
             return;
