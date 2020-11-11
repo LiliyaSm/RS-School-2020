@@ -6,8 +6,8 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import * as storage from './utils/storage';
 
-const minShuffle = 800;
-const maxShuffle = 1000;
+const minShuffle = 900;
+const maxShuffle = 900;
 
 const DRAG_SENSITIVITY = 6;
 
@@ -536,7 +536,7 @@ class Game {
     this.shuffleArray[emptyTilePosition] = this.shuffleArray[tilePos];
     this.shuffleArray[tilePos] = 0;
     this.conditions.push([...this.shuffleArray]);
-    console.log(this.conditions);
+    // console.log(this.conditions);
   }
 
   useDirection(tile, direction) {
@@ -681,14 +681,16 @@ class Game {
         currScores = [];
         currScores.push(newRecord);
       } else {
+        let inserted = false;
         for (let index = 0; index < currScores.length; index++) {
           if (this.moveCounter <= currScores[index].moves) {
             currScores.splice(index, 0, newRecord);
-            break;
-          } else {
-            currScores.push(newRecord);
+            inserted = true;
             break;
           }
+        }
+        if (!inserted) {
+          currScores.push(newRecord);
         }
       }
       // take only first 10 results
@@ -778,10 +780,11 @@ class Game {
   }
 
   showSolution() {
-    const conditions = [...this.conditions];
-    for (let i = 2; i <= this.conditions.length; i++) {
+    const conditions = this.deleteRepeatingMoves();
+
+    for (let i = 2; i <= conditions.length; i++) {
+      const prevArray = conditions[conditions.length - i];
       setTimeout(() => {
-        const prevArray = conditions[conditions.length - i];
         const prevMovePosition = prevArray.indexOf(0);
         const prevRow = Math.floor(
           prevMovePosition / this.PUZZLE_DIFFICULTY,
@@ -791,6 +794,26 @@ class Game {
         this.handleClick(null, prevCol, prevRow);
       }, i * 200);
     }
+  }
+
+  deleteRepeatingMoves() {
+    const conditions = [...this.conditions];
+    for (let i = 1; i <= conditions.length - 1; i++) {
+      // from the end
+      const prevArray = conditions[conditions.length - i];
+      for (let j = 0; j < conditions.length - i; j++) {
+        // we look before reaching the checked array
+        if (arraysEqual(prevArray, conditions[j])) {
+          // delete unnecessary conditions
+          const end = conditions.length - i + 1;
+          const begin = j + 1;
+          conditions.splice(begin, end - begin);
+          console.log('shortcut!');
+          break;
+        }
+      }
+    }
+    return conditions;
   }
 
   resizeField() {
