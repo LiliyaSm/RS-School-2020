@@ -1,34 +1,36 @@
-import images from './images.js';
+// import images from './images.js';
 
-const startPosition = {
-  x: 0,
-  y: 0,
-};
-
-//   const keyButton = new Key(keyObj);
+// const shifting = {
+//   x: 20,
+//   y: 20,
+// };
 
 export default class CreateField {
   constructor() {
     this.canvas = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
-    // this.context = null;
     this.SIZE = null;
+    this.shifting = null;
     this.PUZZLE_DIFFICULTY = null;
     this.pieces = [];
     this.img = new Image();
-    this.img.counter = 0;
+    this.img.counter = Math.floor(Math.random() * Math.floor(151));
     this.initArray = null;
+    this.rect = this.canvas.getBoundingClientRect(); // abs. size of element
   }
 
-  init(SIZE, PUZZLE_DIFFICULTY, array, saveImage) {
+  init(SIZE, PUZZLE_DIFFICULTY, array, shifting, saveImage) {
     this.PUZZLE_DIFFICULTY = PUZZLE_DIFFICULTY;
     this.SIZE = SIZE;
-    this.canvas.width = this.SIZE * this.PUZZLE_DIFFICULTY;
-    this.canvas.height = this.SIZE * this.PUZZLE_DIFFICULTY;
+    this.shifting = {
+      x: shifting,
+      y: shifting,
+    };
+    this.canvas.width = this.SIZE * this.PUZZLE_DIFFICULTY + this.shifting.x * 2;
+    this.canvas.height = this.SIZE * this.PUZZLE_DIFFICULTY + this.shifting.y * 2;
 
-    // this.img = new Image();
     if (!saveImage) {
-      this.img.counter = ++this.img.counter % 150;
+      this.img.counter = (++this.img.counter % 150) + 1;
     }
 
     this.img.src = `../assets/${this.img.counter}.jpg`;
@@ -56,8 +58,8 @@ export default class CreateField {
       // i % 4      0 1 2 3 0 1 2 3
       const col = i % this.PUZZLE_DIFFICULTY;
 
-      piece.sx = startPosition.x + col * this.pieceWidth;
-      piece.sy = startPosition.y + row * this.pieceHeight;
+      piece.sx = col * this.pieceWidth;
+      piece.sy = row * this.pieceHeight;
       this.pieces.push(piece);
     }
     this.createTiles(this.initArray);
@@ -65,6 +67,12 @@ export default class CreateField {
 
   createTiles(array, animated, dragPosition, dragX, dragY) {
     this.clear();
+    
+    this.context.lineWidth = this.shifting.x* 2;
+    this.context.strokeStyle = "#442200";
+    this.context.strokeRect(0, 0, this.canvas.width, this.canvas.height);
+
+
     for (let i = 0; i < array.length; i++) {
       // empty tile
       if (array[i] === 0) {
@@ -85,14 +93,15 @@ export default class CreateField {
       this.drawTile(
         this.SIZE,
         array[i],
-        startPosition.x + col * this.SIZE,
-        startPosition.y + row * this.SIZE,
+        this.shifting.x + col * this.SIZE,
+        this.shifting.y + row * this.SIZE,
       );
     }
-
+    // draw moving tile separatly
     if (animated) {
       this.drawTile(this.SIZE, array[dragPosition], dragX, dragY);
     }
+
   }
 
   drawTile(size, text, x, y) {
@@ -106,7 +115,7 @@ export default class CreateField {
     // get coords from array
     const imgCoords = this.pieces[text - 1];
 
-    if (!imgCoords) debugger;
+    if (imgCoords === undefined) return;
 
     // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
     ctx.drawImage(
@@ -121,14 +130,16 @@ export default class CreateField {
       size - 7,
     );
     ctx.shadowColor = 'transparent';
+    //text color
     ctx.fillStyle = '#FFFFFF';
-    ctx.font = '20px Arial';
+    ctx.font = '14px Arial';
     ctx.draggable = true;
 
     // compute text position
-    const xNumber = x + 35;
-    const yNumber = y + 45;
+    const xNumber = x + 5;
+    const yNumber = y + 15;
     ctx.fillText(text, xNumber, yNumber);
+
   }
 
   setImage(imageNumber) {
@@ -139,15 +150,61 @@ export default class CreateField {
     return this.img.counter;
   }
 
-  winField(PUZZLE_DIFFICULTY, SIZE, fieldSize) {
+  winField(PUZZLE_DIFFICULTY, SIZE, fieldSize, shifting) {
     this.clear();
+    this.shifting = {
+      x: shifting,
+      y: shifting,
+    };
 
     this.PUZZLE_DIFFICULTY = PUZZLE_DIFFICULTY;
     this.SIZE = SIZE;
 
-    this.canvas.width = this.SIZE * this.PUZZLE_DIFFICULTY;
-    this.canvas.height = this.SIZE * this.PUZZLE_DIFFICULTY;
+    this.canvas.width = this.SIZE * this.PUZZLE_DIFFICULTY
+            + this.SIZE
+            + this.shifting.x * 2;
+    this.canvas.height = this.SIZE * this.PUZZLE_DIFFICULTY
+            + this.SIZE
+            + this.shifting.y * 2;
+    this.context.lineWidth = this.shifting.x * 2;
+    this.context.strokeStyle = "#442200";
+    this.context.strokeRect(0, 0, this.canvas.width - 5, this.canvas.height-5);
+    this.context.drawImage(
+      this.img,
+      this.shifting.x,
+      this.shifting.y,
+      fieldSize,
+      fieldSize,
+    );
+  }
 
-    this.context.drawImage(this.img, 0, 0, fieldSize, fieldSize);
+  getColRow(clientX, clientY) {
+    this.rect = this.canvas.getBoundingClientRect(); // abs. size of element
+    const x = clientX - this.rect.left - this.shifting.x;
+    const y = clientY - this.rect.top - this.shifting.y;
+    return {
+      col: Math.floor(x / this.SIZE),
+      row: Math.floor(y / this.SIZE),
+    };
+  }
+
+  getRelativeX(pageX) {
+    return pageX - this.rect.left;
+  }
+
+  getRelativeY(pageY) {
+    return pageY - this.rect.top;
+  }
+
+  clickOnEdge(x, y) {
+    if (
+      x < this.shifting.x + 5
+            || x > this.rect.width - (this.shifting.x + 5)
+            || y < this.shifting.y + 5
+            || y > this.rect.height - (this.shifting.y + 5)
+    ) {
+      return true;
+    }
+    return false;
   }
 }
