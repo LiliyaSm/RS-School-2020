@@ -39,7 +39,8 @@ canvas {
 
 // button
 .solution,
-.menuBtn {
+.menuBtn,
+.quickStart {
     padding: 8px;
     border-radius: 6px;
     background-color: $base-color;
@@ -94,11 +95,12 @@ canvas {
     align-items: center;
     width: 80%;
     margin: 75px auto 0px;
+    z-index: 102;
 }
 
 .bestScoresContainer {
     margin: 75px auto 0px;
-    text-align:center;
+    text-align: center;
 }
 
 header,
@@ -138,7 +140,6 @@ footer {
     font-size: 18px;
     text-transform: uppercase;
     margin: 0;
-
     text-align: end;
 }
 
@@ -161,13 +162,43 @@ header > div {
     text-align: center;
 }
 
-table,
-th,
-td {
-    // border: 1px solid black;
+.zoom {
+    animation: zoom 3s;
+    color: $red-color;
+    font-weight: 500;
+    animation-fill-mode: both;
+    content: attr(data-num);
+    cursor: default;
+    font-size: 90px;
+    position: absolute;
+    top: 45%;
+    left: 35%;
+    text-align: center;
+    opacity: 0;
+    // z-index: 100;
 }
 
-th, td {
+.menuBtn {
+    text-transform: uppercase;
+}
+
+@keyframes zoom {
+    0% {
+        transform: scale(0.2);
+        opacity: 1;
+    }
+
+    70% {
+        transform: scale(1);
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+th,
+td {
     padding: 10px;
     // padding: 0;
     background: transparent;
@@ -183,6 +214,31 @@ th, td {
 .temporary {
     font-size: 24px;
     font-weight: bold;
-    color:$red-color;
+    color: $red-color;
     text-shadow: 0px 1px 2px #000;
+}
+
+@media screen and (max-width: 500px) {
+    .solution,
+    .menuBtn,
+    .quickStart,
+    .select {
+        font-size: 15px;
+    }
+
+    .counter,
+    .time {
+        font-size: 18px;
+    }
+
+    .select {
+        padding: 7px;
+    }
+    .solution,
+    .quickStart {
+        padding: 6px;
+    }
+    .zoom {
+        font-size: 45px;
+    }
 }

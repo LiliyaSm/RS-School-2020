@@ -1,13 +1,10 @@
 import create from './utils/create'; // creates DOM elements
 import CreateField from './utils/createField'; // creates canvas field
 import Timer from './utils/timer'; // creates canvas field
-import Audio from './utils/audio'; // creates canvas field
+import Audio from './utils/audio'; // sounds
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import * as storage from './utils/storage';
-
-const minShuffle = 900;
-const maxShuffle = 900;
 
 const DRAG_SENSITIVITY = 6;
 
@@ -18,7 +15,7 @@ const DirectionEnum = {
   LEFT: 4,
 };
 
-const tableHeader = ['date', 'moves', 'time'];
+const tableHeader = ["moves","time", "date", ];
 
 function arraysEqual(a, b) {
   // check if arrays are equal
@@ -32,7 +29,11 @@ class Game {
   constructor(PUZZLE_DIFFICULTY) {
     this.PUZZLE_DIFFICULTY = Number(PUZZLE_DIFFICULTY);
     this.winMap = this.createWinMap();
-    this.conditions = [[...this.winMap]];
+    this.moveHistory = [[...this.winMap]];
+
+    // info to shuffle the array
+    this.minShuffle = 5;
+    this.maxShuffle = 10;
     this.shuffleArray = this.shuffleTiles();
 
     // this.context = null;
@@ -64,6 +65,8 @@ class Game {
     this.animation = {
       // Frames per second
       frameRate: 100,
+      normDuration: 100,
+      solveDuration: 70,
     };
   }
 
@@ -77,15 +80,16 @@ class Game {
     const thirdRow = create('div', ['row'], this.body);
     const footer = create('footer', null, this.body);
 
-    const solution = create('button', ['solution'], header);
+    const menu = create('button', ['menuBtn'], header);
     this.counterContainer = create('div', null, header);
     this.timeContainer = create('div', null, header);
 
     const headerTime = create('h1', ['headerTime'], this.timeContainer);
     this.time = create('time', ['time'], this.timeContainer);
 
-    const pause = create('button', ['menuBtn'], footer);
+    const quickStart = create('button', ['quickStart'], footer);
     const select = create('select', ['select'], footer);
+    const solution = create('button', ['solution'], footer);
 
     const headerMoves = create(
       'h1',
@@ -162,12 +166,17 @@ class Game {
       const option = create('option', null, select, ['value', i]);
       option.textContent = `${i}x${i}`;
     }
-    beginAgain.innerHTML = 'new game';
+    beginAgain.innerHTML = 'New Game';
     solution.innerHTML = 'Solve';
-    pause.innerHTML = 'pause/menu';
+    menu.innerHTML = 'menu';
+    quickStart.innerHTML = 'New Game';
 
     beginAgain.addEventListener('click', () => {
       this.resumeGame();
+      this.restart();
+    });
+
+    quickStart.addEventListener('click', () => {
       this.restart();
     });
 
@@ -175,12 +184,14 @@ class Game {
       this.showSolution();
     });
 
-    pause.addEventListener('click', (e) => this.showMenu(e));
+    menu.addEventListener('click', (e) => this.showMenu(e));
 
     tableHeader.forEach((name) => {
       const th = create('th', null, tr);
       th.textContent = name;
     });
+    // notification text
+    this.text = create('span', ['text'], this.menu__container);
   }
 
   start() {
@@ -203,8 +214,6 @@ class Game {
 
     // abs. size of element. After loading ALL DOM elements!
     this.rect = this.canvas.getBoundingClientRect();
-
-    // set empty best scores
   }
 
   restart(saveImage) {
@@ -213,7 +222,7 @@ class Game {
       this.isWin = false;
     }
     this.winMap = this.createWinMap();
-    this.conditions = [[...this.winMap]];
+    this.moveHistory = [[...this.winMap]];
 
     this.shuffleArray = this.shuffleTiles();
     this.tileRendering.init(
@@ -231,18 +240,27 @@ class Game {
   }
 
   saveGameHandler() {
+      if (this.isWin) {
+        this.addAnimation("Can't be save!");
+        return;
+      };
+    
+    this.addAnimation('Game saved!');
     storage.set('15gameObject', {
       shuffleArray: this.shuffleArray,
       timer: this.timer.getSeconds(),
       counter: this.moveCounter,
       PUZZLE_DIFFICULTY: this.PUZZLE_DIFFICULTY,
       imageNumber: this.tileRendering.getImage(),
+      solution: this.moveHistory,
     });
   }
 
   loadGameHandler() {
+    
     const savedGameObject = storage.get('15gameObject');
     this.shuffleArray = savedGameObject.shuffleArray;
+    this.moveHistory = savedGameObject.solution;
     this.PUZZLE_DIFFICULTY = savedGameObject.PUZZLE_DIFFICULTY;
     this.SIZE = this.fieldSize / this.PUZZLE_DIFFICULTY;
 
@@ -290,10 +308,15 @@ class Game {
 
   shuffleTiles() {
     this.shuffleArray = [...this.winMap];
+    const maxShuffle = this.maxShuffle * this.PUZZLE_DIFFICULTY * this.PUZZLE_DIFFICULTY;
+    const minShuffle = this.minShuffle * this.PUZZLE_DIFFICULTY * this.PUZZLE_DIFFICULTY;
     const shifts = ['left', 'right', 'up', 'down'];
     const rand = Math.floor(
-      Math.random() * (maxShuffle - minShuffle) + minShuffle,
-    ); // get random number between 50 and 100
+      Math.random()
+            * (maxShuffle
+                - minShuffle)
+            + minShuffle,
+    ); // get a random number of shuffles
 
     // repeat rand times
     let prevOperation;
@@ -371,11 +394,15 @@ class Game {
   handleClick(e, prevCol, prevRow) {
     let col;
     let row;
+    let duration;
+    // was called with these parameters
     if (typeof prevRow !== 'undefined' && typeof prevCol !== 'undefined') {
       col = prevCol;
       row = prevRow;
+      duration = this.animation.solveDuration;
     } else {
       ({ col, row } = this.getColRow(e.clientX, e.clientY));
+      duration = this.animation.normDuration;
     }
 
     // this.animation.position = this.getPosition({ col: col, row: row });
@@ -389,7 +416,7 @@ class Game {
 
     if (
       col === colEmptyTile
-            && (rowEmptyTile + 1 === row || rowEmptyTile - 1 === row)
+          && (rowEmptyTile + 1 === row || rowEmptyTile - 1 === row)
     ) {
       // shift in column
 
@@ -397,7 +424,7 @@ class Game {
         this.createAnimation(
           { from: col * this.SIZE, to: col * this.SIZE },
           { from: row * this.SIZE, to: row * this.SIZE - this.SIZE },
-          100,
+          duration,
           // call to change array only after animation
           () => this.doTurnToDir(DirectionEnum.DOWN),
         );
@@ -405,14 +432,14 @@ class Game {
         this.createAnimation(
           { from: col * this.SIZE, to: col * this.SIZE },
           { from: row * this.SIZE, to: row * this.SIZE + this.SIZE },
-          100,
+          duration,
           // call to change array only after animation
           () => this.doTurnToDir(DirectionEnum.UP),
         );
       }
     } else if (
       row === rowEmptyTile
-            && (colEmptyTile + 1 === col || colEmptyTile - 1 === col)
+          && (colEmptyTile + 1 === col || colEmptyTile - 1 === col)
     ) {
       // shift in row
 
@@ -422,7 +449,7 @@ class Game {
         this.createAnimation(
           { from: col * this.SIZE, to: col * this.SIZE - this.SIZE },
           { from: row * this.SIZE, to: row * this.SIZE },
-          100,
+          duration,
           // call to change array only after animation
           () => this.doTurnToDir(DirectionEnum.RIGHT),
         );
@@ -430,7 +457,7 @@ class Game {
         this.createAnimation(
           { from: col * this.SIZE, to: col * this.SIZE + this.SIZE },
           { from: row * this.SIZE, to: row * this.SIZE },
-          100,
+          duration,
           // call to change array only after animation
           () => this.doTurnToDir(DirectionEnum.LEFT),
         );
@@ -535,8 +562,8 @@ class Game {
     const emptyTilePosition = this.shuffleArray.indexOf(0);
     this.shuffleArray[emptyTilePosition] = this.shuffleArray[tilePos];
     this.shuffleArray[tilePos] = 0;
-    this.conditions.push([...this.shuffleArray]);
-    // console.log(this.conditions);
+    this.moveHistory.push([...this.shuffleArray]);
+    // console.log(this.moveHistory);
   }
 
   useDirection(tile, direction) {
@@ -775,15 +802,23 @@ class Game {
   }
 
   resumeGame(newTime) {
+    // clear notification
+    if (this.text.classList.contains('zoom')) {
+      this.text.classList.remove('zoom');
+    }
+    this.text.textContent = '';
+
     this.timer.start(newTime);
     this.overlay.classList.add('hide');
   }
 
   showSolution() {
-    const conditions = this.deleteRepeatingMoves();
+    document.addEventListener("click", this.disableClickOnPage);
 
-    for (let i = 2; i <= conditions.length; i++) {
-      const prevArray = conditions[conditions.length - i];
+    const moveHistory = this.deleteRepeatingMoves();
+
+    for (let i = 2; i <= moveHistory.length; i++) {
+      const prevArray = moveHistory[moveHistory.length - i];
       setTimeout(() => {
         const prevMovePosition = prevArray.indexOf(0);
         const prevRow = Math.floor(
@@ -792,28 +827,46 @@ class Game {
         const prevCol = prevMovePosition % this.PUZZLE_DIFFICULTY;
         this.drag.position = prevMovePosition;
         this.handleClick(null, prevCol, prevRow);
-      }, i * 200);
+      }, i * 150);
     }
+    document.removeEventListener("click", this.disableClickOnPage);
+  }
+
+  disableClickOnPage(e){
+      e.stopPropagation();
+      e.preventDefault();
   }
 
   deleteRepeatingMoves() {
-    const conditions = [...this.conditions];
-    for (let i = 1; i <= conditions.length - 1; i++) {
+    const moveHistory = [...this.moveHistory];
+    for (let i = 1; i <= moveHistory.length - 1; i++) {
       // from the end
-      const prevArray = conditions[conditions.length - i];
-      for (let j = 0; j < conditions.length - i; j++) {
+      const prevArray = moveHistory[moveHistory.length - i];
+      for (let j = 0; j < moveHistory.length - i; j++) {
         // we look before reaching the checked array
-        if (arraysEqual(prevArray, conditions[j])) {
-          // delete unnecessary conditions
-          const end = conditions.length - i + 1;
+        if (arraysEqual(prevArray, moveHistory[j])) {
+          // delete unnecessary moveHistory
+          const end = moveHistory.length - i + 1;
           const begin = j + 1;
-          conditions.splice(begin, end - begin);
+          moveHistory.splice(begin, end - begin);
           console.log('shortcut!');
           break;
         }
       }
     }
-    return conditions;
+    return moveHistory;
+  }
+
+  addAnimation(notificationText) {
+    if (this.text.classList.contains('zoom')) {
+      this.text.classList.remove('zoom');
+    }
+
+    // force browser to play animation again, set to null styles
+    void this.text.offsetWidth;
+
+    this.text.textContent = notificationText;
+    this.text.classList.add('zoom');
   }
 
   resizeField() {
@@ -828,7 +881,7 @@ class Game {
       this.fieldSize = 500;
       this.isLarge = true;
     } else {
-      this.fieldSize = 320;
+      this.fieldSize = 310;
       this.isLarge = false;
     }
     this.SIZE = this.fieldSize / this.PUZZLE_DIFFICULTY;

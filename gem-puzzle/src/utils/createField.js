@@ -103,6 +103,7 @@ export default class CreateField {
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 2;
     // ctx.fillRect(x + 5, y + 5, size - 5, size - 5);
+    // get coords from array
     const imgCoords = this.pieces[text - 1];
 
     if (!imgCoords) debugger;
@@ -138,7 +139,7 @@ export default class CreateField {
     return this.img.counter;
   }
 
-  winField(PUZZLE_DIFFICULTY, SIZE, fieldSize, counter, timer) {
+  winField(PUZZLE_DIFFICULTY, SIZE, fieldSize) {
     this.clear();
 
     this.PUZZLE_DIFFICULTY = PUZZLE_DIFFICULTY;
@@ -148,9 +149,5 @@ export default class CreateField {
     this.canvas.height = this.SIZE * this.PUZZLE_DIFFICULTY;
 
     this.context.drawImage(this.img, 0, 0, fieldSize, fieldSize);
-    // const sec = this.totalSeconds % 60;
-    // const min = parseInt(this.totalSeconds / 60);
-    // const text = `Ура! Вы решили головоломку за ${min}:${sec} и ${counter} ходов`;
-    // this.context.fillText(text, 15, 45);
   }
 }

@@ -6,7 +6,7 @@ export default class Timer {
   }
 
   start(newTime) {
-    if (newTime) {
+    if (newTime !== undefined) {
       this.totalSeconds = newTime;
     }
 
