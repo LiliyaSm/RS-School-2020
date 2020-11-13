@@ -1,11 +1,9 @@
-// import images from './images.js';
-
 export default class CreateField {
   constructor() {
     this.canvas = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
     this.SIZE = null;
-    this.shifting = null;
+    this.padding = null;
     this.PUZZLE_DIFFICULTY = null;
     this.pieces = [];
     this.img = new Image();
@@ -14,15 +12,12 @@ export default class CreateField {
     this.rect = this.canvas.getBoundingClientRect(); // abs. size of element
   }
 
-  init(SIZE, PUZZLE_DIFFICULTY, array, shifting, saveImage) {
+  init(SIZE, PUZZLE_DIFFICULTY, array, padding, saveImage) {
     this.PUZZLE_DIFFICULTY = PUZZLE_DIFFICULTY;
     this.SIZE = SIZE;
-    this.shifting = {
-      x: shifting,
-      y: shifting,
-    };
-    this.canvas.width = this.SIZE * this.PUZZLE_DIFFICULTY + this.shifting.x * 2;
-    this.canvas.height = this.SIZE * this.PUZZLE_DIFFICULTY + this.shifting.y * 2;
+    this.padding = padding;
+    this.canvas.width = this.SIZE * this.PUZZLE_DIFFICULTY + this.padding *2;
+    this.canvas.height = this.SIZE * this.PUZZLE_DIFFICULTY + this.padding *2;
 
     if (!saveImage) {
       this.img.counter = (++this.img.counter % 150) + 1;
@@ -63,9 +58,9 @@ export default class CreateField {
   createTiles(array, animated, dragPosition, dragX, dragY) {
     this.clear();
 
-    this.context.lineWidth = this.shifting.x * 2;
+    this.context.lineWidth = this.padding * 2;
 
-    const gradient = this.context.createLinearGradient(0, 0, 170, 0);
+    const gradient = this.context.createLinearGradient(0, 20, 110, 0);
     gradient.addColorStop('1.0', '#6cb3e3');
     // gradient.addColorStop("0.5", "#8fdbd0");
     gradient.addColorStop('0', '#cef5f0');
@@ -93,8 +88,8 @@ export default class CreateField {
       this.drawTile(
         this.SIZE,
         array[i],
-        this.shifting.x + col * this.SIZE,
-        this.shifting.y + row * this.SIZE,
+        this.padding + col * this.SIZE,
+        this.padding + row * this.SIZE,
       );
     }
     // draw moving tile separatly
@@ -148,29 +143,34 @@ export default class CreateField {
     return this.img.counter;
   }
 
-  winField(PUZZLE_DIFFICULTY, SIZE, fieldSize, shifting) {
+  winField(PUZZLE_DIFFICULTY, SIZE, fieldSize, padding) {
     this.clear();
-    this.shifting = {
-      x: shifting,
-      y: shifting,
-    };
+    this.padding = padding;
 
     this.PUZZLE_DIFFICULTY = PUZZLE_DIFFICULTY;
     this.SIZE = SIZE;
 
-    this.canvas.width = this.SIZE * this.PUZZLE_DIFFICULTY
-            + this.SIZE
-            + this.shifting.x * 2;
-    this.canvas.height = this.SIZE * this.PUZZLE_DIFFICULTY
-            + this.SIZE
-            + this.shifting.y * 2;
-    this.context.lineWidth = this.shifting.x * 2;
-    this.context.strokeStyle = '#6b290d';
-    this.context.strokeRect(0, 0, this.canvas.width - 5, this.canvas.height - 5);
+    this.canvas.width = this.SIZE * this.PUZZLE_DIFFICULTY + this.SIZE + this.padding *2;
+    this.canvas.height = this.SIZE * this.PUZZLE_DIFFICULTY + this.SIZE + this.padding*2;
+    this.context.lineWidth = this.padding*2;
+
+    const gradient = this.context.createLinearGradient(0, 0, 110, 0);
+    gradient.addColorStop('1.0', '#6cb3e3');
+    // gradient.addColorStop("0.5", "#8fdbd0");
+    gradient.addColorStop('0', '#cef5f0');
+
+    this.context.strokeStyle = gradient;
+
+    this.context.strokeRect(
+      0,
+      0,
+      this.canvas.width - 5,
+      this.canvas.height - 5,
+    );
     this.context.drawImage(
       this.img,
-      this.shifting.x,
-      this.shifting.y,
+      this.padding,
+      this.padding,
       fieldSize,
       fieldSize,
     );
@@ -178,8 +178,8 @@ export default class CreateField {
 
   getColRow(clientX, clientY) {
     this.rect = this.canvas.getBoundingClientRect(); // abs. size of element
-    const x = clientX - this.rect.left - this.shifting.x;
-    const y = clientY - this.rect.top - this.shifting.y;
+    const x = clientX - this.rect.left - this.padding;
+    const y = clientY - this.rect.top - this.padding;
     return {
       col: Math.floor(x / this.SIZE),
       row: Math.floor(y / this.SIZE),
@@ -196,10 +196,10 @@ export default class CreateField {
 
   clickOnEdge(x, y) {
     if (
-      x < this.shifting.x + 5
-            || x > this.rect.width - (this.shifting.x + 5)
-            || y < this.shifting.y + 5
-            || y > this.rect.height - (this.shifting.y + 5)
+      x < this.padding + 5
+            || x > this.rect.width - (this.padding + 5)
+            || y < this.padding + 5
+            || y > this.rect.height - (this.padding + 5)
     ) {
       return true;
     }

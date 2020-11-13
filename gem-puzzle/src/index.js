@@ -15,6 +15,9 @@ const DirectionEnum = {
   LEFT: 4,
 };
 
+const PADDING_SMALL = 25;
+const PADDING_LARGE = 50;
+
 const tableHeader = ['moves', 'time', 'date'];
 
 function arraysEqual(a, b) {
@@ -207,16 +210,13 @@ class Game {
     this.createHTML();
     this.audio = new Audio(this.body);
     this.audio.init();
-    this.shifting = {
-      x: 50,
-      y: 50,
-    };
+    this.padding = PADDING_LARGE;
 
     this.tileRendering.init(
       this.SIZE,
       this.PUZZLE_DIFFICULTY,
       this.shuffleArray,
-      this.shifting.x,
+      this.padding,
     );
 
     this.timer = new Timer(this.time);
@@ -244,7 +244,7 @@ class Game {
       this.SIZE,
       this.PUZZLE_DIFFICULTY,
       this.shuffleArray,
-      this.shifting.x,
+      this.padding,
       saveImage,
     );
     this.canvas = this.tileRendering.canvas;
@@ -290,7 +290,7 @@ class Game {
       this.SIZE,
       this.PUZZLE_DIFFICULTY,
       this.shuffleArray,
-      this.shifting.x,
+      this.padding,
       true,
     );
 
@@ -403,102 +403,91 @@ class Game {
     return pos.row * this.PUZZLE_DIFFICULTY + pos.col;
   }
 
-  handleClick(e, prevCol, prevRow) {
-    let col;
-    let row;
-    let duration;
-    // was called with these parameters
-    if (typeof prevRow !== 'undefined' && typeof prevCol !== 'undefined') {
-      col = prevCol;
-      row = prevRow;
-      duration = this.animation.solveDuration;
-    } else {
-      ({ col, row } = this.tileRendering.getColRow(e.clientX, e.clientY));
-      duration = this.animation.normDuration;
-    }
+  handleClick(e) {
+    const tile = this.tileRendering.getColRow(e.clientX, e.clientY);
+    const duration = this.animation.normDuration;
 
     // this.animation.position = this.getPosition({ col: col, row: row });
     this.drag.started = true;
 
-    const emptyTilePosition = this.shuffleArray.indexOf(0);
-    const rowEmptyTile = Math.floor(
-      emptyTilePosition / this.PUZZLE_DIFFICULTY,
+    const emptyTile = this.getEmptyTileLocation();
+    const moveCoords = this.calcMoveCoords(emptyTile, tile);
+
+    this.createAnimation(
+      {
+        from: moveCoords.from.x,
+        to: moveCoords.to.x,
+      },
+      {
+        from: moveCoords.from.y,
+        to: moveCoords.to.y,
+      },
+      duration,
+      // call to change array only after animation
+      () => this.doTurnToDir(moveCoords.direction),
     );
+  }
+
+  getEmptyTileLocation() {
+    const emptyTilePosition = this.shuffleArray.indexOf(0);
+    const rowEmptyTile = Math.floor(emptyTilePosition / this.PUZZLE_DIFFICULTY);
     const colEmptyTile = emptyTilePosition % this.PUZZLE_DIFFICULTY;
+    return {
+      col: colEmptyTile,
+      row: rowEmptyTile,
+    };
+  }
+
+  calcMoveCoords(empty, target) {
+    const { col, row } = target;
+    const { col: emptyCol, row: emptyRow } = empty;
+    const fromX = col * this.SIZE + this.padding;
+    const fromY = row * this.SIZE + this.padding;
+    let toX;
+    let toY;
+    let direction;
 
     if (
-      col === colEmptyTile
-            && (rowEmptyTile + 1 === row || rowEmptyTile - 1 === row)
+      col === emptyCol
+        && (emptyRow + 1 === row || emptyRow - 1 === row)
     ) {
       // shift in column
-
-      if (rowEmptyTile + 1 === row) {
-        this.createAnimation(
-          {
-            from: col * this.SIZE + this.shifting.x,
-            to: col * this.SIZE + this.shifting.y,
-          },
-          {
-            from: row * this.SIZE + this.shifting.x,
-            to: row * this.SIZE - this.SIZE + this.shifting.y,
-          },
-          duration,
-          // call to change array only after animation
-          () => this.doTurnToDir(DirectionEnum.DOWN),
-        );
+      if (emptyRow + 1 === row) {
+        toX = col * this.SIZE + this.padding;
+        toY = row * this.SIZE - this.SIZE + this.padding;
+        direction = DirectionEnum.DOWN;
       } else {
-        this.createAnimation(
-          {
-            from: col * this.SIZE + this.shifting.x,
-            to: col * this.SIZE + this.shifting.y,
-          },
-          {
-            from: row * this.SIZE + this.shifting.x,
-            to: row * this.SIZE + this.SIZE + this.shifting.y,
-          },
-          duration,
-          // call to change array only after animation
-          () => this.doTurnToDir(DirectionEnum.UP),
-        );
+        toX = col * this.SIZE + this.padding;
+        toY = row * this.SIZE + this.SIZE + this.padding;
+        direction = DirectionEnum.UP;
       }
     } else if (
-      row === rowEmptyTile
-            && (colEmptyTile + 1 === col || colEmptyTile - 1 === col)
+      row === emptyRow
+        && (emptyCol + 1 === col || emptyCol - 1 === col)
     ) {
       // shift in row
-
-      if (colEmptyTile + 1 === col) {
-        // empty tile shifting
-
-        this.createAnimation(
-          {
-            from: col * this.SIZE + this.shifting.x,
-            to: col * this.SIZE - this.SIZE + this.shifting.y,
-          },
-          {
-            from: row * this.SIZE + this.shifting.x,
-            to: row * this.SIZE + this.shifting.y,
-          },
-          duration,
-          // call to change array only after animation
-          () => this.doTurnToDir(DirectionEnum.RIGHT),
-        );
+      if (emptyCol + 1 === col) {
+        toX = col * this.SIZE - this.SIZE + this.padding;
+        toY = row * this.SIZE + this.padding;
+        direction = DirectionEnum.RIGHT;
       } else {
-        this.createAnimation(
-          {
-            from: col * this.SIZE + this.shifting.x,
-            to: col * this.SIZE + this.SIZE + this.shifting.y,
-          },
-          {
-            from: row * this.SIZE + this.shifting.x,
-            to: row * this.SIZE + this.shifting.y,
-          },
-          duration,
-          // call to change array only after animation
-          () => this.doTurnToDir(DirectionEnum.LEFT),
-        );
+        toX = col * this.SIZE + this.SIZE + this.padding;
+        toY = row * this.SIZE + this.padding;
+        direction = DirectionEnum.LEFT;
       }
     }
+
+    return {
+      from: {
+        x: fromX,
+        y: fromY,
+      },
+      to: {
+        x: toX,
+        y: toY,
+      },
+      direction,
+    };
   }
 
   createAnimation(x, y, duration, callback) {
@@ -547,13 +536,13 @@ class Game {
           from:
                         this.tileRendering.getRelativeX(e.clientX)
                         - this.SIZE / 2,
-          to: col * this.SIZE + this.shifting.x,
+          to: col * this.SIZE + this.padding,
         },
         {
           from:
                         this.tileRendering.getRelativeY(e.clientY)
                         - this.SIZE / 2,
-          to: row * this.SIZE + this.shifting.y,
+          to: row * this.SIZE + this.padding,
         },
         300,
         () => this.doTurnToPos(this.drag.position),
@@ -572,12 +561,12 @@ class Game {
       {
         from:
                     this.tileRendering.getRelativeX(e.clientX) - this.SIZE / 2,
-        to: initialCol * this.SIZE + this.shifting.x,
+        to: initialCol * this.SIZE + this.padding,
       },
       {
         from:
                     this.tileRendering.getRelativeY(e.clientY) - this.SIZE / 2,
-        to: initialRow * this.SIZE + this.shifting.y,
+        to: initialRow * this.SIZE + this.padding,
       },
       400,
       () => {
@@ -720,7 +709,7 @@ class Game {
         this.PUZZLE_DIFFICULTY,
         // send here bcs now state
         this.fieldSize,
-        this.shifting.x,
+        this.padding,
       );
 
       const time = this.timer.formatTime();
@@ -819,8 +808,6 @@ class Game {
     } else if (this.drag.started) this.handleMove(event);
 
     // set to initial values
-    // this.drag.started = false;
-    // this.drag.position = null;
     this.drag.x = 0;
     this.drag.y = 0;
     this.canvas.onmousemove = null;
@@ -855,24 +842,53 @@ class Game {
 
   showSolution() {
     if (this.solutionIsShowing) return;
-    this.canvas.onmousedown = null;
-    document.querySelector('.select').disabled = true;
-    this.solutionIsShowing = true;
 
     const moveHistory = this.deleteRepeatingMoves();
+    if (moveHistory.length <= 1) return;
 
-    for (let i = 2; i <= moveHistory.length; i++) {
-      const prevArray = moveHistory[moveHistory.length - i];
-      setTimeout(() => {
-        const prevMovePosition = prevArray.indexOf(0);
-        const prevRow = Math.floor(
-          prevMovePosition / this.PUZZLE_DIFFICULTY,
-        );
-        const prevCol = prevMovePosition % this.PUZZLE_DIFFICULTY;
-        this.drag.position = prevMovePosition;
-        this.handleClick(null, prevCol, prevRow);
-      }, i * 150);
-    }
+    this.solutionIsShowing = true;
+    document.querySelector('.select').disabled = true;
+    this.canvas.onmousedown = null;
+
+    this.revertMoveRecursively(moveHistory, moveHistory.length - 2);
+  }
+
+  revertMoveRecursively(moveHistory, number) {
+    const prevArray = moveHistory[number];
+    const prevMovePosition = prevArray.indexOf(0);
+    const tile = {
+      row: Math.floor(prevMovePosition / this.PUZZLE_DIFFICULTY),
+      col: prevMovePosition % this.PUZZLE_DIFFICULTY,
+    };
+
+    this.drag.position = prevMovePosition;
+
+    // this.animation.position = this.getPosition({ col: col, row: row });
+    this.drag.started = true;
+
+    const emptyTile = this.getEmptyTileLocation();
+    const moveCoords = this.calcMoveCoords(emptyTile, tile);
+
+    this.createAnimation(
+      {
+        from: moveCoords.from.x,
+        to: moveCoords.to.x,
+      },
+      {
+        from: moveCoords.from.y,
+        to: moveCoords.to.y,
+      },
+      this.animation.solveDuration,
+      // call to change array only after animation
+      () => {
+        this.doTurnToDir(moveCoords.direction);
+        setTimeout(() => {
+          if (number > 0) {
+            this.revertMoveRecursively(moveHistory, number - 1);
+          }
+        }, 50);
+      },
+    );
   }
 
   deleteRepeatingMoves() {
@@ -918,16 +934,10 @@ class Game {
 
     if (window.screen.width > 640 && !this.isLarge) {
       this.fieldSize = 500;
-      this.shifting = {
-        x: 50,
-        y: 50,
-      };
+      this.padding = PADDING_LARGE;
       this.isLarge = true;
     } else {
-      this.shifting = {
-        x: 25,
-        y: 25,
-      };
+      this.padding = PADDING_SMALL;
       this.fieldSize = 260;
       this.isLarge = false;
     }
@@ -938,7 +948,7 @@ class Game {
         this.SIZE,
         this.PUZZLE_DIFFICULTY,
         this.fieldSize,
-        this.shifting.x,
+        this.padding,
       );
 
       return;
@@ -948,7 +958,7 @@ class Game {
       this.SIZE,
       this.PUZZLE_DIFFICULTY,
       this.shuffleArray,
-      this.shifting.x,
+      this.padding,
       true,
     );
     // console.log(window.screen.width);
