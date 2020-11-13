@@ -12,7 +12,9 @@ body {
     padding: 0;
     margin: 0;
     color: white;
-    background: radial-gradient(#ceefff, #689ed1);
+    // background: radial-gradient(#ceefff, #689ed1);
+    background: no-repeat url("../assets/bgr.jpg");
+    background-size: cover;
     min-height: 100vh;
 }
 
@@ -29,13 +31,11 @@ canvas {
     margin: auto;
 }
 
-// .mt30 {
-
-//     margin-top: 30px;
-// }
 .time {
     font-size: 34px;
-    font-weight: 300;
+    font-weight: 400;
+    color: #0008ff;
+
 }
 
 // button
@@ -50,6 +50,14 @@ canvas {
     color: white;
     font-weight: 500;
     font-size: 18px;
+}
+
+.solution:focus,
+.menuBtn:focus,
+.quickStart:focus,
+select:focus {
+    border: none;
+    outline: none;
 }
 
 .solution:hover,
@@ -77,7 +85,9 @@ canvas {
     font-weight: bold;
     font-size: 34px;
     text-align: end;
-    font-weight: 300;
+    font-weight: 400;
+    color: #0008ff;
+
 }
 
 .overlay {
@@ -88,7 +98,7 @@ canvas {
     position: fixed;
     width: 100vw;
     height: 100vh;
-    background: rgba(41, 41, 41, 0.75);
+    background: rgba(41, 41, 41, 0.85);
 }
 
 .hide {
@@ -102,7 +112,7 @@ canvas {
     justify-content: center;
     align-items: center;
     width: 80%;
-    margin: 75px auto 0px;
+    margin: 150px auto 0px;
     z-index: 102;
 }
 
@@ -149,10 +159,11 @@ footer {
     text-transform: uppercase;
     margin: 0;
     text-align: end;
+    color: #0008ff;
 }
 
 header {
-    min-height: 130px;
+    min-height: 100px;
 }
 
 header > div {
@@ -164,23 +175,22 @@ header > div {
     max-width: 490px;
     margin: 0 auto;
     font-size: 18px;
-    font-weight: 300;
+    font-weight: 400;
     color: $red-color;
     font-weight: bold;
     text-align: center;
 }
 
 .zoom {
-    animation: zoom 3s;
-    color: $red-color;
+animation: zoom 3s;
+    color: #d43131;
     font-weight: 500;
     animation-fill-mode: both;
     content: attr(data-num);
     cursor: default;
     font-size: 90px;
     position: absolute;
-    top: 45%;
-    left: 35%;
+    top: -40%;
     text-align: center;
     opacity: 0;
     // z-index: 100;
@@ -226,6 +236,10 @@ td {
     text-shadow: 0px 1px 2px #000;
 }
 
+.select:hover {
+    background-color: $base-hover;
+}
+
 @media screen and (max-width: 640px) {
     .solution,
     .menuBtn,
@@ -237,6 +251,7 @@ td {
     .counter,
     .time {
         font-size: 18px;
+
     }
 
     .select {
@@ -261,6 +276,6 @@ td {
     }
 
     .winContainer {
-
-    font-size: 14px;}
+        font-size: 14px;
+    }
 }

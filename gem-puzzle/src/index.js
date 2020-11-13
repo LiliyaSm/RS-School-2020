@@ -32,8 +32,8 @@ class Game {
     this.moveHistory = [[...this.winMap]];
 
     // info to shuffle the array
-    this.minShuffle = 10;
-    this.maxShuffle = 15;
+    this.minShuffle = 20;
+    this.maxShuffle = 35;
     this.shuffleArray = this.shuffleTiles();
 
     this.canvas = null;
@@ -66,6 +66,8 @@ class Game {
       normDuration: 100,
       solveDuration: 70,
     };
+
+    this.solutionIsShowing = false;
   }
 
   createHTML() {
@@ -135,6 +137,11 @@ class Game {
     headerMoves.textContent = 'moves';
     headerTime.textContent = 'time';
 
+    // this.menu__container.addEventListener("click", () => {
+    //     if (this.text.classList.contains("zoom")) {
+    //         this.text.classList.remove("zoom");
+    //     }
+    // });
     this.btn1.addEventListener('click', () => this.resumeGame());
     this.bestScore.addEventListener('click', () => this.showBestScores());
     this.saveGame.addEventListener('click', (e) => this.saveGameHandler(e));
@@ -175,6 +182,7 @@ class Game {
     });
 
     quickStart.addEventListener('click', () => {
+      if (this.solutionIsShowing) return;
       this.restart();
     });
 
@@ -225,6 +233,9 @@ class Game {
       this.winContainer.textContent = '';
       this.isWin = false;
     }
+    this.solutionIsShowing = false;
+    this.drag.started = false;
+
     this.winMap = this.createWinMap();
     this.moveHistory = [[...this.winMap]];
 
@@ -241,7 +252,6 @@ class Game {
     this.resetCounter();
 
     this.timer.resetTimer();
-    this.drag.started = false;
   }
 
   saveGameHandler() {
@@ -263,9 +273,10 @@ class Game {
 
   loadGameHandler() {
     if (this.isWin) {
-        this.winContainer.textContent = "";
-        this.isWin = false;
+      this.winContainer.textContent = '';
+      this.isWin = false;
     }
+    this.solutionIsShowing = false;
 
     const savedGameObject = storage.get('15gameObject');
     this.shuffleArray = savedGameObject.shuffleArray;
@@ -292,6 +303,8 @@ class Game {
   }
 
   logValue(e) {
+    if (this.solutionIsShowing) return;
+
     this.PUZZLE_DIFFICULTY = Number(e.target.value);
     this.SIZE = this.fieldSize / this.PUZZLE_DIFFICULTY;
     this.restart(true);
@@ -321,10 +334,7 @@ class Game {
     const minShuffle = this.minShuffle * this.PUZZLE_DIFFICULTY * this.PUZZLE_DIFFICULTY;
     const shifts = ['left', 'right', 'up', 'down'];
     const rand = Math.floor(
-      Math.random()
-            * (maxShuffle
-                - minShuffle)
-            + minShuffle,
+      Math.random() * (maxShuffle - minShuffle) + minShuffle,
     ); // get a random number of shuffles
 
     // repeat rand times
@@ -336,10 +346,12 @@ class Game {
       const operation = shifts[randOperation];
 
       if (prevOperation) {
-        if ((operation === 'right' && prevOperation === 'left')
-        || (operation === 'left' && prevOperation === 'right')
-        || (operation === 'up' && prevOperation === 'down')
-        || (operation === 'down' && prevOperation === 'up')) {
+        if (
+          (operation === 'right' && prevOperation === 'left')
+                    || (operation === 'left' && prevOperation === 'right')
+                    || (operation === 'up' && prevOperation === 'down')
+                    || (operation === 'down' && prevOperation === 'up')
+        ) {
           continue;
         }
       }
@@ -416,7 +428,7 @@ class Game {
 
     if (
       col === colEmptyTile
-          && (rowEmptyTile + 1 === row || rowEmptyTile - 1 === row)
+            && (rowEmptyTile + 1 === row || rowEmptyTile - 1 === row)
     ) {
       // shift in column
 
@@ -451,7 +463,7 @@ class Game {
       }
     } else if (
       row === rowEmptyTile
-          && (colEmptyTile + 1 === col || colEmptyTile - 1 === col)
+            && (colEmptyTile + 1 === col || colEmptyTile - 1 === col)
     ) {
       // shift in row
 
@@ -532,11 +544,15 @@ class Game {
     if (this.drag.started && position === emptyTilePosition) {
       this.createAnimation(
         {
-          from: this.tileRendering.getRelativeX(e.clientX) - this.SIZE / 2,
+          from:
+                        this.tileRendering.getRelativeX(e.clientX)
+                        - this.SIZE / 2,
           to: col * this.SIZE + this.shifting.x,
         },
         {
-          from: this.tileRendering.getRelativeY(e.clientY) - this.SIZE / 2,
+          from:
+                        this.tileRendering.getRelativeY(e.clientY)
+                        - this.SIZE / 2,
           to: row * this.SIZE + this.shifting.y,
         },
         300,
@@ -548,17 +564,19 @@ class Game {
   }
 
   animateReturn(e) {
-    const { col: initialCol, row: initialRow } = this.tileRendering.getColRow(
-      this.drag.startX,
-      this.drag.startY,
-    );
+    const {
+      col: initialCol,
+      row: initialRow,
+    } = this.tileRendering.getColRow(this.drag.startX, this.drag.startY);
     this.createAnimation(
       {
-        from: this.tileRendering.getRelativeX(e.clientX) - this.SIZE / 2,
+        from:
+                    this.tileRendering.getRelativeX(e.clientX) - this.SIZE / 2,
         to: initialCol * this.SIZE + this.shifting.x,
       },
       {
-        from: this.tileRendering.getRelativeY(e.clientY) - this.SIZE / 2,
+        from:
+                    this.tileRendering.getRelativeY(e.clientY) - this.SIZE / 2,
         to: initialRow * this.SIZE + this.shifting.y,
       },
       400,
@@ -641,7 +659,9 @@ class Game {
 
   myDown(e) {
     // initial place of potential moving
-    const position = this.getPosition(this.tileRendering.getColRow(e.clientX, e.clientY));
+    const position = this.getPosition(
+      this.tileRendering.getColRow(e.clientX, e.clientY),
+    );
 
     const emptyTilePosition = this.shuffleArray.indexOf(0);
 
@@ -659,13 +679,15 @@ class Game {
       this.audio.playSound('badClick');
       return;
     }
-
+    const puzzleDiff = this.PUZZLE_DIFFICULTY;
     if (
       !(
-        position === emptyTilePosition + this.PUZZLE_DIFFICULTY
-                || position === emptyTilePosition - this.PUZZLE_DIFFICULTY
-                || position === emptyTilePosition - 1
-                || position === emptyTilePosition + 1
+        position === emptyTilePosition + puzzleDiff
+        || position === emptyTilePosition - puzzleDiff
+        // we can't move the left tile if emptyTile is in the first column
+        || (position === emptyTilePosition - 1 && emptyTilePosition % puzzleDiff !== 0)
+        // we can't move the right tile if it is in first column
+        || (position === emptyTilePosition + 1 && position % puzzleDiff !== 0)
       )
     ) {
       this.audio.playSound('badClick');
@@ -689,16 +711,16 @@ class Game {
     if (arraysEqual(this.winMap, this.shuffleArray)) {
       this.isWin = true;
       this.timer.stop();
-      document.removeEventListener("mousedown", this.disableClickOnPage);
-      document.removeEventListener("mouseup", this.disableClickOnPage);
-
+      this.solutionIsShowing = false;
+      this.canvas.onmousedown = (e) => this.myDown(e);
+      document.querySelector('.select').disabled = false;
 
       this.tileRendering.winField(
         this.SIZE,
         this.PUZZLE_DIFFICULTY,
         // send here bcs now state
         this.fieldSize,
-        this.shifting.x
+        this.shifting.x,
       );
 
       const time = this.timer.formatTime();
@@ -747,6 +769,10 @@ class Game {
   }
 
   showBestScores() {
+    if (this.text.classList.contains('zoom')) {
+      this.text.textContent = '';
+      this.text.classList.remove('zoom');
+    }
     this.menu__container.classList.add('hide');
     this.bestScoresContainer.classList.remove('hide');
 
@@ -812,15 +838,15 @@ class Game {
 
   // logic for menu
   showMenu() {
+    if (this.solutionIsShowing) return;
+
     this.timer.stop();
     this.overlay.classList.remove('hide');
   }
 
   resumeGame(newTime) {
     // clear notification
-    if (this.text.classList.contains('zoom')) {
-      this.text.classList.remove('zoom');
-    }
+
     this.text.textContent = '';
 
     this.timer.start(newTime);
@@ -828,8 +854,10 @@ class Game {
   }
 
   showSolution() {
-        // this.canvas.onmousedown = null;
-
+    if (this.solutionIsShowing) return;
+    this.canvas.onmousedown = null;
+    document.querySelector('.select').disabled = true;
+    this.solutionIsShowing = true;
 
     const moveHistory = this.deleteRepeatingMoves();
 
@@ -845,12 +873,6 @@ class Game {
         this.handleClick(null, prevCol, prevRow);
       }, i * 150);
     }
-  }
-
-  disableClickOnPage(e) {
-    e.stopPropagation();
-    e.preventDefault();
-    console.log("click!")
   }
 
   deleteRepeatingMoves() {
@@ -889,7 +911,7 @@ class Game {
   resizeField() {
     if (
       (window.screen.width > 640 && this.isLarge)
-        || (window.screen.width <= 640 && !this.isLarge)
+            || (window.screen.width <= 640 && !this.isLarge)
     ) {
       return;
     }
@@ -937,6 +959,6 @@ document.body.onload = function load() {
   const game = new Game(4);
   game.start();
 
-//   game.canvas.addEventListener('mousedown', (e) => game.myDown(e));
+  //   game.canvas.addEventListener('mousedown', (e) => game.myDown(e));
   game.canvas.onmousedown = (e) => game.myDown(e);
 };

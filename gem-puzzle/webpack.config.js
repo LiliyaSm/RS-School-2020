@@ -11,6 +11,7 @@ module.exports = {
     output: {
         filename: "main.js",
         path: path.resolve(__dirname, "dist"),
+        publicPath: "",
     },
     module: {
         rules: [
@@ -33,7 +34,6 @@ module.exports = {
                 use: {
                     loader: "file-loader",
                 },
-
             },
         ],
     },
@@ -48,9 +48,7 @@ module.exports = {
             // filename: "./src/index.html",
         }),
         new CopyWebpackPlugin({
-            patterns: [
-                { from: "./src/assets", to: "assets" },
-            ],
+            patterns: [{ from: "./src/assets", to: "assets" }],
         }),
     ],
 };

@@ -1,10 +1,5 @@
 // import images from './images.js';
 
-// const shifting = {
-//   x: 20,
-//   y: 20,
-// };
-
 export default class CreateField {
   constructor() {
     this.canvas = document.createElement('canvas');
@@ -67,11 +62,16 @@ export default class CreateField {
 
   createTiles(array, animated, dragPosition, dragX, dragY) {
     this.clear();
-    
-    this.context.lineWidth = this.shifting.x* 2;
-    this.context.strokeStyle = "#442200";
-    this.context.strokeRect(0, 0, this.canvas.width, this.canvas.height);
 
+    this.context.lineWidth = this.shifting.x * 2;
+
+    const gradient = this.context.createLinearGradient(0, 0, 170, 0);
+    gradient.addColorStop('1.0', '#6cb3e3');
+    // gradient.addColorStop("0.5", "#8fdbd0");
+    gradient.addColorStop('0', '#cef5f0');
+
+    this.context.strokeStyle = gradient;
+    this.context.strokeRect(0, 0, this.canvas.width, this.canvas.height);
 
     for (let i = 0; i < array.length; i++) {
       // empty tile
@@ -101,7 +101,6 @@ export default class CreateField {
     if (animated) {
       this.drawTile(this.SIZE, array[dragPosition], dragX, dragY);
     }
-
   }
 
   drawTile(size, text, x, y) {
@@ -130,7 +129,7 @@ export default class CreateField {
       size - 7,
     );
     ctx.shadowColor = 'transparent';
-    //text color
+    // text color
     ctx.fillStyle = '#FFFFFF';
     ctx.font = '14px Arial';
     ctx.draggable = true;
@@ -139,7 +138,6 @@ export default class CreateField {
     const xNumber = x + 5;
     const yNumber = y + 15;
     ctx.fillText(text, xNumber, yNumber);
-
   }
 
   setImage(imageNumber) {
@@ -167,8 +165,8 @@ export default class CreateField {
             + this.SIZE
             + this.shifting.y * 2;
     this.context.lineWidth = this.shifting.x * 2;
-    this.context.strokeStyle = "#442200";
-    this.context.strokeRect(0, 0, this.canvas.width - 5, this.canvas.height-5);
+    this.context.strokeStyle = '#6b290d';
+    this.context.strokeRect(0, 0, this.canvas.width - 5, this.canvas.height - 5);
     this.context.drawImage(
       this.img,
       this.shifting.x,
