@@ -10,6 +10,7 @@ export default class Audio {
     this.parent.appendChild(this.createAudio());
   }
 
+  // eslint-disable-next-line class-methods-use-this
   createAudio() {
     const fragment = document.createDocumentFragment();
     sounds.forEach((sound) => {

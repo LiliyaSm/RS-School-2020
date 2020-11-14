@@ -48,7 +48,7 @@ export default class Timer {
   }
 
   getSeconds() {
-    // already was increased
+    // -1 bcs already was increased
     return this.totalSeconds - 1;
   }
 }

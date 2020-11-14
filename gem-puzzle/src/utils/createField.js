@@ -16,8 +16,8 @@ export default class CreateField {
     this.PUZZLE_DIFFICULTY = PUZZLE_DIFFICULTY;
     this.SIZE = SIZE;
     this.padding = padding;
-    this.canvas.width = this.SIZE * this.PUZZLE_DIFFICULTY + this.padding *2;
-    this.canvas.height = this.SIZE * this.PUZZLE_DIFFICULTY + this.padding *2;
+    this.canvas.width = this.SIZE * this.PUZZLE_DIFFICULTY + this.padding * 2;
+    this.canvas.height = this.SIZE * this.PUZZLE_DIFFICULTY + this.padding * 2;
 
     if (!saveImage) {
       this.img.counter = (++this.img.counter % 150) + 1;
@@ -150,9 +150,9 @@ export default class CreateField {
     this.PUZZLE_DIFFICULTY = PUZZLE_DIFFICULTY;
     this.SIZE = SIZE;
 
-    this.canvas.width = this.SIZE * this.PUZZLE_DIFFICULTY + this.SIZE + this.padding *2;
-    this.canvas.height = this.SIZE * this.PUZZLE_DIFFICULTY + this.SIZE + this.padding*2;
-    this.context.lineWidth = this.padding*2;
+    this.canvas.width = this.SIZE * this.PUZZLE_DIFFICULTY + this.SIZE + this.padding * 2;
+    this.canvas.height = this.SIZE * this.PUZZLE_DIFFICULTY + this.SIZE + this.padding * 2;
+    this.context.lineWidth = this.padding * 2;
 
     const gradient = this.context.createLinearGradient(0, 0, 110, 0);
     gradient.addColorStop('1.0', '#6cb3e3');
@@ -185,6 +185,9 @@ export default class CreateField {
       row: Math.floor(y / this.SIZE),
     };
   }
+
+  // mouse position subtracted from the parent element's offset position, mouse position you are
+  // getting is relative to the client window
 
   getRelativeX(pageX) {
     return pageX - this.rect.left;

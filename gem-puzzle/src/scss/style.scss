@@ -12,7 +12,6 @@ body {
     padding: 0;
     margin: 0;
     color: white;
-    // background: radial-gradient(#ceefff, #689ed1);
     background: no-repeat url("../assets/bgr.jpg");
     background-size: cover;
     min-height: 100vh;
@@ -38,10 +37,10 @@ canvas {
 
 }
 
-// button
+// buttons on main screen
 .solution,
-.menuBtn,
-.quickStart {
+.open-menu,
+.quick-start {
     padding: 8px;
     border-radius: 6px;
     background-color: $base-color;
@@ -53,16 +52,17 @@ canvas {
 }
 
 .solution:focus,
-.menuBtn:focus,
-.quickStart:focus,
+.open-menu:focus,
+.quick-start:focus,
 select:focus {
     border: none;
     outline: none;
 }
 
 .solution:hover,
-.menuBtn:hover,
-.quickStart:hover {
+.open-menu:hover,
+.quick-start:hover
+{
     background-color: $base-hover;
 }
 
@@ -87,12 +87,10 @@ select:focus {
     text-align: end;
     font-weight: 400;
     color: #0008ff;
-
 }
 
 .overlay {
     z-index: 99;
-    // background: rgba(0, 0, 0, 0.8);
     right: 0;
     bottom: 0;
     position: fixed;
@@ -105,7 +103,7 @@ select:focus {
     display: none !important;
 }
 
-.menu__container {
+.menu-container {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -116,7 +114,8 @@ select:focus {
     z-index: 102;
 }
 
-.bestScoresContainer {
+.best-scores-container,
+table {
     margin: 75px auto 0px;
     text-align: center;
 }
@@ -131,8 +130,8 @@ footer {
     align-items: flex-end;
 }
 
-.menu__container button,
-.bestScoresContainer button {
+.menu-container button,
+.best-scores-container button {
     margin: 10px;
     padding: 0;
     background: transparent;
@@ -145,16 +144,17 @@ footer {
     outline: none;
 }
 
-.menu__container button:hover {
+.menu-container button:hover,
+.back:hover  {
     color: rgb(212, 208, 208);
 }
 
-.headerTime {
+.header-time {
     font-size: 24px;
 }
 
-.headerTime,
-.headerMoves {
+.header-time,
+.header-moves {
     font-size: 18px;
     text-transform: uppercase;
     margin: 0;
@@ -170,7 +170,7 @@ header > div {
     text-align: end;
 }
 
-.winContainer {
+.win-container {
     min-height: 40px;
     max-width: 490px;
     margin: 0 auto;
@@ -196,7 +196,7 @@ animation: zoom 3s;
     // z-index: 100;
 }
 
-.menuBtn {
+.open-menu {
     text-transform: uppercase;
 }
 
@@ -218,7 +218,6 @@ animation: zoom 3s;
 th,
 td {
     padding: 10px;
-    // padding: 0;
     background: transparent;
     border: none;
     color: #ffffff;
@@ -242,8 +241,8 @@ td {
 
 @media screen and (max-width: 640px) {
     .solution,
-    .menuBtn,
-    .quickStart,
+    .open-menu,
+    .quick-start,
     .select {
         font-size: 15px;
     }
@@ -258,7 +257,7 @@ td {
         padding: 7px;
     }
     .solution,
-    .quickStart {
+    .quick-start {
         padding: 6px;
     }
     .zoom {
@@ -275,7 +274,7 @@ td {
         max-width: 405px;
     }
 
-    .winContainer {
+    .win-container {
         font-size: 14px;
     }
 }
