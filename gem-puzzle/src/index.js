@@ -756,8 +756,12 @@ class Game {
     if (!bestScores) {
       const div = create('div', ['temporary'], this.bestScoresContainer);
       this.bestScoresContainer.insertBefore(div, this.back);
-      div.textContent = 'No records!';
+      div.textContent = 'No records';
     } else {
+      const div = create("div", ["temporary"], this.bestScoresContainer);
+      this.bestScoresContainer.insertBefore(div, this.table);
+      div.textContent = `puzzle size: ${this.PUZZLE_DIFFICULTY} x ${this.PUZZLE_DIFFICULTY}`;
+
       bestScores.forEach((el) => {
         const tr = create('tr', null, this.table);
         tableHeader.forEach((name) => {
