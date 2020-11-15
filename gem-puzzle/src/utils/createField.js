@@ -23,7 +23,7 @@ export default class CreateField {
       this.img.counter = (++this.img.counter % 150) + 1;
     }
 
-    this.img.src = `../assets/${this.img.counter}.jpg`;
+    this.img.src = `./assets/${this.img.counter}.jpg`;
     this.img.addEventListener('load', (e) => this.loadImage(e));
 
     this.initArray = array;
@@ -62,7 +62,6 @@ export default class CreateField {
 
     const gradient = this.context.createLinearGradient(0, 20, 110, 0);
     gradient.addColorStop('1.0', '#6cb3e3');
-    // gradient.addColorStop("0.5", "#8fdbd0");
     gradient.addColorStop('0', '#cef5f0');
 
     this.context.strokeStyle = gradient;
@@ -150,13 +149,12 @@ export default class CreateField {
     this.PUZZLE_DIFFICULTY = PUZZLE_DIFFICULTY;
     this.SIZE = SIZE;
 
-    this.canvas.width = this.SIZE * this.PUZZLE_DIFFICULTY + this.SIZE + this.padding * 2;
-    this.canvas.height = this.SIZE * this.PUZZLE_DIFFICULTY + this.SIZE + this.padding * 2;
+    this.canvas.width = this.SIZE * this.PUZZLE_DIFFICULTY + this.padding * 2;
+    this.canvas.height = this.SIZE * this.PUZZLE_DIFFICULTY + this.padding * 2;
     this.context.lineWidth = this.padding * 2;
 
     const gradient = this.context.createLinearGradient(0, 0, 110, 0);
     gradient.addColorStop('1.0', '#6cb3e3');
-    // gradient.addColorStop("0.5", "#8fdbd0");
     gradient.addColorStop('0', '#cef5f0');
 
     this.context.strokeStyle = gradient;
@@ -186,8 +184,7 @@ export default class CreateField {
     };
   }
 
-  // mouse position subtracted from the parent element's offset position, mouse position you are
-  // getting is relative to the client window
+  // mouse position subtracted from the canvas element's offset position
 
   getRelativeX(pageX) {
     return pageX - this.rect.left;

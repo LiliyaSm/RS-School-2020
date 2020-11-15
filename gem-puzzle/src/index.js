@@ -49,7 +49,7 @@ class Game {
 
     this.isLarge = true;
 
-    this.fieldSize = 500;
+    this.fieldSize = 450;
     this.SIZE = this.fieldSize / this.PUZZLE_DIFFICULTY;
 
     this.drag = {
@@ -140,7 +140,6 @@ class Game {
     headerMoves.textContent = 'moves';
     headerTime.textContent = 'time';
 
-
     this.btn1.addEventListener('click', () => this.resumeGame());
     this.bestScore.addEventListener('click', () => this.showBestScores());
     this.saveGame.addEventListener('click', (e) => this.saveGameHandler(e));
@@ -195,7 +194,7 @@ class Game {
       const th = create('th', null, tr);
       th.textContent = name;
     });
-    
+
     // notification text
     this.text = create('span', ['text'], this.menuContainer);
   }
@@ -221,8 +220,6 @@ class Game {
 
     window.addEventListener('resize', (e) => this.resizeField(e));
     this.resizeField();
-
-    // abs. size of element. After loading ALL DOM elements!
   }
 
   restart(saveImage) {
@@ -337,7 +334,7 @@ class Game {
     // repeat rand times
     let prevOperation;
     for (let i = 0; i <= rand; i++) {
-      // get random number between 0 and 3
+      // get random number of operation between 0 and 3
       const randOperation = Math.floor(Math.random() * shifts.length);
 
       const operation = shifts[randOperation];
@@ -405,14 +402,8 @@ class Game {
     const moveCoords = this.calcMoveCoords(emptyTile, tile);
 
     this.createAnimation(
-      {
-        from: moveCoords.from.x,
-        to: moveCoords.to.x,
-      },
-      {
-        from: moveCoords.from.y,
-        to: moveCoords.to.y,
-      },
+      moveCoords.from,
+      moveCoords.to,
       duration,
       // call to change array only after animation
       () => this.doTurnToDir(moveCoords.direction),
@@ -431,6 +422,9 @@ class Game {
   }
 
   calcMoveCoords(empty, target) {
+    // takes col and row of empty and target tiles
+    // returns coords from, coords to and direction; need for clicking animation
+
     const { col, row } = target;
     const { col: emptyCol, row: emptyRow } = empty;
     const fromX = col * this.SIZE + this.padding;
@@ -482,7 +476,7 @@ class Game {
     };
   }
 
-  createAnimation(x, y, duration, callback) {
+  createAnimation(from, to, duration, callback) {
     let currFrame = 0;
     // Calculate total frames for current animation based on frameRate
     const totalFrames = (duration * this.animation.frameRate) / 1000;
@@ -490,8 +484,8 @@ class Game {
     // this func is recursively called to draw each frame
     const drawFrame = () => {
       // calculate new currPos
-      const currPosX = x.from + ((x.to - x.from) * currFrame) / totalFrames;
-      const currPosY = y.from + ((y.to - y.from) * currFrame) / totalFrames;
+      const currPosX = from.x + ((to.x - from.x) * currFrame) / totalFrames;
+      const currPosY = from.y + ((to.y - from.y) * currFrame) / totalFrames;
       // call render function to update the screen
       this.tileRendering.createTiles(
         this.shuffleArray,
@@ -517,6 +511,7 @@ class Game {
   }
 
   handleMove(e) {
+    // user mouse up above right position
     const { col, row } = this.tileRendering.getColRow(e.clientX, e.clientY);
 
     const position = this.getPosition({ col, row });
@@ -525,16 +520,12 @@ class Game {
     if (this.drag.started && position === emptyTilePosition) {
       this.createAnimation(
         {
-          from:
-                        this.tileRendering.getRelativeX(e.clientX)
-                        - this.SIZE / 2,
-          to: col * this.SIZE + this.padding,
+          x: this.tileRendering.getRelativeX(e.clientX) - this.SIZE / 2,
+          y: this.tileRendering.getRelativeY(e.clientY) - this.SIZE / 2,
         },
         {
-          from:
-                        this.tileRendering.getRelativeY(e.clientY)
-                        - this.SIZE / 2,
-          to: row * this.SIZE + this.padding,
+          x: col * this.SIZE + this.padding,
+          y: row * this.SIZE + this.padding,
         },
         300,
         () => this.doTurnToPos(this.drag.position),
@@ -545,20 +536,20 @@ class Game {
   }
 
   animateReturn(e) {
-    const {
-      col: initialCol,
-      row: initialRow,
-    } = this.tileRendering.getColRow(this.drag.startX, this.drag.startY);
+    // user mouse up above wrong position returns tile on initial place
+
+    const { col: initialCol, row: initialRow } = this.tileRendering.getColRow(
+      this.drag.startX,
+      this.drag.startY,
+    );
     this.createAnimation(
       {
-        from:
-                    this.tileRendering.getRelativeX(e.clientX) - this.SIZE / 2,
-        to: initialCol * this.SIZE + this.padding,
+        x: this.tileRendering.getRelativeX(e.clientX) - this.SIZE / 2,
+        y: this.tileRendering.getRelativeY(e.clientY) - this.SIZE / 2,
       },
       {
-        from:
-                    this.tileRendering.getRelativeY(e.clientY) - this.SIZE / 2,
-        to: initialRow * this.SIZE + this.padding,
+        x: initialCol * this.SIZE + this.padding,
+        y: initialRow * this.SIZE + this.padding,
       },
       400,
       () => {
@@ -651,7 +642,6 @@ class Game {
 
     // prevent - clicking on edge of field causes a bug
     if (this.tileRendering.clickOnEdge(x, y)) {
-      console.log('prevent!');
       this.audio.playSound('badClick');
       return;
     }
@@ -674,7 +664,6 @@ class Game {
       this.audio.playSound('badClick');
       return;
     }
-    console.log(position);
 
     this.drag.startX = e.pageX;
     this.drag.startY = e.pageY;
@@ -697,8 +686,8 @@ class Game {
       document.querySelector('.select').disabled = false;
 
       this.tileRendering.winField(
-        this.SIZE,
         this.PUZZLE_DIFFICULTY,
+        this.SIZE,
         // send here bcs now state
         this.fieldSize,
         this.padding,
@@ -760,10 +749,10 @@ class Game {
     const bestScores = storage.get(`topScoresFor${this.PUZZLE_DIFFICULTY}`);
 
     // clear previous information
-
     while (this.table.rows.length > 1) {
       this.table.deleteRow(1);
     }
+
     if (!bestScores) {
       const div = create('div', ['temporary'], this.bestScoresContainer);
       this.bestScoresContainer.insertBefore(div, this.back);
@@ -861,14 +850,8 @@ class Game {
     const moveCoords = this.calcMoveCoords(emptyTile, tile);
 
     this.createAnimation(
-      {
-        from: moveCoords.from.x,
-        to: moveCoords.to.x,
-      },
-      {
-        from: moveCoords.from.y,
-        to: moveCoords.to.y,
-      },
+      moveCoords.from,
+      moveCoords.to,
       this.animation.solveDuration,
       // call to change array only after animation
       () => {
@@ -894,7 +877,6 @@ class Game {
           const end = moveHistory.length - i + 1;
           const begin = j + 1;
           moveHistory.splice(begin, end - begin);
-          console.log('shortcut!');
           break;
         }
       }
@@ -924,7 +906,7 @@ class Game {
     }
 
     if (window.screen.width > 640 && !this.isLarge) {
-      this.fieldSize = 500;
+      this.fieldSize = 450;
       this.padding = PADDING_LARGE;
       this.isLarge = true;
     } else {
@@ -952,7 +934,6 @@ class Game {
       this.padding,
       true,
     );
-    // console.log(window.screen.width);
   }
 }
 

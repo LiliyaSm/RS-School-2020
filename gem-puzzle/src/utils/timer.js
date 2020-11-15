@@ -16,13 +16,12 @@ export default class Timer {
 
   formatTime() {
     const sec = this.totalSeconds % 3600 % 60;
-    const min = parseInt((this.totalSeconds % 3600) / 60, 10);
-    const hour = parseInt(this.totalSeconds / 3600, 10);
+    const min = parseInt(this.totalSeconds / 60, 10);
     function addZero(n) {
       return (parseInt(n, 10) < 10 ? '0' : '') + n;
     }
     // Output Time
-    return `${hour}:${addZero(min)}:${addZero(
+    return `${addZero(min)}:${addZero(
       sec,
     )}`;
   }
