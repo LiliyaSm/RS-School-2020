@@ -758,7 +758,7 @@ class Game {
       this.bestScoresContainer.insertBefore(div, this.back);
       div.textContent = 'No records';
     } else {
-      const div = create("div", ["temporary"], this.bestScoresContainer);
+      const div = create('div', ['temporary'], this.bestScoresContainer);
       this.bestScoresContainer.insertBefore(div, this.table);
       div.textContent = `puzzle size: ${this.PUZZLE_DIFFICULTY} x ${this.PUZZLE_DIFFICULTY}`;
 
