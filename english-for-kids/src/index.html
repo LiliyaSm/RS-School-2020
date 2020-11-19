@@ -23,12 +23,36 @@
     </head>
     <body>
         <header class="header">
-            <nav class="header__menu"></nav>
-            <h1 class="header__logo">English for kids</h1>
-            <div class="header__toggle">           
-                <input type="checkbox" id="toggle-checkbox" tabindex="1">
+            <div class="navigation">
+                <div class="navigation__icon">
+                    <div class="bar1">icon</div>
+                    <div class="bar2"></div>
+                    <div class="bar3"></div>
+                </div>
+                <nav class="navigation__menu hide_menu">
+                    <ul>
+                        <li class="active">
+                            <a href="#">link</a>
+                        </li>
+                        <li><a href="#"></a></li>
+                        <li>
+                            <a class="disabledLink" href="javascript: void(0)"
+                                >Link</a
+                            >
+                        </li>
+                        <li>
+                            <a class="disabledLink" href="javascript: void(0)"
+                                ></a
+                            >
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <h1 class="logo">English for kids</h1>
+            <div class="toggle">
+                <input type="checkbox" id="toggle-checkbox" tabindex="1" />
                 <div class="kitty"></div>
-                <label for="toggle-checkbox" class="labels-checkbox"></label>                 
+                <label for="toggle-checkbox" class="labels-checkbox"></label>
             </div>
         </header>
         <main></main>
