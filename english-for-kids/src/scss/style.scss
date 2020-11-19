@@ -4,8 +4,9 @@
     src: url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:600,700);
 }
 
-$primary: darken(lightblue, 23%);
+$primary: #04690f;
 $background: lighten(#fde088, 2%);
+$green: #78ea85;
 $shadow: darken($background, 11%);
 $black: #000;
 $white: lighten(mistyrose, 5%);
@@ -29,7 +30,7 @@ body {
 
 h1 {
     font-weight: 400;
-    font-size: 34px;
+    font-size: 50px;
 }
 
 .toggle {
@@ -138,21 +139,20 @@ h1 {
 }
 .navigation__menu {
     width: 290px;
-    height: calc(100vh + 10px);
+    height: 100vh;
     position: fixed;
     visibility: hidden;
-    background: linear-gradient(90deg, #eee094, #0dc735);
+    background:  #c38e70;
     top: 0;
+    box-shadow: 0 0 50px rgba(0,0,0,.5);
     z-index: 100;
-}
 
-.navigation__menu ul {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     font-size: 32px;
-    margin-top: 209px;
+    // margin-top: 209px;
 
     li {
         list-style: none;
@@ -164,9 +164,9 @@ h1 {
     font-family: Arial;
     font-style: normal;
     font-weight: normal;
-    font-size: 18px;
+    font-size: 34px;
     line-height: 160%;
-    color: #cdcdcd;
+    color: #78ea85;
     text-decoration: none;
 }
 
@@ -212,7 +212,7 @@ span {
     width: 55px;
     height: 6px;
     margin-bottom: 10px;
-    background: #7f8fa6;
+    background: #0c2461;
     border-radius: 4px;
     -webkit-transition: all 0.5s cubic-bezier(0.08, 0.81, 0.87, 0.71);
     -moz-transition: all 0.5s cubic-bezier(0.08, 0.81, 0.87, 0.71);
@@ -229,25 +229,29 @@ span {
     transform-origin: bottom right;
 }
 
-input:checked ~ #span1 {
-    background-color: #0c2461;
-    transform: rotate(45deg) translate(7px);
-}
-input:checked ~ #span2 {
-    background-color: #0c2461;
-    transform: rotate(495deg) translate(6px);
-}
-input:checked ~ #span3 {
-    background-color: #0c2461;
-    transform: rotate(45deg);
-    opacity: 0;
+
+.checked ~ {
+
+    #span1 {
+        background-color: $green;
+        transform: rotate(45deg) translate(7px);
+    }
+    #span2 {
+        background-color: $green;
+        transform: rotate(495deg) translate(6px);
+    }
+    #span3 {
+        background-color: $green;
+        transform: rotate(45deg);
+        opacity: 0;
+    }
 }
 
 .overlay {
     position: fixed;
     width: 100%;
     height: 100%;
-    background: rgba(41, 41, 41, 0.6);
+    background: rgba(41, 41, 41, 0.2);
         z-index: 10;
 }
 

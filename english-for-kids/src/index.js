@@ -4,8 +4,7 @@ window.addEventListener("DOMContentLoaded", ()=> {
     Menu.init();
 
     let menuIcon = document.querySelector(".navigation__icon");
-
-      let overlay = document.querySelector(".overlay");
+    let overlay = document.querySelector(".overlay");
 
     //   let Menu = document.querySelector(".navigation__menu");
 
