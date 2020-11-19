@@ -1,0 +1,128 @@
+@font-face {
+    font-family: "Source Sans Pro";
+    unicode-range: "U+1F431-U+1F63A";
+    src: url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:600,700);
+}
+
+$primary: darken(lightblue, 23%);
+$background: lighten(#fde088, 2%);
+$shadow: darken($background, 11%);
+$black: #000;
+$white: lighten(mistyrose, 5%);
+
+body {
+    background-color: $background;
+    font-style: normal;
+    font-weight: 400;
+    color: $primary;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    min-height: 10px;
+    padding: 40px 0;
+    max-width: 1200px;
+}
+
+.header__toggle {
+    position: relative;
+    // margin: 30px 0px 20px 0px;
+
+    .labels-checkbox {
+        background: white;
+        height: 25px;
+        width: 85px;
+        position: absolute;
+        right: 50px;
+        top: 7px;
+        border-radius: 10px;
+        border: 1px solid lighten($primary, 21%);
+        cursor: pointer;
+    }
+
+    #toggle-checkbox {
+        opacity: 0;
+        border: none;
+        border-radius: 0;
+        outline: none;
+        appearance: none;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        height: 29px;
+        width: 140px;
+        background: transparent;
+        position: absolute;
+        right: 0px;
+        top: 3px;
+        cursor: pointer;
+        z-index: 100;
+        color: tranparent;
+
+        // &:after {
+        //     content: "";
+        //     background-color: transparent;
+        //     height: 40px;
+        //     width: 80px;
+        //     position: absolute;
+        //     left: 30px;
+        //     top: -5px;
+        // }
+
+        ~ div.kitty:before {
+            content: "\01F431";
+            position: absolute;
+            right: 90px;
+            top: -16px;
+            font-size: 45px;
+            z-index: 1;
+            -moz-transition: all 0.25s ease-out;
+            -webkit-transition: all 0.25s ease-out;
+            -o-transition: all 0.25s ease-out;
+            transition: all 0.25s ease-out;
+        }
+
+        &:checked {
+            right: 0px;
+
+            // &:after {
+            //     left: -80px;
+            // }
+
+            ~ div.kitty:before {
+                content: "\01F63A";
+                top: -16px;
+                right: 41px;
+            }
+        }
+
+        ~ label {
+            &:before {
+                content: "Play";
+                position: absolute;
+                color: $primary;
+                left: -60px;
+                top: 0px;
+                font-size: 18px;
+            }
+
+            &:after {
+                content: "Train";
+                position: absolute;
+                color: $black;
+                left: 93px;
+                top: 0px;
+                font-size: 18px;
+            }
+        }
+
+        &:checked ~ label {
+            &:before {
+                color: $black;
+            }
+            &:after {
+                color: $primary;
+            }
+        }
+    }
+}

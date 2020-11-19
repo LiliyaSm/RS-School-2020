@@ -3,3 +3,5 @@ key.js
 node_modules/
 
 dist/
+
+.vscode/*
