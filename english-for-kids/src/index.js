@@ -5,8 +5,7 @@ window.addEventListener("DOMContentLoaded", ()=> {
 
     let menuIcon = document.querySelector(".navigation__icon");
 
-    //   let overlay = document.querySelector(".overlay");
-    // let overlayPopup = document.querySelector(".overlay-popup");
+      let overlay = document.querySelector(".overlay");
 
     //   let Menu = document.querySelector(".navigation__menu");
 
@@ -14,8 +13,8 @@ window.addEventListener("DOMContentLoaded", ()=> {
         Menu.toggleMenu();
     });
 
-    //   overlay.addEventListener("click", function (event) {
-    //       Menu.closeMenu();
-    //       overlay.classList.toggle("hide");
-    //   });
+      overlay.addEventListener("click", function (event) {
+          Menu.closeMenu();
+          overlay.classList.toggle("hide");
+      });
 });

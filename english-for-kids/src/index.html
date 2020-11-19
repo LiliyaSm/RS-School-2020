@@ -7,27 +7,41 @@
         <title>English for kids</title>
 
         <!-- bootstrap's CSS -->
-
+<!-- 
         <link
             rel="stylesheet"
             href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
             integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
             crossorigin="anonymous"
-        />
+        /> -->
         <link
             href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;800;900&display=swap"
             rel="stylesheet"
         />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
+            integrity="sha512-NmLkDIU1C/C88wi324HBc+S2kLhi08PN5GDeUVVVC/BVt/9Izdsc9SVeVfA1UZbY3sHUlDSyRXhCzHfr6hmPPw=="
+            crossorigin="anonymous"
+        />
+
+        
         <!-- <link href="./css/style.css" rel="stylesheet" /> -->
         <!-- <script src="index.js" type = module defer></script> -->
     </head>
     <body>
+        <div class="overlay hide"></div>
+
         <header class="header">
             <div class="navigation">
                 <div class="navigation__icon">
-                    <div class="bar1">icon</div>
+                    <input type="checkbox" />
+                    <span id="span1"></span>
+                    <span id="span2"></span>
+                    <span id="span3"></span>
+                    <!-- <div class="bar1">icon</div>
                     <div class="bar2"></div>
-                    <div class="bar3"></div>
+                    <div class="bar3"></div> -->
                 </div>
                 <nav class="navigation__menu hide_menu">
                     <ul>
@@ -41,9 +55,10 @@
                             >
                         </li>
                         <li>
-                            <a class="disabledLink" href="javascript: void(0)"
-                                ></a
-                            >
+                            <a
+                                class="disabledLink"
+                                href="javascript: void(0)"
+                            ></a>
                         </li>
                     </ul>
                 </nav>
