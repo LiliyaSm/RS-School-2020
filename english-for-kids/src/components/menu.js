@@ -1,5 +1,6 @@
 import cards from "../data/cards";
 import create from '../utils/create'; // creates DOM elements
+import { Card } from "./components/card";
 
 const Menu = {
     navMenu: null,
@@ -20,8 +21,23 @@ const Menu = {
 
         listOfCategories.forEach((category, i) => {
             const li = create("li", null, this.navMenu);
-            const a = create("a", null, li, ["href" , "#"]);
+            const a = create(
+                "a",
+                null,
+                li,
+                ["href", "#"],
+                ["data-id", i]
+            );
             a.textContent = category;
+            
+
+
+            li.addEventListener(
+                "click",
+                function (e) {
+                    Card.init();
+                }
+            );
         });
     },
 
