@@ -23,8 +23,6 @@ const Menu = {
             const a = create("a", null, li, ["href" , "#"]);
             a.textContent = category;
         });
-
-
     },
 
     toggleMenu() {
@@ -38,10 +36,10 @@ const Menu = {
 
     closeMenu() {
         if (this.navMenu.classList.contains("slide_menu")) {
-            this.navMenu.classList.add("hide_menu");
             this.navMenu.classList.remove("slide_menu");
-            document.body.classList.remove("no-scroll");
+            this.navMenu.classList.add("hide_menu");
             this.input.classList.remove("checked");
+            document.body.classList.remove("no-scroll");
         }
     },
 };
