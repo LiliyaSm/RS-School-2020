@@ -1,6 +1,6 @@
 import cards from "../data/cards";
 import create from '../utils/create'; // creates DOM elements
-import { Card } from "./components/card";
+import { Card } from "../components/card";
 
 const Menu = {
     navMenu: null,
@@ -15,29 +15,32 @@ const Menu = {
         this.overlay = document.querySelector(".overlay");
         this.input = document.querySelector("input");
 
-
+        // this.navMenu.textContent = "";
         let listOfCategories = cards[0];
         console.log(listOfCategories);
 
         listOfCategories.forEach((category, i) => {
-            const li = create("li", null, this.navMenu);
-            const a = create(
+            const li = create("li", ["navigation__menu__item"], this.navMenu);
+            const navLink = create(
                 "a",
                 null,
                 li,
                 ["href", "#"],
                 ["data-id", i]
             );
-            a.textContent = category;
-            
+            navLink.textContent = category;            
 
 
-            li.addEventListener(
-                "click",
-                function (e) {
-                    Card.init();
+            navLink.addEventListener("click", function (e) {
+                if (document.querySelector(".active")) {
+                    document
+                        .querySelector(".active")
+                        .classList.remove("active");
                 }
-            );
+                e.target.classList.add("active");
+                let categoryId = e.target.getAttribute("data-id");
+                Card.init(categoryId);
+            });
         });
     },
 

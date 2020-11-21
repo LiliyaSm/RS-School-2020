@@ -134,8 +134,7 @@ h1 {
     }
 }
 
-.navigation {
-}
+
 .navigation__menu {
     width: 290px;
     height: 100vh;
@@ -156,6 +155,10 @@ h1 {
     li {
         list-style: none;
     }
+}
+
+.navigation__menu  a.active{
+    color: yellow;
 }
 
 .navigation__menu a {
@@ -286,8 +289,12 @@ span {
         position: relative;
         width: 100%;
         height: 100%;
+        border-radius: 10px;
+
         transition: transform 0.8s;
         transform-style: preserve-3d;
+        background: white;
+
     }
 }
 
@@ -307,6 +314,7 @@ span {
 }
 
 .card__title {
+    
     // background-image: url("../assets//icons/hiclipart2.com.png");
     // background-size: 100% 92%;
     // background-repeat: no-repeat;
@@ -315,14 +323,6 @@ span {
 .card__title .rotate-icon:hover {
     transform: scale(-1, 1) rotate(90deg);
 }
-
-// .card__inner {
-//     position: relative;
-//     width: 100%;
-//     height: 100%;
-//     transition: transform 0.8s;
-//     transform-style: preserve-3d;
-// }
 
 .card__front-side,
 .card__back-side {
@@ -354,6 +354,7 @@ span {
     text-align: center;
     color: #180000cf;
     // background-image: linear-gradient(180deg, #30cdb4 7px, #fff 7px);
+    background: white;
 
     // transition: background 0.2s;
 }
@@ -370,3 +371,5 @@ span {
 .flipped {
     transform: rotateY(180deg);
 }
+
+
