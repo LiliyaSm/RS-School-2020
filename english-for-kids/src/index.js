@@ -1,9 +1,9 @@
 import { Menu } from "./components/menu";
-import { Card } from "./components/card";
+import { mainPage } from "./components/mainPage";
 
 window.addEventListener("DOMContentLoaded", ()=> {
     Menu.init();
-    Card.init(0);
+    mainPage.init();
 
     let menuIcon = document.querySelector(".navigation__icon");
     let overlay = document.querySelector(".overlay");

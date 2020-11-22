@@ -7,15 +7,15 @@ const Card = {
     cards: document.querySelector(".cards"),
 
     init() {
-        cardsData.loadData();
-        this.trainCards(0);
     },
 
     trainCards(categoryNumber) {
+        let wordCards = cardsData.getCategoryCards(categoryNumber);
+
         this.cards.textContent = "";
 
         this.cardTemplate = document.getElementsByTagName("template")[0];
-        let wordCards = cardsData.getCategoryCards(categoryNumber);
+        
 
         console.log(wordCards);
 

@@ -1,6 +1,7 @@
 import cards from "../data/cards";
 import create from "../utils/create"; // creates DOM elements
 import { Card } from "../components/card";
+import { mainPage } from "./mainPage";
 
 const Menu = {
     navMenu: null,
@@ -15,38 +16,38 @@ const Menu = {
 
         let listOfCategories = cards[0];
         console.log(listOfCategories);
-        const li = create("li", ["navigation__menu__item"], this.navMenu);
-        const navLink = create("a", null, li, ["href", "#"]);
 
-        navLink.textContent = "Main page";
+        //create main menu link
+        this.createMenuItem("Main page", "main");
 
         listOfCategories.forEach((category, i) => {
-            const li = create("li", ["navigation__menu__item"], this.navMenu);
-            const navLink = create(
-                "a",
-                null,
-                li,
-                ["href", "#"],
-                ["data-id", i]
-            );
-            navLink.textContent = category;
-
-            navLink.addEventListener("click", (e) => {
-                if (document.querySelector(".active")) {
-                    document
-                        .querySelector(".active")
-                        .classList.remove("active");
-                }
-                e.target.classList.add("active");
-                let categoryId = e.target.getAttribute("data-id");
-                Card.trainCards(categoryId);
-                this.closeMenu();
-            });
+            this.createMenuItem(category, i);
         });
 
         this.menuIcon.addEventListener("click", (e) => {
             this.toggleMenu();
         });
+    },
+
+    createMenuItem(categoryName, id) {
+        const li = create("li", ["navigation__menu__item"], this.navMenu);
+        const navLink = create("a", null, li, ["href", "#"], ["data-id", id]);
+        navLink.textContent = categoryName;
+        navLink.addEventListener("click", (e) => this.loadPage(e));
+    },
+
+    loadPage(e) {
+        if (document.querySelector(".active")) {
+            document.querySelector(".active").classList.remove("active");
+        }
+        e.target.classList.add("active");
+        let categoryId = e.target.getAttribute("data-id");
+        this.closeMenu();
+        if (categoryId === "main") {
+            mainPage.generateMainPage();
+        } else {
+            Card.trainCards(categoryId);
+        }
     },
 
     toggleMenu() {
