@@ -10,12 +10,9 @@ window.addEventListener("DOMContentLoaded", ()=> {
 
     //   let Menu = document.querySelector(".navigation__menu");
 
-    menuIcon.addEventListener("click", function (event) {
-        Menu.toggleMenu();
-    });
+
 
       overlay.addEventListener("click", function (event) {
           Menu.closeMenu();
-          overlay.classList.toggle("hide");
       });
 });

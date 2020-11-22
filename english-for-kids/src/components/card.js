@@ -1,4 +1,4 @@
-import cards from "../data/cards";
+import {cardsData} from "../utils/cardsData";
 import { audio } from "../utils/audio";
 
 const Card = {
@@ -6,15 +6,20 @@ const Card = {
     categoryNumber: null,
     cards: document.querySelector(".cards"),
 
-    init(categoryNumber) {
+    init() {
+        cardsData.loadData();
+        this.trainCards(0);
+    },
+
+    trainCards(categoryNumber) {
         this.cards.textContent = "";
 
         this.cardTemplate = document.getElementsByTagName("template")[0];
-        let wordCards = cards.slice(1);
+        let wordCards = cardsData.getCategoryCards(categoryNumber);
 
         console.log(wordCards);
 
-        wordCards[categoryNumber].forEach((card) => {
+        wordCards.forEach((card) => {
             let clon = this.cardTemplate.content.cloneNode(true);
 
             clon.querySelector(".card").setAttribute(
@@ -53,11 +58,12 @@ const Card = {
                     ".rotate-icon"
                 );
 
-                if (e.target === rotateIcon) {
+                let backSide = e.target.closest(".card__back-side");
+
+                if (e.target === rotateIcon || backSide) {
                     return;
                 }
 
-                
                 let clickedCard = this.closest(".card").getAttribute(
                     "data-word"
                 );
@@ -79,6 +85,11 @@ const Card = {
             this.cards.appendChild(clon);
         });
     },
+
+    gameCards(categoryNumber) {
+
+
+    }
 };
 
 export { Card };

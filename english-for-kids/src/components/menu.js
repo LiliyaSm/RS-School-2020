@@ -1,12 +1,10 @@
 import cards from "../data/cards";
-import create from '../utils/create'; // creates DOM elements
+import create from "../utils/create"; // creates DOM elements
 import { Card } from "../components/card";
 
 const Menu = {
     navMenu: null,
     menuIcon: null,
-    logo: null,
-    header: null,
     overlay: null,
 
     init() {
@@ -15,9 +13,12 @@ const Menu = {
         this.overlay = document.querySelector(".overlay");
         this.input = document.querySelector("input");
 
-        // this.navMenu.textContent = "";
         let listOfCategories = cards[0];
         console.log(listOfCategories);
+        const li = create("li", ["navigation__menu__item"], this.navMenu);
+        const navLink = create("a", null, li, ["href", "#"]);
+
+        navLink.textContent = "Main page";
 
         listOfCategories.forEach((category, i) => {
             const li = create("li", ["navigation__menu__item"], this.navMenu);
@@ -28,10 +29,9 @@ const Menu = {
                 ["href", "#"],
                 ["data-id", i]
             );
-            navLink.textContent = category;            
+            navLink.textContent = category;
 
-
-            navLink.addEventListener("click", function (e) {
+            navLink.addEventListener("click", (e) => {
                 if (document.querySelector(".active")) {
                     document
                         .querySelector(".active")
@@ -39,8 +39,13 @@ const Menu = {
                 }
                 e.target.classList.add("active");
                 let categoryId = e.target.getAttribute("data-id");
-                Card.init(categoryId);
+                Card.trainCards(categoryId);
+                this.closeMenu();
             });
+        });
+
+        this.menuIcon.addEventListener("click", (e) => {
+            this.toggleMenu();
         });
     },
 
@@ -50,7 +55,6 @@ const Menu = {
         this.overlay.classList.toggle("hide");
         this.input.classList.toggle("checked");
         document.body.classList.toggle("no-scroll");
-       
     },
 
     closeMenu() {
@@ -59,6 +63,7 @@ const Menu = {
             this.navMenu.classList.add("hide_menu");
             this.input.classList.remove("checked");
             document.body.classList.remove("no-scroll");
+            this.overlay.classList.add("hide");
         }
     },
 };
