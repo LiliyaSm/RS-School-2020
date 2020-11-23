@@ -1,21 +1,22 @@
-import cards from "../data/cards";
+import { cardsData } from "../utils/cardsData";
 import create from "../utils/create"; // creates DOM elements
-import { Card } from "../components/card";
-import { mainPage } from "./mainPage";
+
 
 const Menu = {
     navMenu: null,
     menuIcon: null,
     overlay: null,
+    loadPageById: null,
 
-    init() {
+    init(loadPageById) {
         this.navMenu = document.querySelector(".navigation__menu");
         this.menuIcon = document.querySelector(".navigation__icon");
         this.overlay = document.querySelector(".overlay");
         this.input = document.querySelector("input");
 
-        let listOfCategories = cards[0];
-        console.log(listOfCategories);
+        this.loadPageById = loadPageById;
+
+        let listOfCategories = cardsData.getCategoriesList();
 
         //create main menu link
         this.createMenuItem("Main page", "main");
@@ -26,6 +27,10 @@ const Menu = {
 
         this.menuIcon.addEventListener("click", (e) => {
             this.toggleMenu();
+        });
+
+        this.overlay.addEventListener("click", function (event) {
+            Menu.closeMenu();
         });
     },
 
@@ -42,12 +47,9 @@ const Menu = {
         }
         e.target.classList.add("active");
         let categoryId = e.target.getAttribute("data-id");
+        this.loadPageById(categoryId);
         this.closeMenu();
-        if (categoryId === "main") {
-            mainPage.generateMainPage();
-        } else {
-            Card.trainCards(categoryId);
-        }
+        
     },
 
     toggleMenu() {

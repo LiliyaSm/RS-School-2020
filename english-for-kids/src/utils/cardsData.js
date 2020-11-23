@@ -17,6 +17,10 @@ const cardsData = {
     getCategoriesList() {
         return this.categories;
     },
+
+    getCategoryImage(i){
+        return this.wordCards[i][0].image;
+    }
 };
 
 
