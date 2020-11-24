@@ -1,4 +1,4 @@
-export default function create(el, classNames, parent, ...dataAttr) {
+export default function createElement(el, classNames, parent, ...dataAttr) {
   // element, classes comma separated, parent, dataAttr
   let element = null;
   try {

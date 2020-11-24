@@ -1,3 +1,5 @@
+import * as constants from './constants';
+
 export default class CreateField {
   constructor() {
     this.canvas = document.createElement('canvas');
@@ -7,20 +9,20 @@ export default class CreateField {
     this.PUZZLE_DIFFICULTY = null;
     this.pieces = [];
     this.img = new Image();
-    this.img.counter = Math.floor(Math.random() * Math.floor(151));
+    this.img.counter = Math.floor(
+      Math.random() * Math.floor(constants.NUMBER_OF_IMAGES),
+    );
     this.initArray = null;
-    this.rect = this.canvas.getBoundingClientRect(); // abs. size of element
+    this.canvasAbsSize = this.canvas.getBoundingClientRect(); // abs. size of element
   }
 
   init(SIZE, PUZZLE_DIFFICULTY, array, padding, saveImage) {
     this.PUZZLE_DIFFICULTY = PUZZLE_DIFFICULTY;
     this.SIZE = SIZE;
     this.padding = padding;
-    this.canvas.width = this.SIZE * this.PUZZLE_DIFFICULTY + this.padding * 2;
-    this.canvas.height = this.SIZE * this.PUZZLE_DIFFICULTY + this.padding * 2;
-
+    this.updateCanvas();
     if (!saveImage) {
-      this.img.counter = (++this.img.counter % 150) + 1;
+      this.img.counter = (++this.img.counter % (constants.NUMBER_OF_IMAGES - 1)) + 1;
     }
 
     this.img.src = `./assets/${this.img.counter}.jpg`;
@@ -29,6 +31,11 @@ export default class CreateField {
     this.initArray = array;
 
     this.pieces = [];
+  }
+
+  updateCanvas() {
+    this.canvas.width = this.SIZE * this.PUZZLE_DIFFICULTY + this.padding * 2;
+    this.canvas.height = this.SIZE * this.PUZZLE_DIFFICULTY + this.padding * 2;
   }
 
   clear() {
@@ -149,8 +156,8 @@ export default class CreateField {
     this.PUZZLE_DIFFICULTY = PUZZLE_DIFFICULTY;
     this.SIZE = SIZE;
 
-    this.canvas.width = this.SIZE * this.PUZZLE_DIFFICULTY + this.padding * 2;
-    this.canvas.height = this.SIZE * this.PUZZLE_DIFFICULTY + this.padding * 2;
+    this.updateCanvas();
+
     this.context.lineWidth = this.padding * 2;
 
     const gradient = this.context.createLinearGradient(0, 0, 110, 0);
@@ -175,34 +182,27 @@ export default class CreateField {
   }
 
   getColRow(clientX, clientY) {
-    this.rect = this.canvas.getBoundingClientRect(); // abs. size of element
-    const x = clientX - this.rect.left - this.padding;
-    const y = clientY - this.rect.top - this.padding;
+    this.canvasAbsSize = this.canvas.getBoundingClientRect();
+    const x = clientX - this.canvasAbsSize.left - this.padding;
+    const y = clientY - this.canvasAbsSize.top - this.padding;
     return {
       col: Math.floor(x / this.SIZE),
       row: Math.floor(y / this.SIZE),
     };
   }
 
-  // mouse position subtracted from the canvas element's offset position
-
-  getRelativeX(pageX) {
-    return pageX - this.rect.left;
+  getRelativeX(mousePositionX) {
+    return mousePositionX - this.canvasAbsSize.left;
   }
 
-  getRelativeY(pageY) {
-    return pageY - this.rect.top;
+  getRelativeY(mousePositionY) {
+    return mousePositionY - this.canvasAbsSize.top;
   }
 
   clickOnEdge(x, y) {
-    if (
-      x < this.padding + 5
-            || x > this.rect.width - (this.padding + 5)
-            || y < this.padding + 5
-            || y > this.rect.height - (this.padding + 5)
-    ) {
-      return true;
-    }
-    return false;
+    const rightEdge = this.canvasAbsSize.width - (this.padding + constants.SAVE_EDGE_SPACE);
+    const topEdge = this.canvasAbsSize.height - (this.padding + constants.SAVE_EDGE_SPACE);
+    const minValue = this.padding + constants.SAVE_EDGE_SPACE;
+    return x < minValue || x > rightEdge || y < minValue || y > topEdge;
   }
 }
