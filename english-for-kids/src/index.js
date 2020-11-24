@@ -20,9 +20,8 @@ class Main {
     setGameState() {
         this.gameMode = !this.gameMode;
         console.log(this.gameMode);
-        // this.loadPageById(this.pageId);
         if (this.pageId === "main") {
-            mainPage.generateGame(this.gameMode);
+            mainPage.toggleStyleMainPage(this.gameMode);
         } else {
            this.card.toggleStyle(this.gameMode);
         }
@@ -42,7 +41,7 @@ class Main {
         this.pageId = categoryId;
         console.log(this.pageId);
         if (categoryId === "main") {
-            mainPage.generateMainPage(this.gameMode);
+            mainPage.renderMainPage(this.gameMode);
         } else {
             this.card.renderCards(categoryId, this.gameMode);
         }

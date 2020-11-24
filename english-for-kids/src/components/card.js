@@ -96,12 +96,15 @@ class Card {
         cards.forEach((card) => {
             let image = card.querySelector(".card__image img");
             let icon = card.querySelector(".rotate-icon");
+            let startBtn = document.querySelector(".start-btn");
             if (gameMode) {
                 image.classList.add("game-mode");
                 icon.classList.add("hide");
+                startBtn.classList.remove("hide");
             } else {
                 if (image.classList.contains("game-mode")) {
                     image.classList.remove("game-mode");
+                    startBtn.classList.add("hide");
                 }
                 if (icon.classList.contains("hide")) {
                     icon.classList.remove("hide");

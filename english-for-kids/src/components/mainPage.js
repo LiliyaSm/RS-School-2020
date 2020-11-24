@@ -9,10 +9,10 @@ const mainPage = {
         this.loadPageById = loadPageById;
         cardsData.loadData();
         this.categories = cardsData.getCategoriesList();
-        this.generateMainPage(false);
+        this.renderMainPage(false);
     },
 
-    generateMainPage(isTrainMode) {
+    renderMainPage(isTrainMode) {
         this.cards.textContent = "";
 
         let cardTemplate = document.getElementsByTagName("template")[1];
@@ -36,34 +36,32 @@ const mainPage = {
 
                 this.loadPageById(categoryId);
             });
-
             this.cards.appendChild(clon);
         });
+
+        this.toggleStyleMainPage(isTrainMode);
     },
 
-    generateGame(isTrainMode) {
-        viewBgImage(
-            document.querySelectorAll(".card__main-title"),
-            isTrainMode
-        );
+    toggleStyleMainPage(isTrainMode) {
+        let startBtn = document.querySelector(".start-btn");
+        if (startBtn && !startBtn.classList.contains("hide")) {
+            startBtn.classList.add("hide");
+        }
+
+        document.querySelectorAll(".card__main-title").forEach((element) => {
+            let src;
+            if (isTrainMode) {
+                src = "../assets/icons/hiclipart2.com.png";
+            } else {
+                src = "../assets/icons/hiclipart1.com.png";
+            }
+            const img = document.createElement("img");
+            img.src = src;
+            img.onload = () => {
+                element.style.backgroundImage = `url(${src})`;
+            };
+        });
     },
 };
 
-function viewBgImage(data, isTrainMode) {
-
-    data.forEach((element)=>{
-        
-        let src;
-        if (isTrainMode) {
-            src = "../assets/icons/hiclipart2.com.png";
-        } else {            
-            src = "../assets/icons/hiclipart1.com.png";
-        }
-        const img = document.createElement("img");
-        img.src = src;
-        img.onload = () => {
-            element.style.backgroundImage = `url(${src})`;
-        };
-    })
-}
 export { mainPage };
