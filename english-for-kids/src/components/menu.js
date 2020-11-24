@@ -42,15 +42,11 @@ const Menu = {
     },
 
     loadPage(e) {
-        if (document.querySelector(".active")) {
-            document.querySelector(".active").classList.remove("active");
-        }
-        e.target.classList.add("active");
         let categoryId = e.target.getAttribute("data-id");
         this.loadPageById(categoryId);
-        this.closeMenu();
-        
+        this.closeMenu();        
     },
+
 
     toggleMenu() {
         this.navMenu.classList.toggle("slide_menu");

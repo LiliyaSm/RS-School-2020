@@ -1,21 +1,21 @@
-import {cardsData} from "../utils/cardsData";
+import { cardsData } from "../utils/cardsData";
 import { audio } from "../utils/audio";
 
-const Card = {
-    cardTemplate: null,
-    categoryNumber: null,
-    cards: document.querySelector(".cards"),
+class Card {
+    constructor() {
+        this.cardTemplate = null;
+        this.categoryNumber = null;
+        this.cardsContainer = document.querySelector(".cards");
+    }
+    // init() {
+    // },
 
-    init() {
-    },
-
-    trainCards(categoryNumber) {
+    renderCards(categoryNumber, trainMode) {
         let wordCards = cardsData.getCategoryCards(categoryNumber);
 
-        this.cards.textContent = "";
+        this.cardsContainer.textContent = "";
 
         this.cardTemplate = document.getElementsByTagName("template")[0];
-        
 
         console.log(wordCards);
 
@@ -82,14 +82,33 @@ const Card = {
                 }
             );
 
-            this.cards.appendChild(clon);
+            this.cardsContainer.appendChild(clon);
         });
-    },
 
-    gameCards(categoryNumber) {
-
-
+        if (trainMode) {
+            this.toggleStyle(trainMode);
+        }
     }
-};
+
+    toggleStyle(gameMode) {
+        let cards = document.querySelectorAll(".card");
+
+        cards.forEach((card) => {
+            let image = card.querySelector(".card__image img");
+            let icon = card.querySelector(".rotate-icon");
+            if (gameMode) {
+                image.classList.add("game-mode");
+                icon.classList.add("hide");
+            } else {
+                if (image.classList.contains("game-mode")) {
+                    image.classList.remove("game-mode");
+                }
+                if (icon.classList.contains("hide")) {
+                    icon.classList.remove("hide");
+                }
+            }
+        });
+    }
+}
 
 export { Card };
