@@ -23,84 +23,128 @@ export default class GameHTML {
   createHeader() {
     const header = createElement('header', null, this.body);
 
-    const menuBtn = createElement('button', ['open-menu'], header);
+    const menuBtn = createElement('button', ['open-menu'], header.element, [
+      ['click', this.callbacks.showMenu],
+    ]);
 
-    this.counterContainer = createElement('div', null, header);
+    this.counterContainer = createElement('div', null, header.element);
     const headerMoves = createElement(
       'h1',
       ['header-moves'],
-      this.counterContainer,
+      this.counterContainer.element,
     );
 
-    const timeContainer = createElement('div', null, header);
-    const headerTime = createElement('h1', ['header-time'], timeContainer);
-    this.time = createElement('time', ['time'], timeContainer);
+    const timeContainer = createElement('div', null, header.element);
+    const headerTime = createElement(
+      'h1',
+      ['header-time'],
+      timeContainer.element,
+    );
+    this.time = createElement(
+      'time',
+      ['time'],
+      timeContainer.element,
+    ).element;
 
     this.counter = createElement(
       'span',
       ['counter'],
-      this.counterContainer,
+      this.counterContainer.element,
     );
 
-    this.counter.textContent = 0;
-    menuBtn.addEventListener('click', this.callbacks.showMenu);
+    this.counter.element.textContent = 0;
 
-    menuBtn.textContent = 'menu';
-    headerMoves.textContent = 'moves';
-    headerTime.textContent = 'time';
+    menuBtn.element.textContent = 'menu';
+    headerMoves.element.textContent = 'moves';
+    headerTime.element.textContent = 'time';
   }
 
   createMenu() {
     this.menuContainer = createElement(
       'div',
       ['menu-container'],
-      this.overlay,
+      this.overlay.element,
     );
     this.bestScoresContainer = createElement(
       'div',
       ['best-scores-container', 'hide'],
-      this.overlay,
+      this.overlay.element,
     );
 
     this.notificationText = createElement(
       'span',
       ['notificationText'],
-      this.menuContainer,
+      this.menuContainer.element,
     );
 
-    this.table = createElement('table', null, this.bestScoresContainer);
+    this.table = createElement(
+      'table',
+      null,
+      this.bestScoresContainer.element,
+    );
 
-    this.back = createElement('button', ['back'], this.bestScoresContainer);
+    this.back = createElement(
+      'button',
+      ['back'],
+      this.bestScoresContainer.element,
+      [['click', (e) => this.goBackToMenu(e)]],
+    );
 
-    const beginAgain = createElement('button', null, this.menuContainer);
-    const saveGame = createElement('button', null, this.menuContainer);
-    const loadGame = createElement('button', null, this.menuContainer);
-    this.sound = createElement('button', null, this.menuContainer);
+    const beginAgain = createElement(
+      'button',
+      null,
+      this.menuContainer.element,
+      [['click', this.callbacks.beginAgain]],
+    );
+    const saveGame = createElement(
+      'button',
+      null,
+      this.menuContainer.element,
+      [['click', this.callbacks.saveGameHandler]],
+    );
+    const loadGame = createElement(
+      'button',
+      null,
+      this.menuContainer.element,
+      [['click', this.callbacks.loadGameHandler]],
+    );
+    this.sound = createElement('button', null, this.menuContainer.element, [
+      ['click', (e) => this.toggleSound(e)],
+    ]);
 
-    const bestScoreBtn = createElement('button', null, this.menuContainer);
-    const btnResume = createElement('button', null, this.menuContainer);
+    const bestScore = createElement(
+      'button',
+      null,
+      this.menuContainer.element,
+      [['click', (e) => this.showBestScores(e)]],
+    );
+    const btnResume = createElement(
+      'button',
+      null,
+      this.menuContainer.element,
+      [['click', this.callbacks.resumeGame]],
+    );
 
-    btnResume.textContent = 'Resume game';
-    this.sound.textContent = 'Sound: On';
-    bestScoreBtn.textContent = '10 best scores';
-    beginAgain.textContent = 'New Game';
-    saveGame.textContent = 'Save Game';
-    loadGame.textContent = 'Load Game';
-    this.back.textContent = 'Back';
-
-    btnResume.addEventListener('click', this.callbacks.resumeGame);
-    bestScoreBtn.addEventListener('click', (e) => this.showBestScores(e));
-    beginAgain.addEventListener('click', this.callbacks.beginAgain);
-    saveGame.addEventListener('click', this.callbacks.saveGameHandler);
-    loadGame.addEventListener('click', this.callbacks.loadGameHandler);
-    this.back.addEventListener('click', (e) => this.returnMenu(e));
-
-    this.sound.addEventListener('click', (e) => {
-      this.callbacks.toggleSound(e);
-      this.sound.textContent = this.sound.textContent === 'Sound: Off'
-        ? 'Sound: On'
-        : 'Sound: Off';
+    const tr = createElement('tr', null, this.table.element).element;
+    constants.TABLE_HEADERS.forEach((name) => {
+      const th = createElement('th', null, tr).element;
+      th.textContent = name;
     });
+
+    btnResume.element.textContent = 'Resume game';
+    this.sound.element.textContent = 'Sound: On';
+    bestScore.element.textContent = '10 best scores';
+    beginAgain.element.textContent = 'New Game';
+    saveGame.element.textContent = 'Save Game';
+    loadGame.element.textContent = 'Load Game';
+    this.back.element.textContent = 'Back';
+  }
+
+  toggleSound(e) {
+    this.callbacks.toggleSound(e);
+    this.sound.element.textContent = this.sound.element.textContent === 'Sound: Off'
+      ? 'Sound: On'
+      : 'Sound: Off';
   }
 
   createField() {
@@ -110,47 +154,51 @@ export default class GameHTML {
 
   createFooter() {
     const footer = createElement('footer', null, this.body);
-    const quickStartBtn = createElement('button', ['quick-start'], footer);
-    const select = createElement('select', ['select'], footer);
-    const solution = createElement('button', ['solution'], footer);
-    select.addEventListener('change', this.selectCallback);
+    const quickStartBtn = createElement(
+      'button',
+      ['quick-start'],
+      footer.element,
+      [['click', this.callbacks.quickStart]],
+    );
+    const select = createElement('select', ['select'], footer.element, [
+      ['change', this.callbacks.logValue],
+    ]);
+    const solution = createElement('button', ['solution'], footer.element, [
+      ['click', this.callbacks.showSolution],
+    ]);
 
     const options = createElement(
       'option',
       null,
-      select,
+      select.element,
+      null,
       ['selected', ''],
       ['selected', 'selected'],
       ['disabled', 'disabled'],
       ['hidden', 'hidden'],
     );
 
-    quickStartBtn.textContent = 'New Game';
-    solution.textContent = 'Solve';
-    options.textContent = 'Change field size ';
+    quickStartBtn.element.textContent = 'New Game';
+    solution.element.textContent = 'Solve';
+    options.element.textContent = 'Change field size ';
 
     Object.values(constants.PUZZLE_DIFFICULTY_LIST).forEach((size) => {
-      const option = createElement('option', null, select, [
+      const option = createElement('option', null, select.element, null, [
         'value',
         size,
       ]);
-      option.textContent = `${size}x${size}`;
 
-      quickStartBtn.addEventListener('click', this.callbacks.quickStart);
+      option.element.textContent = `${size}x${size}`;
     });
-
-    solution.addEventListener('click', this.callbacks.showSolution);
-    select.addEventListener('change', this.callbacks.logValue);
   }
 
   appendCanvas(canvas) {
-    this.canvasRow.append(canvas);
+    this.canvasRow.element.append(canvas);
   }
 
-  returnMenu(e) {
-    this.menuContainer.classList.remove('hide');
+  goBackToMenu(e) {
+    this.menuContainer.element.classList.remove('hide');
     e.target.parentNode.classList.add('hide');
-    // delete all temporary notifications
     if (e.target.parentNode.querySelector('.temporary')) {
       e.target.parentNode.removeChild(
         e.target.parentNode.querySelector('.temporary'),
@@ -161,82 +209,88 @@ export default class GameHTML {
   showBestScores() {
     const curDifficulty = this.callbacks.getDifficulty();
 
-    if (this.notificationText.classList.contains('zoom')) {
-      this.notificationText.textContent = '';
-      this.notificationText.classList.remove('zoom');
+    if (this.notificationText.element.classList.contains('zoom')) {
+      this.notificationText.element.textContent = '';
+      this.notificationText.element.classList.remove('zoom');
     }
-    this.menuContainer.classList.add('hide');
-    this.bestScoresContainer.classList.remove('hide');
+    this.menuContainer.element.classList.add('hide');
+    this.bestScoresContainer.element.classList.remove('hide');
 
     const bestScores = this.storage.get(`topScoresFor${curDifficulty}`);
 
     // clear previous information
-    while (this.table.rows.length > 1) {
-      this.table.deleteRow(1);
+    while (this.table.element.rows.length > 1) {
+      this.table.element.deleteRow(1);
     }
 
     if (!bestScores) {
       const div = createElement(
         'div',
         ['temporary'],
-        this.bestScoresContainer,
+        this.bestScoresContainer.element,
       );
-      this.bestScoresContainer.insertBefore(div, this.back);
-      div.textContent = 'No records';
+      this.bestScoresContainer.element.insertBefore(
+        div.element,
+        this.back.element,
+      );
+      div.element.textContent = 'No records';
     } else {
       const div = createElement(
         'div',
         ['temporary'],
-        this.bestScoresContainer,
+        this.bestScoresContainer.element,
       );
 
-      this.bestScoresContainer.insertBefore(div, this.table);
-      div.textContent = `puzzle size: ${curDifficulty} x ${curDifficulty}`;
+      this.bestScoresContainer.element.insertBefore(
+        div.element,
+        this.table.element,
+      );
+      div.element.textContent = `puzzle size: ${curDifficulty} x ${curDifficulty}`;
 
       bestScores.forEach((el) => {
-        const tr = createElement('tr', null, this.table);
+        const tr = createElement('tr', null, this.table.element);
         constants.TABLE_HEADERS.forEach((name) => {
-          const td = createElement('td', null, tr);
-          td.textContent += `${el[name]} `;
+          const td = createElement('td', null, tr.element);
+          td.element.textContent += `${el[name]} `;
         });
       });
     }
   }
 
   redrawCounter(moveCounter) {
-    this.counter.textContent = moveCounter;
+    this.counter.element.textContent = moveCounter;
   }
 
   clearMenuNotification() {
-    this.notificationText.textContent = '';
+    this.notificationText.element.textContent = '';
   }
 
-  addAnimation(notificationText) {
-    if (this.notificationText.classList.contains('zoom')) {
-      this.notificationText.classList.remove('zoom');
+  addAnimation(text) {
+    if (this.notificationText.element.classList.contains('zoom')) {
+      this.notificationText.element.classList.remove('zoom');
     }
 
     // force browser to play animation again, set to null styles
     // eslint-disable-next-line no-void
-    void this.notificationText.offsetWidth;
+    void this.notificationText.element.offsetWidth;
 
-    this.notificationText.textContent = notificationText;
-    this.notificationText.classList.add('zoom');
+    this.notificationText.element.textContent = text;
+    this.notificationText.element.classList.add('zoom');
   }
 
   hideOverlay(isHide) {
     if (isHide) {
-      this.overlay.classList.add('hide');
+      this.overlay.element.classList.add('hide');
     } else {
-      this.overlay.classList.remove('hide');
+      this.overlay.element.classList.remove('hide');
     }
   }
 
   removeWinNotification() {
-    this.winContainer.textContent = '';
+    this.winContainer.element.textContent = '';
   }
 
-  showWinNotification(time, moveCounter) {
-    this.winContainer.textContent = `Ура! Вы решили головоломку за ${time} и ${moveCounter} ходов`;
+  showWinNotification(moveCounter, time) {
+    this.winContainer.element.textContent = `Ура! Вы решили головоломку за ${time} и ${moveCounter} ходов`;
   }
 }

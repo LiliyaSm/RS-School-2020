@@ -1,4 +1,10 @@
-export default function createElement(el, classNames, parent, ...dataAttr) {
+export default function createElement(
+  el,
+  classNames,
+  parent,
+  eventListeners,
+  ...dataAttr
+) {
   // element, classes comma separated, parent, dataAttr
   let element = null;
   try {
@@ -18,5 +24,17 @@ export default function createElement(el, classNames, parent, ...dataAttr) {
       element.setAttribute(attrName, attrValue);
     });
   }
-  return element;
+
+  if (eventListeners) {
+    eventListeners.forEach(([event, fn]) => {
+      element.addEventListener(event, fn);
+    });
+  }
+
+  return {
+    element,
+    unsubscribe: (event, fn) => {
+      element.removeEventListener(event, fn);
+    },
+  };
 }

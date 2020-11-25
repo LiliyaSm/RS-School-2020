@@ -1,5 +1,6 @@
 import CreateField from './js/createField'; // creates canvas field
 import Timer from './js/timer';
+import BestScores from './js/bestScores';
 import Audio from './js/audio';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
@@ -29,7 +30,8 @@ class Game {
     this.fieldSize = constants.FIELD_SIZE_LARGE;
     this.size = this.fieldSize / this.puzzleDifficulty;
     this.gameHTML = null;
-    this.drag = {
+    this.bestScores = null;
+    this.animation = {
       started: false,
       position: null,
       startX: 0,
@@ -54,6 +56,7 @@ class Game {
   start() {
     this.calculateSize();
     this.tileRendering = new CreateField();
+    this.bestScores = new BestScores(() => this.getDifficulty());
     this.canvas = this.tileRendering.canvas;
 
     this.createHTML();
@@ -99,7 +102,7 @@ class Game {
       this.isWin = false;
     }
     this.solutionIsShowing = false;
-    this.drag.started = false;
+    this.animation.started = false;
 
     this.winMap = this.createWinMap();
     this.moveHistory = [[...this.winMap]];
@@ -286,7 +289,7 @@ class Game {
     const tile = this.tileRendering.getColRow(e.clientX, e.clientY);
     const duration = constants.ANIMATION_SETTINGS.normDuration;
 
-    this.drag.started = true;
+    this.animation.started = true;
 
     const emptyTile = this.getEmptyTileLocation();
     const moveCoords = this.calcMoveCoords(emptyTile, tile);
@@ -381,8 +384,8 @@ class Game {
       // call render function to update the screen
       this.tileRendering.createTiles(
         this.shuffleArray,
-        this.drag.started,
-        this.drag.position,
+        this.animation.started,
+        this.animation.position,
         currPosX,
         currPosY,
       );
@@ -394,7 +397,7 @@ class Game {
       if (currFrame <= totalFrames) {
         setTimeout(drawFrame, duration / totalFrames);
       } else {
-        this.drag.started = false;
+        this.animation.started = false;
         if (callback) callback();
       }
     };
@@ -409,7 +412,7 @@ class Game {
     const position = this.getPosition({ col, row });
 
     const emptyTilePosition = this.shuffleArray.indexOf(0);
-    if (this.drag.started && position === emptyTilePosition) {
+    if (this.animation.started && position === emptyTilePosition) {
       this.createAnimation(
         {
           x:
@@ -424,7 +427,7 @@ class Game {
           y: row * this.size + this.padding,
         },
         constants.ANIMATION_SETTINGS.moveDuration,
-        () => this.doTurnToPos(this.drag.position),
+        () => this.doTurnToPos(this.animation.position),
       );
     } else {
       this.animateReturn(e);
@@ -437,7 +440,7 @@ class Game {
     const {
       col: initialCol,
       row: initialRow,
-    } = this.tileRendering.getColRow(this.drag.startX, this.drag.startY);
+    } = this.tileRendering.getColRow(this.animation.startX, this.animation.startY);
     this.createAnimation(
       {
         x: this.tileRendering.getRelativeX(e.clientX) - this.size / 2,
@@ -449,10 +452,10 @@ class Game {
       },
       constants.ANIMATION_SETTINGS.moveHomeDuration,
       () => {
-        this.drag.started = false;
-        this.drag.x = 0;
-        this.drag.y = 0;
-        this.drag.position = null;
+        this.animation.started = false;
+        this.animation.x = 0;
+        this.animation.y = 0;
+        this.animation.position = null;
         this.audio.playSound('badClick');
       },
     );
@@ -504,26 +507,25 @@ class Game {
     this.checkIfWin();
   }
 
-  myMove(e) {
-    // prevent dragging tile without sensible mouse moving
-    const diffX = Math.abs(e.pageX - this.drag.startX);
-    const diffY = Math.abs(e.pageY - this.drag.startY);
+  tileIsMoving(e) {
+    const diffX = Math.abs(e.clientX - this.animation.startX);
+    const diffY = Math.abs(e.clientY - this.animation.startY);
+    return (diffX > constants.DRAG_SENSITIVITY || diffY > constants.DRAG_SENSITIVITY);
+  }
 
-    if (
-      diffX > constants.DRAG_SENSITIVITY
-            || diffY > constants.DRAG_SENSITIVITY
-    ) {
-      this.drag.started = true;
-      this.drag.x = this.tileRendering.getRelativeX(e.pageX);
-      this.drag.y = this.tileRendering.getRelativeY(e.pageY);
+  myMove(e) {
+    if (this.tileIsMoving(e)) {
+      this.animation.started = true;
+      this.animation.x = this.tileRendering.getRelativeX(e.clientX);
+      this.animation.y = this.tileRendering.getRelativeY(e.clientY);
 
       this.tileRendering.createTiles(
         this.shuffleArray,
-        this.drag.started,
-        this.drag.position,
+        this.animation.started,
+        this.animation.position,
         // shift for centering on cursor
-        this.drag.x - this.size / 2,
-        this.drag.y - this.size / 2,
+        this.animation.x - this.size / 2,
+        this.animation.y - this.size / 2,
       );
     }
   }
@@ -544,7 +546,7 @@ class Game {
       this.audio.playSound('badClick');
       return;
     }
-    if (this.drag.started || this.isWin) {
+    if (this.animation.started || this.isWin) {
       // check if shifting is available
       this.audio.playSound('badClick');
       return;
@@ -566,12 +568,12 @@ class Game {
       return;
     }
 
-    this.drag.startX = e.pageX;
-    this.drag.startY = e.pageY;
+    this.animation.startX = e.clientX;
+    this.animation.startY = e.clientY;
 
-    this.drag.x = this.tileRendering.getRelativeX(e.clientX);
-    this.drag.y = this.tileRendering.getRelativeY(e.clientY);
-    this.drag.position = position;
+    this.animation.x = this.tileRendering.getRelativeX(e.clientX);
+    this.animation.y = this.tileRendering.getRelativeY(e.clientY);
+    this.animation.position = position;
 
     this.canvas.onmousemove = (event) => this.myMove(event);
     this.canvas.onmouseup = (event) => this.myUp(event);
@@ -595,77 +597,30 @@ class Game {
 
       const time = this.timer.formatTime();
 
-      this.timer.getSeconds();
-
-      this.gameHTML.showWinNotification(time, this.moveCounter);
-
-      const today = new Date();
-      const year = today.getFullYear();
-      const month = today.getMonth() + 1;
-      const dayMonth = today.getDate();
-
-      let currScores = this.storage.get(
-        `topScoresFor${this.puzzleDifficulty}`,
-      );
-
-      const newRecord = {
-        date: `${dayMonth}.${month}.${year}`,
-        moves: this.moveCounter,
-        time,
-      };
-      // no records yet
-      if (!currScores) {
-        currScores = [];
-        currScores.push(newRecord);
-      } else {
-        let inserted = false;
-        for (let index = 0; index < currScores.length; index++) {
-          if (this.moveCounter <= currScores[index].moves) {
-            currScores.splice(index, 0, newRecord);
-            inserted = true;
-            break;
-          }
-        }
-        if (!inserted) {
-          currScores.push(newRecord);
-        }
-      }
-      // take only first 10 results
-      if (currScores.length > 10) {
-        currScores = currScores.slice(0, 10);
-      }
-
-      this.storage.set(
-        `topScoresFor${this.puzzleDifficulty}`,
-        currScores,
-      );
+      this.gameHTML.showWinNotification(this.moveCounter, time);
+      this.bestScores.addRecords({ moves: this.moveCounter, time });
     }
   }
 
   myUp(event) {
-    // measure the difference between start and end drag
-    const diffX = Math.abs(event.pageX - this.drag.startX);
-    const diffY = Math.abs(event.pageY - this.drag.startY);
-
-    if (
-      diffX < constants.DRAG_SENSITIVITY
-            && diffY < constants.DRAG_SENSITIVITY
-    ) {
+    if (!this.tileIsMoving(event)) {
       this.handleClick(event);
-    } else if (this.drag.started) this.handleMove(event);
+    } else if (this.animation.started) this.handleMove(event);
 
     // set to initial values
-    this.drag.x = 0;
-    this.drag.y = 0;
+    this.animation.x = 0;
+    this.animation.y = 0;
+    this.deleteCanvasEvents();
+  }
+
+  deleteCanvasEvents() {
     this.canvas.onmousemove = null;
     this.canvas.onmouseup = null;
     this.canvas.onmouseout = null;
   }
 
   mouseOutsideField(e) {
-    this.canvas.onmousemove = null;
-    this.canvas.onmouseup = null;
-    this.canvas.onmouseout = null;
+    this.deleteCanvasEvents();
     this.animateReturn(e);
   }
 
@@ -703,9 +658,9 @@ class Game {
       col: prevMovePosition % this.puzzleDifficulty,
     };
 
-    this.drag.position = prevMovePosition;
+    this.animation.position = prevMovePosition;
 
-    this.drag.started = true;
+    this.animation.started = true;
 
     const emptyTile = this.getEmptyTileLocation();
     const moveCoords = this.calcMoveCoords(emptyTile, tile);
@@ -721,7 +676,7 @@ class Game {
           if (number > 0) {
             this.revertMoveRecursively(moveHistory, number - 1);
           }
-        }, 50);
+        }, constants.ANIMATION_SETTINGS.solveDuration);
       },
     );
   }
@@ -786,11 +741,7 @@ class Game {
 }
 
 document.body.onload = function load() {
-  const game = new Game(
-    constants.PUZZLE_DIFFICULTY_LIST._4,
-    new LocalStorage(),
-  );
+  const game = new Game(constants.DEFAULT_FIELD_SIZE, new LocalStorage());
   game.start();
-
   game.canvas.onmousedown = (e) => game.myDown(e);
 };

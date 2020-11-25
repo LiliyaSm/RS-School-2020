@@ -13,13 +13,14 @@ export const PADDING_LARGE = 50;
 export const TABLE_HEADERS = ['moves', 'time', 'date'];
 
 export const PUZZLE_DIFFICULTY_LIST = {
-  _3: 3,
-  _4: 4,
-  _5: 5,
-  _6: 6,
-  _7: 7,
-  _8: 8,
+  3: 3,
+  4: 4,
+  5: 5,
+  6: 6,
+  7: 7,
+  8: 8,
 };
+export const DEFAULT_FIELD_SIZE = 4;
 
 export const FIELD_SIZE_LARGE = 450;
 export const FIELD_SIZE_SMALL = 260;
@@ -36,8 +37,8 @@ export const ANIMATION_SETTINGS = {
   frameRate: 100,
   normDuration: 100,
   solveDuration: 70,
-  moveDuration: 300,
-  moveHomeDuration: 400,
+  moveDuration: 100,
+  moveHomeDuration: 300,
 };
 
 // save additional space to prevent canvas bug on edge of the rectangle
