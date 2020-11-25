@@ -13,6 +13,7 @@ module.exports = {
   rules: {
     'no-plusplus': 'off',
     'no-continue': 'off',
+    'linebreak-style': ['error', 'windows'],
     indent: ['error', 2],
   },
   settings: {

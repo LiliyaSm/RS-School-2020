@@ -2,7 +2,7 @@ const sounds = ['click.wav', 'badClick.wav'];
 
 export default class Audio {
   constructor(parent) {
-    this.parent = parent;
+    this.parent = parent.body;
     this.soundOn = true;
   }
 

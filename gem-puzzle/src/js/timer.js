@@ -1,6 +1,6 @@
 export default class Timer {
-  constructor(time) {
-    this.time = time;
+  constructor(body) {
+    this.timeElement = body.time;
     this.totalSeconds = -1;
     this.myInterval = null;
   }
@@ -28,7 +28,7 @@ export default class Timer {
 
   showTime() {
     ++this.totalSeconds;
-    this.time.innerHTML = this.formatTime();
+    this.timeElement.textContent = this.formatTime();
   }
 
   resetTimer() {

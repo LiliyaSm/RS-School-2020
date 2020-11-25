@@ -1,10 +1,10 @@
-import createElement from './js/createElement'; // creates DOM elements
 import CreateField from './js/createField'; // creates canvas field
 import Timer from './js/timer';
 import Audio from './js/audio';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import LocalStorage from './js/storage';
+import GameHTML from './js/gameHTML';
 import * as constants from './js/constants';
 
 function arraysEqual(a, b) {
@@ -15,10 +15,9 @@ function arraysEqual(a, b) {
 }
 
 class Game {
-  constructor(defDifficulty, PUZZLE_DIFFICULTY_LIST, storage) {
+  constructor(defDifficulty, storage) {
     this.PUZZLE_DIFFICULTY = defDifficulty;
     this.storage = storage;
-    this.PUZZLE_DIFFICULTY_LIST = PUZZLE_DIFFICULTY_LIST;
     this.winMap = this.createWinMap();
     this.moveHistory = [[...this.winMap]];
     this.shuffleArray = this.shuffleTiles();
@@ -28,8 +27,8 @@ class Game {
     this.isWin = false;
     this.isLarge = true;
     this.fieldSize = constants.FIELD_SIZE_LARGE;
-    this.SIZE = this.fieldSize / this.PUZZLE_DIFFICULTY;
-
+    this.SIZE = null;
+    this.gameHTML = null;
     this.drag = {
       started: false,
       position: null,
@@ -39,154 +38,28 @@ class Game {
       y: 0,
     };
 
-    this.overlay = null;
     this.solutionIsShowing = false;
   }
 
-  createHTML() {
-    this.body = document.querySelector('body');
-    this.body.setAttribute('class', 'container-fluid');
+  beginAgain() {
+    this.resumeGame();
+    this.restart();
+  }
 
-    const header = createElement('header', null, this.body);
-
-    this.winContainer = createElement('div', ['win-container'], this.body);
-    const thirdRow = createElement('div', ['row'], this.body);
-    const footer = createElement('footer', null, this.body);
-
-    const menu = createElement('button', ['open-menu'], header);
-    this.counterContainer = createElement('div', null, header);
-    this.timeContainer = createElement('div', null, header);
-
-    const headerTime = createElement(
-      'h1',
-      ['header-time'],
-      this.timeContainer,
-    );
-    this.time = createElement('time', ['time'], this.timeContainer);
-
-    const quickStart = createElement('button', ['quick-start'], footer);
-    const select = createElement('select', ['select'], footer);
-    const solution = createElement('button', ['solution'], footer);
-
-    const headerMoves = createElement(
-      'h1',
-      ['header-moves'],
-      this.counterContainer,
-    );
-
-    this.counter = createElement(
-      'span',
-      ['counter'],
-      this.counterContainer,
-    );
-
-    this.counter.textContent = 0;
-
-    thirdRow.appendChild(this.canvas);
-
-    this.overlay = createElement('div', ['overlay', 'hide'], this.body);
-    this.menuContainer = createElement(
-      'div',
-      ['menu-container'],
-      this.overlay,
-    );
-    this.bestScoresContainer = createElement(
-      'div',
-      ['best-scores-container', 'hide'],
-      this.overlay,
-    );
-
-    this.table = createElement('table', null, this.bestScoresContainer);
-    const tr = createElement('tr', null, this.table);
-
-    this.back = createElement('button', ['back'], this.bestScoresContainer);
-
-    const beginAgain = createElement('button', null, this.menuContainer);
-    this.saveGame = createElement('button', null, this.menuContainer);
-    this.loadGame = createElement('button', null, this.menuContainer);
-    this.sound = createElement('button', null, this.menuContainer);
-
-    this.bestScore = createElement('button', null, this.menuContainer);
-    this.btn1 = createElement('button', null, this.menuContainer);
-
-    this.btn1.textContent = 'Resume game';
-    this.sound.textContent = 'Sound: On';
-    this.bestScore.textContent = '10 best scores';
-    this.saveGame.textContent = 'Save Game';
-    this.loadGame.textContent = 'Load Game';
-    this.back.textContent = 'Back';
-    headerMoves.textContent = 'moves';
-    headerTime.textContent = 'time';
-
-    this.btn1.addEventListener('click', () => this.resumeGame());
-    this.bestScore.addEventListener('click', () => this.showBestScores());
-    this.saveGame.addEventListener('click', (e) => this.saveGameHandler(e));
-    this.loadGame.addEventListener('click', (e) => this.loadGameHandler(e));
-    this.back.addEventListener('click', (e) => this.returnMenu(e));
-    this.sound.addEventListener('click', (e) => {
-      this.audio.toggleSound(e);
-      this.sound.innerHTML = this.sound.innerHTML === 'Sound: Off'
-        ? 'Sound: On'
-        : 'Sound: Off';
-    });
-
-    select.addEventListener('change', (e) => this.logValue(e));
-
-    const option1 = createElement(
-      'option',
-      null,
-      select,
-      ['selected', ''],
-      ['selected', 'selected'],
-      ['disabled', 'disabled'],
-      ['hidden', 'hidden'],
-    );
-
-    option1.textContent = 'Change field size ';
-    Object.values(this.PUZZLE_DIFFICULTY_LIST).forEach((size) => {
-      const option = createElement('option', null, select, ['value', size]);
-      option.textContent = `${size}x${size}`;
-    });
-    beginAgain.innerHTML = 'New Game';
-    solution.innerHTML = 'Solve';
-    menu.innerHTML = 'menu';
-    quickStart.innerHTML = 'New Game';
-
-    beginAgain.addEventListener('click', () => {
-      this.resumeGame();
-      this.restart();
-    });
-
-    quickStart.addEventListener('click', () => {
-      if (this.solutionIsShowing) return;
-      this.restart();
-    });
-
-    solution.addEventListener('click', () => {
-      this.showSolution();
-    });
-
-    menu.addEventListener('click', (e) => this.showMenu(e));
-
-    constants.TABLE_HEADERS.forEach((name) => {
-      const th = createElement('th', null, tr);
-      th.textContent = name;
-    });
-
-    this.notificationText = createElement(
-      'span',
-      ['notificationText'],
-      this.menuContainer,
-    );
+  quickStart() {
+    if (this.solutionIsShowing) return;
+    this.restart();
   }
 
   start() {
+    this.calculateSize();
     this.tileRendering = new CreateField();
     this.canvas = this.tileRendering.canvas;
 
     this.createHTML();
-    this.audio = new Audio(this.body);
+    this.audio = new Audio(this.gameHTML);
     this.audio.init();
+
     this.padding = constants.PADDING_LARGE;
 
     this.tileRendering.init(
@@ -196,16 +69,33 @@ class Game {
       this.padding,
     );
 
-    this.timer = new Timer(this.time);
+    this.timer = new Timer(this.gameHTML);
     this.timer.start();
 
     window.addEventListener('resize', (e) => this.resizeField(e));
     this.resizeField();
   }
 
+  createHTML() {
+    this.gameHTML = new GameHTML(document.querySelector('body'), {
+      logValue: (e) => this.logValue(e),
+      quickStart: (e) => this.quickStart(e),
+      beginAgain: (e) => this.beginAgain(e),
+      showSolution: (e) => this.showSolution(e),
+      saveGameHandler: (e) => this.saveGameHandler(e),
+      loadGameHandler: (e) => this.loadGameHandler(e),
+      showMenu: (e) => this.showMenu(e),
+      toggleSound: (e) => this.audio.toggleSound(e),
+      resumeGame: () => this.resumeGame(),
+      getDifficulty: (e) => this.getDifficulty(e),
+    });
+    this.gameHTML.init();
+    this.gameHTML.appendCanvas(this.canvas);
+  }
+
   restart(saveImage) {
     if (this.isWin) {
-      this.winContainer.textContent = '';
+      this.gameHTML.removeWinNotification();
       this.isWin = false;
     }
     this.solutionIsShowing = false;
@@ -229,13 +119,17 @@ class Game {
     this.timer.resetTimer();
   }
 
+  getDifficulty() {
+    return this.PUZZLE_DIFFICULTY;
+  }
+
   saveGameHandler() {
     if (this.isWin) {
-      this.addAnimation("Can't be save!");
+      this.gameHTML.addAnimation("Can't be save!");
       return;
     }
 
-    this.addAnimation('Game saved!');
+    this.gameHTML.addAnimation('Game saved!');
     this.storage.set('15gameObject', {
       shuffleArray: this.shuffleArray,
       timer: this.timer.getSeconds(),
@@ -246,9 +140,13 @@ class Game {
     });
   }
 
+  calculateSize() {
+    this.SIZE = this.fieldSize / this.PUZZLE_DIFFICULTY;
+  }
+
   loadGameHandler() {
     if (this.isWin) {
-      this.winContainer.textContent = '';
+      this.gameHTML.removeWinNotification();
       this.isWin = false;
     }
     this.solutionIsShowing = false;
@@ -257,7 +155,7 @@ class Game {
     this.shuffleArray = savedGameObject.shuffleArray;
     this.moveHistory = savedGameObject.solution;
     this.PUZZLE_DIFFICULTY = savedGameObject.PUZZLE_DIFFICULTY;
-    this.SIZE = this.fieldSize / this.PUZZLE_DIFFICULTY;
+    this.calculateSize();
 
     this.tileRendering.setImage(savedGameObject.imageNumber);
 
@@ -270,7 +168,7 @@ class Game {
     );
 
     this.moveCounter = savedGameObject.counter;
-    this.counter.textContent = this.moveCounter;
+    this.gameHTML.redrawCounter(this.moveCounter);
 
     this.resumeGame(savedGameObject.timer);
 
@@ -279,20 +177,19 @@ class Game {
 
   logValue(e) {
     if (this.solutionIsShowing) return;
-
     this.PUZZLE_DIFFICULTY = Number(e.target.value);
-    this.SIZE = this.fieldSize / this.PUZZLE_DIFFICULTY;
+    this.calculateSize();
     this.restart(true);
   }
 
   increaseCounter() {
     ++this.moveCounter;
-    this.counter.textContent = this.moveCounter;
+    this.gameHTML.redrawCounter(this.moveCounter);
   }
 
   resetCounter() {
     this.moveCounter = 0;
-    this.counter.textContent = this.moveCounter;
+    this.gameHTML.redrawCounter(this.moveCounter);
   }
 
   createWinMap() {
@@ -509,8 +406,12 @@ class Game {
     if (this.drag.started && position === emptyTilePosition) {
       this.createAnimation(
         {
-          x: this.tileRendering.getRelativeX(e.clientX) - this.SIZE / 2,
-          y: this.tileRendering.getRelativeY(e.clientY) - this.SIZE / 2,
+          x:
+                        this.tileRendering.getRelativeX(e.clientX)
+                        - this.SIZE / 2,
+          y:
+                        this.tileRendering.getRelativeY(e.clientY)
+                        - this.SIZE / 2,
         },
         {
           x: col * this.SIZE + this.padding,
@@ -668,7 +569,7 @@ class Game {
 
     this.canvas.onmousemove = (event) => this.myMove(event);
     this.canvas.onmouseup = (event) => this.myUp(event);
-    this.canvas.onmouseout = (event) => this.myOut(event);
+    this.canvas.onmouseout = (event) => this.mouseOutsideField(event);
   }
 
   checkIfWin() {
@@ -689,7 +590,8 @@ class Game {
       const time = this.timer.formatTime();
 
       this.timer.getSeconds();
-      this.winContainer.innerHTML = `Ура! Вы решили головоломку за ${time} и ${this.moveCounter} ходов`;
+
+      this.gameHTML.showWinNotification(time, this.moveCounter);
 
       const today = new Date();
       const year = today.getFullYear();
@@ -734,61 +636,6 @@ class Game {
     }
   }
 
-  showBestScores() {
-    if (this.notificationText.classList.contains('zoom')) {
-      this.notificationText.textContent = '';
-      this.notificationText.classList.remove('zoom');
-    }
-    this.menuContainer.classList.add('hide');
-    this.bestScoresContainer.classList.remove('hide');
-
-    const bestScores = this.storage.get(
-      `topScoresFor${this.PUZZLE_DIFFICULTY}`,
-    );
-
-    // clear previous information
-    while (this.table.rows.length > 1) {
-      this.table.deleteRow(1);
-    }
-
-    if (!bestScores) {
-      const div = createElement(
-        'div',
-        ['temporary'],
-        this.bestScoresContainer,
-      );
-      this.bestScoresContainer.insertBefore(div, this.back);
-      div.textContent = 'No records';
-    } else {
-      const div = createElement(
-        'div',
-        ['temporary'],
-        this.bestScoresContainer,
-      );
-      this.bestScoresContainer.insertBefore(div, this.table);
-      div.textContent = `puzzle size: ${this.PUZZLE_DIFFICULTY} x ${this.PUZZLE_DIFFICULTY}`;
-
-      bestScores.forEach((el) => {
-        const tr = createElement('tr', null, this.table);
-        constants.TABLE_HEADERS.forEach((name) => {
-          const td = createElement('td', null, tr);
-          td.textContent += `${el[name]} `;
-        });
-      });
-    }
-  }
-
-  returnMenu(e) {
-    this.menuContainer.classList.remove('hide');
-    e.target.parentNode.classList.add('hide');
-    // delete all temporary notifications
-    if (e.target.parentNode.querySelector('.temporary')) {
-      e.target.parentNode.removeChild(
-        e.target.parentNode.querySelector('.temporary'),
-      );
-    }
-  }
-
   myUp(event) {
     // measure the difference between start and end drag
     const diffX = Math.abs(event.pageX - this.drag.startX);
@@ -809,28 +656,23 @@ class Game {
     this.canvas.onmouseout = null;
   }
 
-  myOut(e) {
-    // mouse outside the field
+  mouseOutsideField(e) {
     this.canvas.onmousemove = null;
     this.canvas.onmouseup = null;
     this.canvas.onmouseout = null;
     this.animateReturn(e);
   }
 
-  // logic for menu
   showMenu() {
     if (this.solutionIsShowing) return;
-
     this.timer.stop();
-    this.overlay.classList.remove('hide');
+    this.gameHTML.hideOverlay(false);
   }
 
   resumeGame(newTime) {
-    // clear notification
-    this.notificationText.textContent = '';
-
     this.timer.start(newTime);
-    this.overlay.classList.add('hide');
+    this.gameHTML.clearMenuNotification();
+    this.gameHTML.hideOverlay(true);
   }
 
   showSolution() {
@@ -897,19 +739,6 @@ class Game {
     return moveHistory;
   }
 
-  addAnimation(notificationText) {
-    if (this.notificationText.classList.contains('zoom')) {
-      this.notificationText.classList.remove('zoom');
-    }
-
-    // force browser to play animation again, set to null styles
-    // eslint-disable-next-line no-void
-    void this.notificationText.offsetWidth;
-
-    this.notificationText.textContent = notificationText;
-    this.notificationText.classList.add('zoom');
-  }
-
   resizeField() {
     if (
       (window.screen.width > constants.MOBILE_SCREEN && this.isLarge)
@@ -927,7 +756,7 @@ class Game {
       this.fieldSize = constants.FIELD_SIZE_SMALL;
       this.isLarge = false;
     }
-    this.SIZE = this.fieldSize / this.PUZZLE_DIFFICULTY;
+    this.calculateSize();
 
     if (this.isWin) {
       this.tileRendering.winField(
@@ -953,7 +782,6 @@ class Game {
 document.body.onload = function load() {
   const game = new Game(
     constants.PUZZLE_DIFFICULTY_LIST._4,
-    constants.PUZZLE_DIFFICULTY_LIST,
     new LocalStorage(),
   );
   game.start();
