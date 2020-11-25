@@ -378,7 +378,6 @@ class Game {
 
     // this func is recursively called to draw each frame
     const drawFrame = () => {
-      // calculate new currPos
       const currPosX = from.x + ((to.x - from.x) * currFrame) / totalFrames;
       const currPosY = from.y + ((to.y - from.y) * currFrame) / totalFrames;
       // call render function to update the screen
@@ -389,8 +388,6 @@ class Game {
         currPosX,
         currPosY,
       );
-
-      // increment current frame number
       currFrame += 1;
       // check if we not exceed totalFrame - set a timeout to call drawFrame
       // after the desired delay
@@ -436,7 +433,6 @@ class Game {
 
   animateReturn(e) {
     // user mouse up above wrong position returns tile on initial place
-
     const {
       col: initialCol,
       row: initialRow,
@@ -570,14 +566,23 @@ class Game {
 
     this.animation.startX = e.clientX;
     this.animation.startY = e.clientY;
-
     this.animation.x = this.tileRendering.getRelativeX(e.clientX);
     this.animation.y = this.tileRendering.getRelativeY(e.clientY);
     this.animation.position = position;
 
+    this.addCanvasEvents();
+  }
+
+  addCanvasEvents() {
     this.canvas.onmousemove = (event) => this.myMove(event);
     this.canvas.onmouseup = (event) => this.myUp(event);
     this.canvas.onmouseout = (event) => this.mouseOutsideField(event);
+  }
+
+  deleteCanvasEvents() {
+    this.canvas.onmousemove = null;
+    this.canvas.onmouseup = null;
+    this.canvas.onmouseout = null;
   }
 
   checkIfWin() {
@@ -611,12 +616,6 @@ class Game {
     this.animation.x = 0;
     this.animation.y = 0;
     this.deleteCanvasEvents();
-  }
-
-  deleteCanvasEvents() {
-    this.canvas.onmousemove = null;
-    this.canvas.onmouseup = null;
-    this.canvas.onmouseout = null;
   }
 
   mouseOutsideField(e) {

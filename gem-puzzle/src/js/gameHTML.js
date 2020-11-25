@@ -131,12 +131,12 @@ export default class GameHTML {
       th.textContent = name;
     });
 
-    btnResume.element.textContent = 'Resume game';
-    this.sound.element.textContent = 'Sound: On';
-    bestScore.element.textContent = '10 best scores';
     beginAgain.element.textContent = 'New Game';
     saveGame.element.textContent = 'Save Game';
     loadGame.element.textContent = 'Load Game';
+    this.sound.element.textContent = 'Sound: On';
+    bestScore.element.textContent = '10 best scores';
+    btnResume.element.textContent = 'Resume game';
     this.back.element.textContent = 'Back';
   }
 
@@ -187,7 +187,6 @@ export default class GameHTML {
         'value',
         size,
       ]);
-
       option.element.textContent = `${size}x${size}`;
     });
   }
@@ -197,8 +196,8 @@ export default class GameHTML {
   }
 
   goBackToMenu(e) {
-    this.menuContainer.element.classList.remove('hide');
-    e.target.parentNode.classList.add('hide');
+    this.showElement(this.menuContainer.element);
+    this.hideElement(e.target.parentNode);
     if (e.target.parentNode.querySelector('.temporary')) {
       e.target.parentNode.removeChild(
         e.target.parentNode.querySelector('.temporary'),
@@ -209,20 +208,15 @@ export default class GameHTML {
   showBestScores() {
     const curDifficulty = this.callbacks.getDifficulty();
 
-    if (this.notificationText.element.classList.contains('zoom')) {
-      this.notificationText.element.textContent = '';
-      this.notificationText.element.classList.remove('zoom');
-    }
-    this.menuContainer.element.classList.add('hide');
-    this.bestScoresContainer.element.classList.remove('hide');
+    this.clearMenuNotification();
+    this.hideElement(this.menuContainer.element);
+    this.showElement(this.bestScoresContainer.element);
 
-    const bestScores = this.storage.get(`topScoresFor${curDifficulty}`);
-
-    // clear previous information
     while (this.table.element.rows.length > 1) {
       this.table.element.deleteRow(1);
     }
 
+    const bestScores = this.storage.get(`topScoresFor${curDifficulty}`);
     if (!bestScores) {
       const div = createElement(
         'div',
@@ -262,27 +256,34 @@ export default class GameHTML {
   }
 
   clearMenuNotification() {
+    if (this.notificationText.element.classList.contains('zoom')) {
+      this.notificationText.element.classList.remove('zoom');
+    }
     this.notificationText.element.textContent = '';
   }
 
   addAnimation(text) {
-    if (this.notificationText.element.classList.contains('zoom')) {
-      this.notificationText.element.classList.remove('zoom');
-    }
-
+    this.clearMenuNotification();
     // force browser to play animation again, set to null styles
     // eslint-disable-next-line no-void
     void this.notificationText.element.offsetWidth;
-
     this.notificationText.element.textContent = text;
     this.notificationText.element.classList.add('zoom');
   }
 
+  hideElement(element) {
+    element.classList.add('hide');
+  }
+
+  showElement(element) {
+    element.classList.remove('hide');
+  }
+
   hideOverlay(isHide) {
     if (isHide) {
-      this.overlay.element.classList.add('hide');
+      this.hideElement(this.overlay.element);
     } else {
-      this.overlay.element.classList.remove('hide');
+      this.showElement(this.overlay.element);
     }
   }
 
