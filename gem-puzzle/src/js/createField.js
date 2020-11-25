@@ -4,9 +4,9 @@ export default class CreateField {
   constructor() {
     this.canvas = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
-    this.SIZE = null;
+    this.size = null;
     this.padding = null;
-    this.PUZZLE_DIFFICULTY = null;
+    this.puzzleDifficulty = null;
     this.pieces = [];
     this.img = new Image();
     this.img.counter = Math.floor(
@@ -16,11 +16,8 @@ export default class CreateField {
     this.canvasAbsSize = this.canvas.getBoundingClientRect(); // abs. size of element
   }
 
-  init(SIZE, PUZZLE_DIFFICULTY, array, padding, saveImage) {
-    this.PUZZLE_DIFFICULTY = PUZZLE_DIFFICULTY;
-    this.SIZE = SIZE;
-    this.padding = padding;
-    this.updateCanvas();
+  init(size, puzzleDifficulty, array, padding, saveImage) {
+    this.updateCanvas(size, puzzleDifficulty, padding);
     if (!saveImage) {
       this.img.counter = (++this.img.counter % (constants.NUMBER_OF_IMAGES - 1)) + 1;
     }
@@ -33,9 +30,12 @@ export default class CreateField {
     this.pieces = [];
   }
 
-  updateCanvas() {
-    this.canvas.width = this.SIZE * this.PUZZLE_DIFFICULTY + this.padding * 2;
-    this.canvas.height = this.SIZE * this.PUZZLE_DIFFICULTY + this.padding * 2;
+  updateCanvas(size, puzzleDifficulty, padding) {
+    this.puzzleDifficulty = puzzleDifficulty;
+    this.size = size;
+    this.padding = padding;
+    this.canvas.width = this.size * this.puzzleDifficulty + this.padding * 2;
+    this.canvas.height = this.size * this.puzzleDifficulty + this.padding * 2;
   }
 
   clear() {
@@ -43,17 +43,17 @@ export default class CreateField {
   }
 
   loadImage() {
-    this.pieceWidth = Math.floor(this.img.width / this.PUZZLE_DIFFICULTY);
-    this.pieceHeight = Math.floor(this.img.height / this.PUZZLE_DIFFICULTY);
+    this.pieceWidth = Math.floor(this.img.width / this.puzzleDifficulty);
+    this.pieceHeight = Math.floor(this.img.height / this.puzzleDifficulty);
 
     let i;
     let piece;
 
-    for (i = 0; i < this.PUZZLE_DIFFICULTY * this.PUZZLE_DIFFICULTY; i++) {
+    for (i = 0; i < this.puzzleDifficulty * this.puzzleDifficulty; i++) {
       piece = {};
-      const row = Math.floor(i / this.PUZZLE_DIFFICULTY);
+      const row = Math.floor(i / this.puzzleDifficulty);
       // i % 4      0 1 2 3 0 1 2 3
-      const col = i % this.PUZZLE_DIFFICULTY;
+      const col = i % this.puzzleDifficulty;
 
       piece.sx = col * this.pieceWidth;
       piece.sy = row * this.pieceHeight;
@@ -88,19 +88,19 @@ export default class CreateField {
       // i:         0 1 2 3 4 5 itc
       // i / 4      0 0 0 0
       //            1 1 1 1
-      const row = Math.floor(i / this.PUZZLE_DIFFICULTY);
+      const row = Math.floor(i / this.puzzleDifficulty);
       // i % 4      0 1 2 3 0 1 2 3
-      const col = i % this.PUZZLE_DIFFICULTY;
+      const col = i % this.puzzleDifficulty;
       this.drawTile(
-        this.SIZE,
+        this.size,
         array[i],
-        this.padding + col * this.SIZE,
-        this.padding + row * this.SIZE,
+        this.padding + col * this.size,
+        this.padding + row * this.size,
       );
     }
     // draw moving tile separatly
     if (animated) {
-      this.drawTile(this.SIZE, array[dragPosition], dragX, dragY);
+      this.drawTile(this.size, array[dragPosition], dragX, dragY);
     }
   }
 
@@ -149,14 +149,10 @@ export default class CreateField {
     return this.img.counter;
   }
 
-  winField(PUZZLE_DIFFICULTY, SIZE, fieldSize, padding) {
+  winField(size, puzzleDifficulty, fieldSize, padding) {
     this.clear();
-    this.padding = padding;
 
-    this.PUZZLE_DIFFICULTY = PUZZLE_DIFFICULTY;
-    this.SIZE = SIZE;
-
-    this.updateCanvas();
+    this.updateCanvas(size, puzzleDifficulty, padding);
 
     this.context.lineWidth = this.padding * 2;
 
@@ -186,8 +182,8 @@ export default class CreateField {
     const x = clientX - this.canvasAbsSize.left - this.padding;
     const y = clientY - this.canvasAbsSize.top - this.padding;
     return {
-      col: Math.floor(x / this.SIZE),
-      row: Math.floor(y / this.SIZE),
+      col: Math.floor(x / this.size),
+      row: Math.floor(y / this.size),
     };
   }
 
@@ -200,8 +196,10 @@ export default class CreateField {
   }
 
   clickOnEdge(x, y) {
-    const rightEdge = this.canvasAbsSize.width - (this.padding + constants.SAVE_EDGE_SPACE);
-    const topEdge = this.canvasAbsSize.height - (this.padding + constants.SAVE_EDGE_SPACE);
+    const rightEdge = this.canvasAbsSize.width
+            - (this.padding + constants.SAVE_EDGE_SPACE);
+    const topEdge = this.canvasAbsSize.height
+            - (this.padding + constants.SAVE_EDGE_SPACE);
     const minValue = this.padding + constants.SAVE_EDGE_SPACE;
     return x < minValue || x > rightEdge || y < minValue || y > topEdge;
   }

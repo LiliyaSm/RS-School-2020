@@ -16,7 +16,7 @@ function arraysEqual(a, b) {
 
 class Game {
   constructor(defDifficulty, storage) {
-    this.PUZZLE_DIFFICULTY = defDifficulty;
+    this.puzzleDifficulty = defDifficulty;
     this.storage = storage;
     this.winMap = this.createWinMap();
     this.moveHistory = [[...this.winMap]];
@@ -27,7 +27,7 @@ class Game {
     this.isWin = false;
     this.isLarge = true;
     this.fieldSize = constants.FIELD_SIZE_LARGE;
-    this.SIZE = null;
+    this.size = this.fieldSize / this.puzzleDifficulty;
     this.gameHTML = null;
     this.drag = {
       started: false,
@@ -63,8 +63,8 @@ class Game {
     this.padding = constants.PADDING_LARGE;
 
     this.tileRendering.init(
-      this.SIZE,
-      this.PUZZLE_DIFFICULTY,
+      this.size,
+      this.puzzleDifficulty,
       this.shuffleArray,
       this.padding,
     );
@@ -106,8 +106,8 @@ class Game {
 
     this.shuffleArray = this.shuffleTiles();
     this.tileRendering.init(
-      this.SIZE,
-      this.PUZZLE_DIFFICULTY,
+      this.size,
+      this.puzzleDifficulty,
       this.shuffleArray,
       this.padding,
       saveImage,
@@ -120,7 +120,7 @@ class Game {
   }
 
   getDifficulty() {
-    return this.PUZZLE_DIFFICULTY;
+    return this.puzzleDifficulty;
   }
 
   saveGameHandler() {
@@ -134,14 +134,14 @@ class Game {
       shuffleArray: this.shuffleArray,
       timer: this.timer.getSeconds(),
       counter: this.moveCounter,
-      PUZZLE_DIFFICULTY: this.PUZZLE_DIFFICULTY,
+      PUZZLE_DIFFICULTY: this.puzzleDifficulty,
       imageNumber: this.tileRendering.getImage(),
       solution: this.moveHistory,
     });
   }
 
   calculateSize() {
-    this.SIZE = this.fieldSize / this.PUZZLE_DIFFICULTY;
+    this.size = this.fieldSize / this.puzzleDifficulty;
   }
 
   loadGameHandler() {
@@ -154,14 +154,14 @@ class Game {
     const savedGameObject = this.storage.get('15gameObject');
     this.shuffleArray = savedGameObject.shuffleArray;
     this.moveHistory = savedGameObject.solution;
-    this.PUZZLE_DIFFICULTY = savedGameObject.PUZZLE_DIFFICULTY;
+    this.puzzleDifficulty = savedGameObject.PUZZLE_DIFFICULTY;
     this.calculateSize();
 
     this.tileRendering.setImage(savedGameObject.imageNumber);
 
     this.tileRendering.init(
-      this.SIZE,
-      this.PUZZLE_DIFFICULTY,
+      this.size,
+      this.puzzleDifficulty,
       this.shuffleArray,
       this.padding,
       true,
@@ -177,7 +177,7 @@ class Game {
 
   logValue(e) {
     if (this.solutionIsShowing) return;
-    this.PUZZLE_DIFFICULTY = Number(e.target.value);
+    this.puzzleDifficulty = Number(e.target.value);
     this.calculateSize();
     this.restart(true);
   }
@@ -194,20 +194,31 @@ class Game {
 
   createWinMap() {
     //  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0];
-    const arraySize = this.PUZZLE_DIFFICULTY * this.PUZZLE_DIFFICULTY;
+    const arraySize = this.puzzleDifficulty * this.puzzleDifficulty;
     const result = [...Array(arraySize + 1).keys()].slice(1);
     result[arraySize - 1] = 0;
     return result;
   }
 
+  reverseOperation(operation) {
+    switch (operation) {
+    case 'right':
+      return 'left';
+    case 'left':
+      return 'right';
+    case 'up':
+      return 'down';
+    case 'down':
+      return 'up';
+    }
+  }
+
   shuffleTiles() {
     this.shuffleArray = [...this.winMap];
-    const maxShuffle = constants.MAX_SHUFFLE
-            * this.PUZZLE_DIFFICULTY
-            * this.PUZZLE_DIFFICULTY;
-    const minShuffle = constants.MIN_SHUFFLE
-            * this.PUZZLE_DIFFICULTY
-            * this.PUZZLE_DIFFICULTY;
+    const shuffleRate = this.puzzleDifficulty
+            * this.puzzleDifficulty;
+    const maxShuffle = constants.MAX_SHUFFLE * shuffleRate;
+    const minShuffle = constants.MIN_SHUFFLE * shuffleRate;
     const rand = Math.floor(
       Math.random() * (maxShuffle - minShuffle) + minShuffle,
     );
@@ -222,12 +233,7 @@ class Game {
 
       if (prevOperation) {
         // avoid mutually exclusive moves
-        if (
-          (operation === 'right' && prevOperation === 'left')
-                    || (operation === 'left' && prevOperation === 'right')
-                    || (operation === 'up' && prevOperation === 'down')
-                    || (operation === 'down' && prevOperation === 'up')
-        ) {
+        if (operation === this.reverseOperation(prevOperation)) {
           continue;
         }
       }
@@ -246,7 +252,7 @@ class Game {
         break;
 
       case 'right':
-        if (emptyCol === this.PUZZLE_DIFFICULTY - 1) {
+        if (emptyCol === this.puzzleDifficulty - 1) {
           continue;
         }
         this.moveToDir(constants.DIRECTION.RIGHT);
@@ -258,7 +264,7 @@ class Game {
         this.moveToDir(constants.DIRECTION.UP);
         break;
       case 'down':
-        if (emptyRow === this.PUZZLE_DIFFICULTY - 1) {
+        if (emptyRow === this.puzzleDifficulty - 1) {
           continue;
         }
         this.moveToDir(constants.DIRECTION.DOWN);
@@ -273,7 +279,7 @@ class Game {
   }
 
   getPosition(pos) {
-    return pos.row * this.PUZZLE_DIFFICULTY + pos.col;
+    return pos.row * this.puzzleDifficulty + pos.col;
   }
 
   handleClick(e) {
@@ -298,9 +304,9 @@ class Game {
     // returns row and col of empty tile
     const emptyTilePosition = this.shuffleArray.indexOf(0);
     const rowEmptyTile = Math.floor(
-      emptyTilePosition / this.PUZZLE_DIFFICULTY,
+      emptyTilePosition / this.puzzleDifficulty,
     );
-    const colEmptyTile = emptyTilePosition % this.PUZZLE_DIFFICULTY;
+    const colEmptyTile = emptyTilePosition % this.puzzleDifficulty;
     return {
       col: colEmptyTile,
       row: rowEmptyTile,
@@ -313,8 +319,8 @@ class Game {
 
     const { col, row } = target;
     const { col: emptyCol, row: emptyRow } = empty;
-    const fromX = col * this.SIZE + this.padding;
-    const fromY = row * this.SIZE + this.padding;
+    const fromX = col * this.size + this.padding;
+    const fromY = row * this.size + this.padding;
     let toX;
     let toY;
     let direction;
@@ -325,12 +331,12 @@ class Game {
     ) {
       // shift in column
       if (emptyRow + 1 === row) {
-        toX = col * this.SIZE + this.padding;
-        toY = row * this.SIZE - this.SIZE + this.padding;
+        toX = col * this.size + this.padding;
+        toY = row * this.size - this.size + this.padding;
         direction = constants.DIRECTION.DOWN;
       } else {
-        toX = col * this.SIZE + this.padding;
-        toY = row * this.SIZE + this.SIZE + this.padding;
+        toX = col * this.size + this.padding;
+        toY = row * this.size + this.size + this.padding;
         direction = constants.DIRECTION.UP;
       }
     } else if (
@@ -339,12 +345,12 @@ class Game {
     ) {
       // shift in row
       if (emptyCol + 1 === col) {
-        toX = col * this.SIZE - this.SIZE + this.padding;
-        toY = row * this.SIZE + this.padding;
+        toX = col * this.size - this.size + this.padding;
+        toY = row * this.size + this.padding;
         direction = constants.DIRECTION.RIGHT;
       } else {
-        toX = col * this.SIZE + this.SIZE + this.padding;
-        toY = row * this.SIZE + this.padding;
+        toX = col * this.size + this.size + this.padding;
+        toY = row * this.size + this.padding;
         direction = constants.DIRECTION.LEFT;
       }
     }
@@ -408,14 +414,14 @@ class Game {
         {
           x:
                         this.tileRendering.getRelativeX(e.clientX)
-                        - this.SIZE / 2,
+                        - this.size / 2,
           y:
                         this.tileRendering.getRelativeY(e.clientY)
-                        - this.SIZE / 2,
+                        - this.size / 2,
         },
         {
-          x: col * this.SIZE + this.padding,
-          y: row * this.SIZE + this.padding,
+          x: col * this.size + this.padding,
+          y: row * this.size + this.padding,
         },
         constants.ANIMATION_SETTINGS.moveDuration,
         () => this.doTurnToPos(this.drag.position),
@@ -434,12 +440,12 @@ class Game {
     } = this.tileRendering.getColRow(this.drag.startX, this.drag.startY);
     this.createAnimation(
       {
-        x: this.tileRendering.getRelativeX(e.clientX) - this.SIZE / 2,
-        y: this.tileRendering.getRelativeY(e.clientY) - this.SIZE / 2,
+        x: this.tileRendering.getRelativeX(e.clientX) - this.size / 2,
+        y: this.tileRendering.getRelativeY(e.clientY) - this.size / 2,
       },
       {
-        x: initialCol * this.SIZE + this.padding,
-        y: initialRow * this.SIZE + this.padding,
+        x: initialCol * this.size + this.padding,
+        y: initialRow * this.size + this.padding,
       },
       constants.ANIMATION_SETTINGS.moveHomeDuration,
       () => {
@@ -475,9 +481,9 @@ class Game {
     case constants.DIRECTION.LEFT:
       return tile - 1;
     case constants.DIRECTION.UP:
-      return tile - this.PUZZLE_DIFFICULTY;
+      return tile - this.puzzleDifficulty;
     case constants.DIRECTION.DOWN:
-      return tile + this.PUZZLE_DIFFICULTY;
+      return tile + this.puzzleDifficulty;
     default:
       throw new Error('Unexpected value');
     }
@@ -516,8 +522,8 @@ class Game {
         this.drag.started,
         this.drag.position,
         // shift for centering on cursor
-        this.drag.x - this.SIZE / 2,
-        this.drag.y - this.SIZE / 2,
+        this.drag.x - this.size / 2,
+        this.drag.y - this.size / 2,
       );
     }
   }
@@ -543,7 +549,7 @@ class Game {
       this.audio.playSound('badClick');
       return;
     }
-    const puzzleDiff = this.PUZZLE_DIFFICULTY;
+    const puzzleDiff = this.puzzleDifficulty;
     if (
       !(
         position === emptyTilePosition + puzzleDiff
@@ -581,8 +587,8 @@ class Game {
       document.querySelector('.select').disabled = false;
 
       this.tileRendering.winField(
-        this.PUZZLE_DIFFICULTY,
-        this.SIZE,
+        this.size,
+        this.puzzleDifficulty,
         this.fieldSize,
         this.padding,
       );
@@ -599,7 +605,7 @@ class Game {
       const dayMonth = today.getDate();
 
       let currScores = this.storage.get(
-        `topScoresFor${this.PUZZLE_DIFFICULTY}`,
+        `topScoresFor${this.puzzleDifficulty}`,
       );
 
       const newRecord = {
@@ -630,7 +636,7 @@ class Game {
       }
 
       this.storage.set(
-        `topScoresFor${this.PUZZLE_DIFFICULTY}`,
+        `topScoresFor${this.puzzleDifficulty}`,
         currScores,
       );
     }
@@ -693,8 +699,8 @@ class Game {
     const prevArray = moveHistory[number];
     const prevMovePosition = prevArray.indexOf(0);
     const tile = {
-      row: Math.floor(prevMovePosition / this.PUZZLE_DIFFICULTY),
-      col: prevMovePosition % this.PUZZLE_DIFFICULTY,
+      row: Math.floor(prevMovePosition / this.puzzleDifficulty),
+      col: prevMovePosition % this.puzzleDifficulty,
     };
 
     this.drag.position = prevMovePosition;
@@ -760,8 +766,8 @@ class Game {
 
     if (this.isWin) {
       this.tileRendering.winField(
-        this.SIZE,
-        this.PUZZLE_DIFFICULTY,
+        this.size,
+        this.puzzleDifficulty,
         this.fieldSize,
         this.padding,
       );
@@ -770,8 +776,8 @@ class Game {
     }
 
     this.tileRendering.init(
-      this.SIZE,
-      this.PUZZLE_DIFFICULTY,
+      this.size,
+      this.puzzleDifficulty,
       this.shuffleArray,
       this.padding,
       true,
