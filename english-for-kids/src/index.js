@@ -2,10 +2,12 @@ import { Menu } from "./components/menu";
 import { Game } from "./components/game";
 import { mainPage } from "./components/mainPage";
 import { Card } from "./components/card";
+import * as constants from "./data/constants";
+
 
 class Main {
     constructor() {
-        this.gameMode = false;
+        this.isGameMode = false;
         this.pageId = "main";
         this.card = null;
     }
@@ -14,16 +16,16 @@ class Main {
         mainPage.init((categoryId) => this.loadPageById(categoryId));
         Menu.init((categoryId) => this.loadPageById(categoryId));
         Game.init(() => this.setGameState());
-        this.card = new Card;
+        this.card = new Card(constants.TEMPLATES_NUMBERS.WORD_CARD);
     }
 
     setGameState() {
-        this.gameMode = !this.gameMode;
-        console.log(this.gameMode);
+        this.isGameMode = !this.isGameMode;
+        console.log(this.isGameMode);
         if (this.pageId === "main") {
-            mainPage.toggleStyleMainPage(this.gameMode);
+            mainPage.toggleStyleMainPage(this.isGameMode);
         } else {
-           this.card.toggleStyle(this.gameMode);
+           this.card.toggleStyle(this.isGameMode);
         }
     }
 
@@ -41,9 +43,9 @@ class Main {
         this.pageId = categoryId;
         console.log(this.pageId);
         if (categoryId === "main") {
-            mainPage.renderMainPage(this.gameMode);
+            mainPage.renderMainPage(this.isGameMode);
         } else {
-            this.card.renderCards(categoryId, this.gameMode);
+            this.card.renderCards(categoryId, this.isGameMode);
         }
     }
 }

@@ -2,20 +2,18 @@ import { cardsData } from "../utils/cardsData";
 import { audio } from "../utils/audio";
 
 class Card {
-    constructor() {
-        this.cardTemplate = null;
+    constructor(templateNumber) {
+        this.cardTemplate = document.getElementsByTagName("template")[
+            templateNumber
+        ];
         this.categoryNumber = null;
         this.cardsContainer = document.querySelector(".cards");
     }
-    // init() {
-    // },
 
     renderCards(categoryNumber, trainMode) {
         let wordCards = cardsData.getCategoryCards(categoryNumber);
 
         this.cardsContainer.textContent = "";
-
-        this.cardTemplate = document.getElementsByTagName("template")[0];
 
         console.log(wordCards);
 
@@ -53,22 +51,10 @@ class Card {
                 }
             );
 
-            clon.querySelector(".card").addEventListener("click", function (e) {
-                let rotateIcon = this.closest(".card").querySelector(
-                    ".rotate-icon"
-                );
-
-                let backSide = e.target.closest(".card__back-side");
-
-                if (e.target === rotateIcon || backSide) {
-                    return;
-                }
-
-                let clickedCard = this.closest(".card").getAttribute(
-                    "data-word"
-                );
-                audio.playSound(clickedCard);
-            });
+            clon.querySelector(".card").addEventListener(
+                "click",
+                this.trainHandler
+            );
 
             clon.querySelector(".card").addEventListener(
                 "mouseleave",
@@ -90,6 +76,17 @@ class Card {
         }
     }
 
+    trainHandler(e) {
+        let rotateIcon = e.target.closest(".card").querySelector(".rotate-icon");
+        let clickedCard = e.target.closest(".card").getAttribute("data-word");
+        let backSide = e.target.closest(".card__back-side");
+
+        if (e.target === rotateIcon || backSide) {
+            return;
+        }
+        audio.playSound(clickedCard);
+    }
+
     toggleStyle(gameMode) {
         let cards = document.querySelectorAll(".card");
 
@@ -101,6 +98,9 @@ class Card {
                 image.classList.add("game-mode");
                 icon.classList.add("hide");
                 startBtn.classList.remove("hide");
+                cards.forEach((card) =>
+                    card.removeEventListener("click", this.trainHandler)
+                );
             } else {
                 if (image.classList.contains("game-mode")) {
                     image.classList.remove("game-mode");
@@ -109,6 +109,9 @@ class Card {
                 if (icon.classList.contains("hide")) {
                     icon.classList.remove("hide");
                 }
+                cards.forEach((card) =>
+                    card.addEventListener("click", this.trainHandler)
+                );
             }
         });
     }

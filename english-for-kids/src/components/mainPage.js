@@ -1,4 +1,6 @@
 import { cardsData } from "../utils/cardsData";
+import createElement from "../utils/createElement";
+import * as constants from "../data/constants";
 
 const mainPage = {
     categories: null,
@@ -49,17 +51,23 @@ const mainPage = {
         }
 
         document.querySelectorAll(".card__main-title").forEach((element) => {
-            let src;
-            if (isTrainMode) {
-                src = "../assets/icons/hiclipart2.com.png";
-            } else {
-                src = "../assets/icons/hiclipart1.com.png";
-            }
-            const img = document.createElement("img");
-            img.src = src;
-            img.onload = () => {
-                element.style.backgroundImage = `url(${src})`;
-            };
+            let BackgroundSrc = isTrainMode
+                ? constants.trainImage
+                : constants.gameImage;
+            createElement(
+                "img",
+                null,
+                null,
+                [["src", BackgroundSrc]],
+                [
+                    [
+                        "load",
+                        () => {
+                            element.style.backgroundImage = `url(${BackgroundSrc})`;
+                        },
+                    ],
+                ]
+            );
         });
     },
 };

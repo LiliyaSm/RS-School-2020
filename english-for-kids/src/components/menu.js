@@ -1,6 +1,5 @@
 import { cardsData } from "../utils/cardsData";
-import create from "../utils/create"; // creates DOM elements
-
+import createElement from "../utils/createElement"; 
 
 const Menu = {
     navMenu: null,
@@ -18,7 +17,6 @@ const Menu = {
 
         let listOfCategories = cardsData.getCategoriesList();
 
-        //create main menu link
         this.createMenuItem("Main page", "main");
 
         listOfCategories.forEach((category, i) => {
@@ -35,8 +33,12 @@ const Menu = {
     },
 
     createMenuItem(categoryName, id) {
-        const li = create("li", ["navigation__menu__item"], this.navMenu);
-        const navLink = create("a", null, li, ["href", "#"], ["data-id", id]);
+        const { element: li } = createElement(
+            "li",
+            ["navigation__menu__item"],
+            this.navMenu
+        );
+        const { element: navLink } = createElement("a", null, li, [["href", "#"], ["data-id", id]]);
         navLink.textContent = categoryName;
         navLink.addEventListener("click", (e) => this.loadPage(e));
     },
