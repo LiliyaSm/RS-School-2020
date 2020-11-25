@@ -143,14 +143,10 @@ class Game {
     );
 
     option1.textContent = 'Change field size ';
-    for (
-      let i = this.PUZZLE_DIFFICULTY_LIST._3;
-      i <= this.PUZZLE_DIFFICULTY_LIST._8;
-      i++
-    ) {
-      const option = createElement('option', null, select, ['value', i]);
-      option.textContent = `${i}x${i}`;
-    }
+    Object.values(this.PUZZLE_DIFFICULTY_LIST).forEach((size) => {
+      const option = createElement('option', null, select, ['value', size]);
+      option.textContent = `${size}x${size}`;
+    });
     beginAgain.innerHTML = 'New Game';
     solution.innerHTML = 'Solve';
     menu.innerHTML = 'menu';
@@ -774,9 +770,9 @@ class Game {
 
       bestScores.forEach((el) => {
         const tr = createElement('tr', null, this.table);
-        constants.tableHeader.forEach((name) => {
+        constants.TABLE_HEADERS.forEach((name) => {
           const td = createElement('td', null, tr);
-          td.innerHTML += `${el[name]} `;
+          td.textContent += `${el[name]} `;
         });
       });
     }
