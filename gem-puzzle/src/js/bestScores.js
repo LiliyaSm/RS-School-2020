@@ -18,7 +18,7 @@ export default class BestScores {
       let inserted = false;
       for (let index = 0; index < currScores.length; index++) {
         if (newRecord.moves <= currScores[index].moves) {
-          currScores.splice(index, 0, newRecord);
+          currScores.splice(index, 0, { ...newRecord, date });
           inserted = true;
           break;
         }

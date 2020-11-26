@@ -51,7 +51,6 @@ export default class CreateField {
     for (i = 0; i < this.puzzleDifficulty * this.puzzleDifficulty; i++) {
       piece = {};
       const row = Math.floor(i / this.puzzleDifficulty);
-      // i % 4      0 1 2 3 0 1 2 3
       const col = i % this.puzzleDifficulty;
 
       piece.sx = col * this.pieceWidth;
@@ -74,7 +73,6 @@ export default class CreateField {
     this.context.strokeRect(0, 0, this.canvas.width, this.canvas.height);
 
     for (let i = 0; i < array.length; i++) {
-      // empty tile
       if (array[i] === 0) {
         continue;
       }
@@ -82,12 +80,7 @@ export default class CreateField {
       if (animated && dragPosition === i) {
         continue;
       }
-
-      // i:         0 1 2 3 4 5 itc
-      // i / 4      0 0 0 0
-      //            1 1 1 1
       const row = Math.floor(i / this.puzzleDifficulty);
-      // i % 4      0 1 2 3 0 1 2 3
       const col = i % this.puzzleDifficulty;
       this.drawTile(
         this.size,
@@ -96,7 +89,7 @@ export default class CreateField {
         this.padding + row * this.size,
       );
     }
-    // draw moving tile separatly
+
     if (animated) {
       this.drawTile(this.size, array[dragPosition], dragX, dragY);
     }

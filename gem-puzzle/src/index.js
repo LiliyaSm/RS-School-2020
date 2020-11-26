@@ -33,16 +33,6 @@ class GemPuzzle {
     this.game = null;
   }
 
-  beginAgainHandler() {
-    this.resumeGameHandler();
-    this.restart();
-  }
-
-  quickStartHandler() {
-    if (this.solutionIsShowing) return;
-    this.restart();
-  }
-
   start() {
     this.calculateSize();
     this.tileRendering = new CreateField();
@@ -111,6 +101,16 @@ class GemPuzzle {
     this.timer.resetTimer();
   }
 
+  beginAgainHandler() {
+    this.resumeGameHandler();
+    this.restart();
+  }
+
+  quickStartHandler() {
+    if (this.solutionIsShowing) return;
+    this.restart();
+  }
+
   getDifficultyHandler() {
     return this.puzzleDifficulty;
   }
@@ -143,7 +143,9 @@ class GemPuzzle {
     this.solutionIsShowing = false;
 
     const savedGameObject = LocalStorage.get('15gameObject');
+    if (!savedGameObject) return;
     this.game.load(savedGameObject);
+    this.puzzleDifficulty = savedGameObject.puzzleDifficulty;
     this.calculateSize();
 
     this.tileRendering.setImage(savedGameObject.imageNumber);
@@ -216,44 +218,39 @@ class GemPuzzle {
     );
   }
 
-  calcMoveCoords(empty, target) {
-    // takes col and row of empty and target tiles
-    // returns coords from, coords to and direction; need for clicking animation
-
-    const { col, row } = target;
-    const { col: emptyCol, row: emptyRow } = empty;
-    const fromX = col * this.size + this.padding;
-    const fromY = row * this.size + this.padding;
+  calcMoveCoords(emptyTileColRow, targetTileColRow) {
+    const { col: targetCol, row: targetRow } = targetTileColRow;
+    const { col: emptyCol, row: emptyRow } = emptyTileColRow;
+    const fromX = targetCol * this.size + this.padding;
+    const fromY = targetRow * this.size + this.padding;
     let toX;
     let toY;
     let direction;
+    const sameCols = targetCol === emptyCol;
+    const sameRows = targetRow === emptyRow;
+    const canMoveDown = emptyRow + 1 === targetRow;
+    const canMoveUp = emptyRow - 1 === targetRow;
+    const canMoveLeft = emptyCol + 1 === targetCol;
+    const canMoveRight = emptyCol - 1 === targetCol;
 
-    if (
-      col === emptyCol
-            && (emptyRow + 1 === row || emptyRow - 1 === row)
-    ) {
-      // shift in column
-      if (emptyRow + 1 === row) {
-        toX = col * this.size + this.padding;
-        toY = row * this.size - this.size + this.padding;
+    if (sameCols && (canMoveDown || canMoveUp)) {
+      if (canMoveDown) {
+        toX = fromX;
+        toY = fromY - this.size;
         direction = constants.DIRECTION.DOWN;
       } else {
-        toX = col * this.size + this.padding;
-        toY = row * this.size + this.size + this.padding;
+        toX = fromX;
+        toY = fromY + this.size;
         direction = constants.DIRECTION.UP;
       }
-    } else if (
-      row === emptyRow
-            && (emptyCol + 1 === col || emptyCol - 1 === col)
-    ) {
-      // shift in row
-      if (emptyCol + 1 === col) {
-        toX = col * this.size - this.size + this.padding;
-        toY = row * this.size + this.padding;
+    } else if (sameRows && (canMoveLeft || canMoveRight)) {
+      if (canMoveLeft) {
+        toX = fromX - this.size;
+        toY = fromY;
         direction = constants.DIRECTION.RIGHT;
       } else {
-        toX = col * this.size + this.size + this.padding;
-        toY = row * this.size + this.padding;
+        toX = fromX + this.size;
+        toY = fromY;
         direction = constants.DIRECTION.LEFT;
       }
     }
@@ -368,6 +365,10 @@ class GemPuzzle {
   }
 
   myDown(e) {
+    if (this.animation.started || this.isWin) {
+      this.audio.playSound('badClick');
+      return;
+    }
     const initialPosition = this.getPosition(
       this.tileRendering.getColRow(e.clientX, e.clientY),
     );
@@ -376,27 +377,8 @@ class GemPuzzle {
     const x = this.tileRendering.getRelativeX(e.clientX);
     const y = this.tileRendering.getRelativeY(e.clientY);
 
-    if (this.tileRendering.clickOnEdge(x, y)) {
-      this.audio.playSound('badClick');
-      return;
-    }
-    if (this.animation.started || this.isWin) {
-      this.audio.playSound('badClick');
-      return;
-    }
-    const puzzleDiff = this.puzzleDifficulty;
-    if (
-      !(
-        initialPosition === emptyTilePosition + puzzleDiff
-                || initialPosition === emptyTilePosition - puzzleDiff
-                // we can't move the left tile if emptyTile is in the first column
-                || (initialPosition === emptyTilePosition - 1
-                    && emptyTilePosition % puzzleDiff !== 0)
-                // we can't move the right tile if it is in first column
-                || (initialPosition === emptyTilePosition + 1
-                    && initialPosition % puzzleDiff !== 0)
-      )
-    ) {
+    if (!this.game.moveIsPossible(initialPosition, emptyTilePosition)
+    || this.tileRendering.clickOnEdge(x, y)) {
       this.audio.playSound('badClick');
       return;
     }
@@ -522,8 +504,8 @@ class GemPuzzle {
       this.padding = constants.PADDING_LARGE;
       this.isLarge = true;
     } else {
-      this.padding = constants.PADDING_SMALL;
       this.fieldSize = constants.FIELD_SIZE_SMALL;
+      this.padding = constants.PADDING_SMALL;
       this.isLarge = false;
     }
     this.calculateSize();
@@ -535,7 +517,6 @@ class GemPuzzle {
         this.fieldSize,
         this.padding,
       );
-
       return;
     }
 

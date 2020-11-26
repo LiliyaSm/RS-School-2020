@@ -7,11 +7,10 @@ export default class Audio {
   }
 
   init() {
-    this.parent.appendChild(this.createAudio());
+    this.parent.appendChild(Audio.createAudio());
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  createAudio() {
+  static createAudio() {
     const fragment = document.createDocumentFragment();
     sounds.forEach((sound) => {
       const audio = document.createElement('audio');
@@ -24,7 +23,6 @@ export default class Audio {
 
   playSound(code) {
     if (!this.soundOn) return;
-    // if (!this.soundIsOn) return;
     const audio = document.querySelector(`audio[src*=${code}]`);
 
     if (!audio) {

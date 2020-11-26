@@ -57,21 +57,20 @@ export default class Game {
     const shuffleRate = this.puzzleDifficulty * this.puzzleDifficulty;
     const maxShuffle = constants.MAX_SHUFFLE * shuffleRate;
     const minShuffle = constants.MIN_SHUFFLE * shuffleRate;
-    const rand = Math.floor(
+    const repeatTimes = Math.floor(
       Math.random() * (maxShuffle - minShuffle) + minShuffle,
     );
 
-    // repeat rand times
     let prevOperation;
-    for (let i = 0; i <= rand; i++) {
+    for (let i = 0; i <= repeatTimes; i++) {
       const randOperation = Math.floor(
         Math.random() * constants.SHIFTS.length,
       );
       const operation = constants.SHIFTS[randOperation];
 
       if (prevOperation) {
-        // avoid mutually exclusive moves
-        if (operation === Game.reverseOperation(prevOperation)) {
+        const mutuallyExclusiveMoves = operation === Game.reverseOperation(prevOperation);
+        if (mutuallyExclusiveMoves) {
           continue;
         }
       }
@@ -81,28 +80,32 @@ export default class Game {
         row: emptyRow,
       } = this.getEmptyTileLocation();
 
+      const lastRow = emptyRow === this.puzzleDifficulty - 1;
+      const lastCol = emptyCol === this.puzzleDifficulty - 1;
+      const firstCol = emptyCol === 0;
+      const firstRow = emptyRow === 0;
+
       switch (operation) {
       case 'left':
-        if (emptyCol === 0) {
+        if (firstCol) {
           continue;
         }
         this.moveToDir(constants.DIRECTION.LEFT);
         break;
-
       case 'right':
-        if (emptyCol === this.puzzleDifficulty - 1) {
+        if (lastCol) {
           continue;
         }
         this.moveToDir(constants.DIRECTION.RIGHT);
         break;
       case 'up':
-        if (emptyRow === 0) {
+        if (firstRow) {
           continue;
         }
         this.moveToDir(constants.DIRECTION.UP);
         break;
       case 'down':
-        if (emptyRow === this.puzzleDifficulty - 1) {
+        if (lastRow) {
           continue;
         }
         this.moveToDir(constants.DIRECTION.DOWN);
@@ -117,7 +120,6 @@ export default class Game {
   }
 
   moveToDir(direction) {
-    // function for shuffling win map
     const emptyTilePosition = this.tiles.indexOf(0);
     const targetMove = this.useDirection(emptyTilePosition, direction);
     this.moveToPos(targetMove);
@@ -167,5 +169,20 @@ export default class Game {
 
   get isWin() {
     return arraysEqual(this.winMap, this.tiles);
+  }
+
+  moveIsPossible(initialPosition, emptyTilePosition) {
+    const puzzleDiff = this.puzzleDifficulty;
+
+    return (
+      initialPosition === emptyTilePosition + puzzleDiff
+            || initialPosition === emptyTilePosition - puzzleDiff
+            // we can't move the left tile if emptyTile is in the first column
+            || (initialPosition === emptyTilePosition - 1
+                && emptyTilePosition % puzzleDiff !== 0)
+            // we can't move the right tile if it is in first column
+            || (initialPosition === emptyTilePosition + 1
+                && initialPosition % puzzleDiff !== 0)
+    );
   }
 }
