@@ -31,7 +31,6 @@ export default function createElement(
         });
     }
 
-    console.log(event);
 
     return {
         element: element,
