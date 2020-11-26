@@ -34,7 +34,7 @@ export default class Audio {
     audio.play();
   }
 
-  toggleSound() {
+  toggleSoundHandler() {
     this.soundOn = !this.soundOn;
   }
 }

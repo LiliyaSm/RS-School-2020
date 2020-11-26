@@ -13,7 +13,7 @@ export default class CreateField {
       Math.random() * Math.floor(constants.NUMBER_OF_IMAGES),
     );
     this.initArray = null;
-    this.canvasAbsSize = this.canvas.getBoundingClientRect(); // abs. size of element
+    this.canvasAbsSize = this.canvas.getBoundingClientRect();
   }
 
   init(size, puzzleDifficulty, array, padding, saveImage) {
@@ -26,7 +26,6 @@ export default class CreateField {
     this.img.addEventListener('load', (e) => this.loadImage(e));
 
     this.initArray = array;
-
     this.pieces = [];
   }
 
@@ -81,7 +80,6 @@ export default class CreateField {
       }
 
       if (animated && dragPosition === i) {
-        // draw separately dragging tile
         continue;
       }
 
@@ -111,13 +109,11 @@ export default class CreateField {
     ctx.shadowBlur = 4;
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 2;
-    // ctx.fillRect(x + 5, y + 5, size - 5, size - 5);
-    // get coords from array
+
     const imgCoords = this.pieces[text - 1];
 
     if (imgCoords === undefined) return;
 
-    // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
     ctx.drawImage(
       this.img,
       imgCoords.sx,
@@ -135,10 +131,9 @@ export default class CreateField {
     ctx.font = '14px Arial';
     ctx.draggable = true;
 
-    // compute text position
-    const xNumber = x + 5;
-    const yNumber = y + 15;
-    ctx.fillText(text, xNumber, yNumber);
+    const textPosX = x + constants.TEXT_PADDING_X;
+    const textPosY = y + constants.TEXT_PADDING_Y;
+    ctx.fillText(text, textPosX, textPosY);
   }
 
   setImage(imageNumber) {
@@ -165,8 +160,8 @@ export default class CreateField {
     this.context.strokeRect(
       0,
       0,
-      this.canvas.width - 5,
-      this.canvas.height - 5,
+      this.canvas.width - constants.RECT_PADDING,
+      this.canvas.height - constants.RECT_PADDING,
     );
     this.context.drawImage(
       this.img,
@@ -195,6 +190,7 @@ export default class CreateField {
     return mousePositionY - this.canvasAbsSize.top;
   }
 
+  // prevent - clicking on edge of field causes a bug
   clickOnEdge(x, y) {
     const rightEdge = this.canvasAbsSize.width
             - (this.padding + constants.SAVE_EDGE_SPACE);

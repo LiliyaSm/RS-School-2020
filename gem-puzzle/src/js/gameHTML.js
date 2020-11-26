@@ -12,7 +12,6 @@ export default class GameHTML {
   }
 
   init() {
-    this.storage = new LocalStorage();
     this.body.setAttribute('class', 'container-fluid');
     this.createHeader();
     this.createField();
@@ -65,6 +64,7 @@ export default class GameHTML {
       ['menu-container'],
       this.overlay.element,
     );
+
     this.bestScoresContainer = createElement(
       'div',
       ['best-scores-container', 'hide'],
@@ -160,9 +160,9 @@ export default class GameHTML {
       footer.element,
       [['click', this.callbacks.quickStart]],
     );
-    const select = createElement('select', ['select'], footer.element, [
+    this.select = createElement('select', ['select'], footer.element, [
       ['change', this.callbacks.logValue],
-    ]);
+    ]).element;
     const solution = createElement('button', ['solution'], footer.element, [
       ['click', this.callbacks.showSolution],
     ]);
@@ -170,7 +170,7 @@ export default class GameHTML {
     const options = createElement(
       'option',
       null,
-      select.element,
+      this.select,
       null,
       ['selected', ''],
       ['selected', 'selected'],
@@ -183,7 +183,7 @@ export default class GameHTML {
     options.element.textContent = 'Change field size ';
 
     Object.values(constants.PUZZLE_DIFFICULTY_LIST).forEach((size) => {
-      const option = createElement('option', null, select.element, null, [
+      const option = createElement('option', null, this.select, null, [
         'value',
         size,
       ]);
@@ -196,8 +196,8 @@ export default class GameHTML {
   }
 
   goBackToMenu(e) {
-    this.showElement(this.menuContainer.element);
-    this.hideElement(e.target.parentNode);
+    GameHTML.showElement(this.menuContainer.element);
+    GameHTML.hideElement(e.target.parentNode);
     if (e.target.parentNode.querySelector('.temporary')) {
       e.target.parentNode.removeChild(
         e.target.parentNode.querySelector('.temporary'),
@@ -209,14 +209,14 @@ export default class GameHTML {
     const curDifficulty = this.callbacks.getDifficulty();
 
     this.clearMenuNotification();
-    this.hideElement(this.menuContainer.element);
-    this.showElement(this.bestScoresContainer.element);
+    GameHTML.hideElement(this.menuContainer.element);
+    GameHTML.showElement(this.bestScoresContainer.element);
 
     while (this.table.element.rows.length > 1) {
       this.table.element.deleteRow(1);
     }
 
-    const bestScores = this.storage.get(`topScoresFor${curDifficulty}`);
+    const bestScores = LocalStorage.get(`topScoresFor${curDifficulty}`);
     if (!bestScores) {
       const div = createElement(
         'div',
@@ -271,19 +271,19 @@ export default class GameHTML {
     this.notificationText.element.classList.add('zoom');
   }
 
-  hideElement(element) {
+  static hideElement(element) {
     element.classList.add('hide');
   }
 
-  showElement(element) {
+  static showElement(element) {
     element.classList.remove('hide');
   }
 
   hideOverlay(isHide) {
     if (isHide) {
-      this.hideElement(this.overlay.element);
+      GameHTML.hideElement(this.overlay.element);
     } else {
-      this.showElement(this.overlay.element);
+      GameHTML.showElement(this.overlay.element);
     }
   }
 
@@ -293,5 +293,13 @@ export default class GameHTML {
 
   showWinNotification(moveCounter, time) {
     this.winContainer.element.textContent = `Ура! Вы решили головоломку за ${time} и ${moveCounter} ходов`;
+  }
+
+  disableSelect(isDisabled) {
+    if (isDisabled) {
+      this.select.disabled = true;
+    } else {
+      this.select.disabled = false;
+    }
   }
 }

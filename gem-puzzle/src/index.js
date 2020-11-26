@@ -7,21 +7,12 @@ import 'regenerator-runtime/runtime';
 import LocalStorage from './js/storage';
 import GameHTML from './js/gameHTML';
 import * as constants from './js/constants';
+import Game from './js/game';
+import createAnimation from './js/animation';
 
-function arraysEqual(a, b) {
-  for (let i = 0; i < a.length; ++i) {
-    if (a[i] !== b[i]) return false;
-  }
-  return true;
-}
-
-class Game {
-  constructor(defDifficulty, storage) {
+class GemPuzzle {
+  constructor(defDifficulty) {
     this.puzzleDifficulty = defDifficulty;
-    this.storage = storage;
-    this.winMap = this.createWinMap();
-    this.moveHistory = [[...this.winMap]];
-    this.shuffleArray = this.shuffleTiles();
     this.canvas = null;
     this.moveCounter = 0;
     this.timer = null;
@@ -36,19 +27,18 @@ class Game {
       position: null,
       startX: 0,
       startY: 0,
-      x: 0,
-      y: 0,
     };
 
     this.solutionIsShowing = false;
+    this.game = null;
   }
 
-  beginAgain() {
-    this.resumeGame();
+  beginAgainHandler() {
+    this.resumeGameHandler();
     this.restart();
   }
 
-  quickStart() {
+  quickStartHandler() {
     if (this.solutionIsShowing) return;
     this.restart();
   }
@@ -56,8 +46,9 @@ class Game {
   start() {
     this.calculateSize();
     this.tileRendering = new CreateField();
-    this.bestScores = new BestScores(() => this.getDifficulty());
+    this.bestScores = new BestScores(() => this.getDifficultyHandler());
     this.canvas = this.tileRendering.canvas;
+    this.canvas.onmousedown = (e) => this.myDown(e);
 
     this.createHTML();
     this.audio = new Audio(this.gameHTML);
@@ -65,10 +56,12 @@ class Game {
 
     this.padding = constants.PADDING_LARGE;
 
+    this.game = new Game(this.puzzleDifficulty);
+
     this.tileRendering.init(
       this.size,
       this.puzzleDifficulty,
-      this.shuffleArray,
+      this.game.tiles,
       this.padding,
     );
 
@@ -81,16 +74,16 @@ class Game {
 
   createHTML() {
     this.gameHTML = new GameHTML(document.querySelector('body'), {
-      logValue: (e) => this.logValue(e),
-      quickStart: (e) => this.quickStart(e),
-      beginAgain: (e) => this.beginAgain(e),
-      showSolution: (e) => this.showSolution(e),
+      logValue: (e) => this.logValueHandler(e),
+      quickStart: (e) => this.quickStartHandler(e),
+      beginAgain: (e) => this.beginAgainHandler(e),
+      showSolution: (e) => this.showSolutionHandler(e),
       saveGameHandler: (e) => this.saveGameHandler(e),
       loadGameHandler: (e) => this.loadGameHandler(e),
-      showMenu: (e) => this.showMenu(e),
-      toggleSound: (e) => this.audio.toggleSound(e),
-      resumeGame: () => this.resumeGame(),
-      getDifficulty: (e) => this.getDifficulty(e),
+      showMenu: (e) => this.showMenuHandler(e),
+      toggleSound: (e) => this.audio.toggleSoundHandler(e),
+      resumeGame: () => this.resumeGameHandler(),
+      getDifficulty: (e) => this.getDifficultyHandler(e),
     });
     this.gameHTML.init();
     this.gameHTML.appendCanvas(this.canvas);
@@ -104,25 +97,21 @@ class Game {
     this.solutionIsShowing = false;
     this.animation.started = false;
 
-    this.winMap = this.createWinMap();
-    this.moveHistory = [[...this.winMap]];
-
-    this.shuffleArray = this.shuffleTiles();
+    this.game.restart(this.puzzleDifficulty);
     this.tileRendering.init(
       this.size,
       this.puzzleDifficulty,
-      this.shuffleArray,
+      this.game.tiles,
       this.padding,
       saveImage,
     );
     this.canvas = this.tileRendering.canvas;
 
     this.resetCounter();
-
     this.timer.resetTimer();
   }
 
-  getDifficulty() {
+  getDifficultyHandler() {
     return this.puzzleDifficulty;
   }
 
@@ -133,14 +122,13 @@ class Game {
     }
 
     this.gameHTML.addAnimation('Game saved!');
-    this.storage.set('15gameObject', {
-      shuffleArray: this.shuffleArray,
-      timer: this.timer.getSeconds(),
-      counter: this.moveCounter,
-      PUZZLE_DIFFICULTY: this.puzzleDifficulty,
-      imageNumber: this.tileRendering.getImage(),
-      solution: this.moveHistory,
-    });
+    const savedGameObject = this.game.save();
+    savedGameObject.timer = this.timer.getSeconds();
+    savedGameObject.counter = this.moveCounter;
+    savedGameObject.puzzleDifficulty = this.puzzleDifficulty;
+    savedGameObject.imageNumber = this.tileRendering.getImage();
+
+    LocalStorage.set('15gameObject', savedGameObject);
   }
 
   calculateSize() {
@@ -154,10 +142,8 @@ class Game {
     }
     this.solutionIsShowing = false;
 
-    const savedGameObject = this.storage.get('15gameObject');
-    this.shuffleArray = savedGameObject.shuffleArray;
-    this.moveHistory = savedGameObject.solution;
-    this.puzzleDifficulty = savedGameObject.PUZZLE_DIFFICULTY;
+    const savedGameObject = LocalStorage.get('15gameObject');
+    this.game.load(savedGameObject);
     this.calculateSize();
 
     this.tileRendering.setImage(savedGameObject.imageNumber);
@@ -165,7 +151,7 @@ class Game {
     this.tileRendering.init(
       this.size,
       this.puzzleDifficulty,
-      this.shuffleArray,
+      this.game.tiles,
       this.padding,
       true,
     );
@@ -173,12 +159,12 @@ class Game {
     this.moveCounter = savedGameObject.counter;
     this.gameHTML.redrawCounter(this.moveCounter);
 
-    this.resumeGame(savedGameObject.timer);
+    this.resumeGameHandler(savedGameObject.timer);
 
     this.canvas = this.tileRendering.canvas;
   }
 
-  logValue(e) {
+  logValueHandler(e) {
     if (this.solutionIsShowing) return;
     this.puzzleDifficulty = Number(e.target.value);
     this.calculateSize();
@@ -195,94 +181,18 @@ class Game {
     this.gameHTML.redrawCounter(this.moveCounter);
   }
 
-  createWinMap() {
-    //  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0];
-    const arraySize = this.puzzleDifficulty * this.puzzleDifficulty;
-    const result = [...Array(arraySize + 1).keys()].slice(1);
-    result[arraySize - 1] = 0;
-    return result;
-  }
-
-  reverseOperation(operation) {
-    switch (operation) {
-    case 'right':
-      return 'left';
-    case 'left':
-      return 'right';
-    case 'up':
-      return 'down';
-    case 'down':
-      return 'up';
-    }
-  }
-
-  shuffleTiles() {
-    this.shuffleArray = [...this.winMap];
-    const shuffleRate = this.puzzleDifficulty
-            * this.puzzleDifficulty;
-    const maxShuffle = constants.MAX_SHUFFLE * shuffleRate;
-    const minShuffle = constants.MIN_SHUFFLE * shuffleRate;
-    const rand = Math.floor(
-      Math.random() * (maxShuffle - minShuffle) + minShuffle,
-    );
-
-    // repeat rand times
-    let prevOperation;
-    for (let i = 0; i <= rand; i++) {
-      const randOperation = Math.floor(
-        Math.random() * constants.SHIFTS.length,
-      );
-      const operation = constants.SHIFTS[randOperation];
-
-      if (prevOperation) {
-        // avoid mutually exclusive moves
-        if (operation === this.reverseOperation(prevOperation)) {
-          continue;
-        }
-      }
-
-      const {
-        col: emptyCol,
-        row: emptyRow,
-      } = this.getEmptyTileLocation();
-
-      switch (operation) {
-      case 'left':
-        if (emptyCol === 0) {
-          continue;
-        }
-        this.moveToDir(constants.DIRECTION.LEFT);
-        break;
-
-      case 'right':
-        if (emptyCol === this.puzzleDifficulty - 1) {
-          continue;
-        }
-        this.moveToDir(constants.DIRECTION.RIGHT);
-        break;
-      case 'up':
-        if (emptyRow === 0) {
-          continue;
-        }
-        this.moveToDir(constants.DIRECTION.UP);
-        break;
-      case 'down':
-        if (emptyRow === this.puzzleDifficulty - 1) {
-          continue;
-        }
-        this.moveToDir(constants.DIRECTION.DOWN);
-        break;
-
-      default:
-        throw new Error('Unexpected value');
-      }
-      prevOperation = operation;
-    }
-    return this.shuffleArray;
-  }
-
   getPosition(pos) {
     return pos.row * this.puzzleDifficulty + pos.col;
+  }
+
+  renderAnimationFrame(pos) {
+    this.tileRendering.createTiles(
+      this.game.tiles,
+      this.animation.started,
+      this.animation.position,
+      pos.x,
+      pos.y,
+    );
   }
 
   handleClick(e) {
@@ -291,29 +201,19 @@ class Game {
 
     this.animation.started = true;
 
-    const emptyTile = this.getEmptyTileLocation();
+    const emptyTile = this.game.getEmptyTileLocation();
     const moveCoords = this.calcMoveCoords(emptyTile, tile);
 
-    this.createAnimation(
+    createAnimation(
       moveCoords.from,
       moveCoords.to,
       duration,
-      // call to change array only after animation
-      () => this.doTurnToDir(moveCoords.direction),
+      (pos) => this.renderAnimationFrame(pos),
+      () => {
+        this.animation.started = false;
+        this.doTurnToDir(moveCoords.direction);
+      },
     );
-  }
-
-  getEmptyTileLocation() {
-    // returns row and col of empty tile
-    const emptyTilePosition = this.shuffleArray.indexOf(0);
-    const rowEmptyTile = Math.floor(
-      emptyTilePosition / this.puzzleDifficulty,
-    );
-    const colEmptyTile = emptyTilePosition % this.puzzleDifficulty;
-    return {
-      col: colEmptyTile,
-      row: rowEmptyTile,
-    };
   }
 
   calcMoveCoords(empty, target) {
@@ -371,60 +271,38 @@ class Game {
     };
   }
 
-  createAnimation(from, to, duration, callback) {
-    let currFrame = 0;
-    // Calculate total frames for current animation based on frameRate
-    const totalFrames = (duration * constants.ANIMATION_SETTINGS.frameRate) / 1000;
-
-    // this func is recursively called to draw each frame
-    const drawFrame = () => {
-      const currPosX = from.x + ((to.x - from.x) * currFrame) / totalFrames;
-      const currPosY = from.y + ((to.y - from.y) * currFrame) / totalFrames;
-      // call render function to update the screen
-      this.tileRendering.createTiles(
-        this.shuffleArray,
-        this.animation.started,
-        this.animation.position,
-        currPosX,
-        currPosY,
-      );
-      currFrame += 1;
-      // check if we not exceed totalFrame - set a timeout to call drawFrame
-      // after the desired delay
-      if (currFrame <= totalFrames) {
-        setTimeout(drawFrame, duration / totalFrames);
-      } else {
-        this.animation.started = false;
-        if (callback) callback();
-      }
+  getRelativeCoordinates(e) {
+    return {
+      x: this.tileRendering.getRelativeX(e.clientX) - this.size / 2,
+      y: this.tileRendering.getRelativeY(e.clientY) - this.size / 2,
     };
-    // call drawFrame to start animation (draw the first frame)
-    drawFrame();
+  }
+
+  convertPositionToCoordinates(position) {
+    return {
+      x: position.col * this.size + this.padding,
+      y: position.row * this.size + this.padding,
+    };
   }
 
   handleMove(e) {
     // user mouse up above right position
     const { col, row } = this.tileRendering.getColRow(e.clientX, e.clientY);
-
     const position = this.getPosition({ col, row });
+    const emptyTilePosition = this.game.tiles.indexOf(0);
 
-    const emptyTilePosition = this.shuffleArray.indexOf(0);
     if (this.animation.started && position === emptyTilePosition) {
-      this.createAnimation(
-        {
-          x:
-                        this.tileRendering.getRelativeX(e.clientX)
-                        - this.size / 2,
-          y:
-                        this.tileRendering.getRelativeY(e.clientY)
-                        - this.size / 2,
-        },
-        {
-          x: col * this.size + this.padding,
-          y: row * this.size + this.padding,
-        },
+      const from = this.getRelativeCoordinates(e);
+      const to = this.convertPositionToCoordinates({ col, row });
+      createAnimation(
+        from,
+        to,
         constants.ANIMATION_SETTINGS.moveDuration,
-        () => this.doTurnToPos(this.animation.position),
+        (pos) => this.renderAnimationFrame(pos),
+        () => {
+          this.animation.started = false;
+          this.doTurnToPos(this.animation.position);
+        },
       );
     } else {
       this.animateReturn(e);
@@ -433,71 +311,33 @@ class Game {
 
   animateReturn(e) {
     // user mouse up above wrong position returns tile on initial place
-    const {
-      col: initialCol,
-      row: initialRow,
-    } = this.tileRendering.getColRow(this.animation.startX, this.animation.startY);
-    this.createAnimation(
-      {
-        x: this.tileRendering.getRelativeX(e.clientX) - this.size / 2,
-        y: this.tileRendering.getRelativeY(e.clientY) - this.size / 2,
-      },
-      {
-        x: initialCol * this.size + this.padding,
-        y: initialRow * this.size + this.padding,
-      },
+    const initialPos = this.tileRendering.getColRow(
+      this.animation.startX,
+      this.animation.startY,
+    );
+    const from = this.getRelativeCoordinates(e);
+    const to = this.convertPositionToCoordinates(initialPos);
+    createAnimation(
+      from,
+      to,
       constants.ANIMATION_SETTINGS.moveHomeDuration,
+      (pos) => this.renderAnimationFrame(pos),
       () => {
         this.animation.started = false;
-        this.animation.x = 0;
-        this.animation.y = 0;
         this.animation.position = null;
         this.audio.playSound('badClick');
       },
     );
   }
 
-  moveToDir(direction) {
-    // function for shuffling win map
-    const emptyTilePosition = this.shuffleArray.indexOf(0);
-    const targetMove = this.useDirection(emptyTilePosition, direction);
-    this.moveToPos(targetMove);
-  }
-
-  moveToPos(tilePos) {
-    // swipes in array 0 and new position and saves history
-    const emptyTilePosition = this.shuffleArray.indexOf(0);
-    this.shuffleArray[emptyTilePosition] = this.shuffleArray[tilePos];
-    this.shuffleArray[tilePos] = 0;
-    this.moveHistory.push([...this.shuffleArray]);
-  }
-
-  useDirection(tile, direction) {
-    // returns new tile position
-    switch (direction) {
-    case constants.DIRECTION.RIGHT:
-      return tile + 1;
-    case constants.DIRECTION.LEFT:
-      return tile - 1;
-    case constants.DIRECTION.UP:
-      return tile - this.puzzleDifficulty;
-    case constants.DIRECTION.DOWN:
-      return tile + this.puzzleDifficulty;
-    default:
-      throw new Error('Unexpected value');
-    }
-  }
-
   doTurnToDir(direction) {
-    // player turn
-    const emptyTilePosition = this.shuffleArray.indexOf(0);
-    const targetPos = this.useDirection(emptyTilePosition, direction);
+    const emptyTilePosition = this.game.tiles.indexOf(0);
+    const targetPos = this.game.useDirection(emptyTilePosition, direction);
     this.doTurnToPos(targetPos);
   }
 
   doTurnToPos(pos) {
-    // player turn
-    this.moveToPos(pos);
+    this.game.moveToPos(pos);
     this.increaseCounter();
     this.audio.playSound('click');
     this.checkIfWin();
@@ -506,58 +346,55 @@ class Game {
   tileIsMoving(e) {
     const diffX = Math.abs(e.clientX - this.animation.startX);
     const diffY = Math.abs(e.clientY - this.animation.startY);
-    return (diffX > constants.DRAG_SENSITIVITY || diffY > constants.DRAG_SENSITIVITY);
+    return (
+      diffX > constants.DRAG_SENSITIVITY
+            || diffY > constants.DRAG_SENSITIVITY
+    );
   }
 
   myMove(e) {
     if (this.tileIsMoving(e)) {
       this.animation.started = true;
-      this.animation.x = this.tileRendering.getRelativeX(e.clientX);
-      this.animation.y = this.tileRendering.getRelativeY(e.clientY);
+      const coords = this.getRelativeCoordinates(e);
 
       this.tileRendering.createTiles(
-        this.shuffleArray,
+        this.game.tiles,
         this.animation.started,
         this.animation.position,
-        // shift for centering on cursor
-        this.animation.x - this.size / 2,
-        this.animation.y - this.size / 2,
+        coords.x,
+        coords.y,
       );
     }
   }
 
   myDown(e) {
-    // initial place of potential moving
-    const position = this.getPosition(
+    const initialPosition = this.getPosition(
       this.tileRendering.getColRow(e.clientX, e.clientY),
     );
 
-    const emptyTilePosition = this.shuffleArray.indexOf(0);
-
+    const emptyTilePosition = this.game.tiles.indexOf(0);
     const x = this.tileRendering.getRelativeX(e.clientX);
     const y = this.tileRendering.getRelativeY(e.clientY);
 
-    // prevent - clicking on edge of field causes a bug
     if (this.tileRendering.clickOnEdge(x, y)) {
       this.audio.playSound('badClick');
       return;
     }
     if (this.animation.started || this.isWin) {
-      // check if shifting is available
       this.audio.playSound('badClick');
       return;
     }
     const puzzleDiff = this.puzzleDifficulty;
     if (
       !(
-        position === emptyTilePosition + puzzleDiff
-                || position === emptyTilePosition - puzzleDiff
+        initialPosition === emptyTilePosition + puzzleDiff
+                || initialPosition === emptyTilePosition - puzzleDiff
                 // we can't move the left tile if emptyTile is in the first column
-                || (position === emptyTilePosition - 1
+                || (initialPosition === emptyTilePosition - 1
                     && emptyTilePosition % puzzleDiff !== 0)
                 // we can't move the right tile if it is in first column
-                || (position === emptyTilePosition + 1
-                    && position % puzzleDiff !== 0)
+                || (initialPosition === emptyTilePosition + 1
+                    && initialPosition % puzzleDiff !== 0)
       )
     ) {
       this.audio.playSound('badClick');
@@ -566,9 +403,7 @@ class Game {
 
     this.animation.startX = e.clientX;
     this.animation.startY = e.clientY;
-    this.animation.x = this.tileRendering.getRelativeX(e.clientX);
-    this.animation.y = this.tileRendering.getRelativeY(e.clientY);
-    this.animation.position = position;
+    this.animation.position = initialPosition;
 
     this.addCanvasEvents();
   }
@@ -586,12 +421,12 @@ class Game {
   }
 
   checkIfWin() {
-    if (arraysEqual(this.winMap, this.shuffleArray)) {
+    if (this.game.isWin) {
       this.isWin = true;
       this.timer.stop();
       this.solutionIsShowing = false;
       this.canvas.onmousedown = (e) => this.myDown(e);
-      document.querySelector('.select').disabled = false;
+      this.gameHTML.disableSelect(false);
 
       this.tileRendering.winField(
         this.size,
@@ -611,10 +446,6 @@ class Game {
     if (!this.tileIsMoving(event)) {
       this.handleClick(event);
     } else if (this.animation.started) this.handleMove(event);
-
-    // set to initial values
-    this.animation.x = 0;
-    this.animation.y = 0;
     this.deleteCanvasEvents();
   }
 
@@ -623,27 +454,26 @@ class Game {
     this.animateReturn(e);
   }
 
-  showMenu() {
+  showMenuHandler() {
     if (this.solutionIsShowing) return;
     this.timer.stop();
     this.gameHTML.hideOverlay(false);
   }
 
-  resumeGame(newTime) {
+  resumeGameHandler(newTime) {
     this.timer.start(newTime);
     this.gameHTML.clearMenuNotification();
     this.gameHTML.hideOverlay(true);
   }
 
-  showSolution() {
+  showSolutionHandler() {
     if (this.solutionIsShowing) return;
 
-    const moveHistory = this.deleteRepeatingMoves();
-    // already won
+    const moveHistory = this.game.getMoveHistory();
     if (moveHistory.length <= 1) return;
 
     this.solutionIsShowing = true;
-    document.querySelector('.select').disabled = true;
+    this.gameHTML.disableSelect(true);
     this.canvas.onmousedown = null;
 
     this.revertMoveRecursively(moveHistory, moveHistory.length - 2);
@@ -658,17 +488,16 @@ class Game {
     };
 
     this.animation.position = prevMovePosition;
-
     this.animation.started = true;
 
-    const emptyTile = this.getEmptyTileLocation();
+    const emptyTile = this.game.getEmptyTileLocation();
     const moveCoords = this.calcMoveCoords(emptyTile, tile);
 
-    this.createAnimation(
+    createAnimation(
       moveCoords.from,
       moveCoords.to,
       constants.ANIMATION_SETTINGS.solveDuration,
-      // call to change array only after animation
+      (pos) => this.renderAnimationFrame(pos),
       () => {
         this.doTurnToDir(moveCoords.direction);
         setTimeout(() => {
@@ -678,25 +507,6 @@ class Game {
         }, constants.ANIMATION_SETTINGS.solveDuration);
       },
     );
-  }
-
-  deleteRepeatingMoves() {
-    const moveHistory = [...this.moveHistory];
-    for (let i = 1; i <= moveHistory.length - 1; i++) {
-      // from the end
-      const prevArray = moveHistory[moveHistory.length - i];
-      for (let j = 0; j < moveHistory.length - i; j++) {
-        // we look before reaching the checked array
-        if (arraysEqual(prevArray, moveHistory[j])) {
-          // delete unnecessary moveHistory
-          const end = moveHistory.length - i + 1;
-          const begin = j + 1;
-          moveHistory.splice(begin, end - begin);
-          break;
-        }
-      }
-    }
-    return moveHistory;
   }
 
   resizeField() {
@@ -732,7 +542,7 @@ class Game {
     this.tileRendering.init(
       this.size,
       this.puzzleDifficulty,
-      this.shuffleArray,
+      this.game.tiles,
       this.padding,
       true,
     );
@@ -740,7 +550,6 @@ class Game {
 }
 
 document.body.onload = function load() {
-  const game = new Game(constants.DEFAULT_FIELD_SIZE, new LocalStorage());
-  game.start();
-  game.canvas.onmousedown = (e) => game.myDown(e);
+  const gemPuzzle = new GemPuzzle(constants.DEFAULT_FIELD_SIZE, new LocalStorage());
+  gemPuzzle.start();
 };

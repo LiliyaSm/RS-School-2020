@@ -2,21 +2,18 @@ import LocalStorage from './storage';
 
 export default class BestScores {
   constructor(getDifficulty) {
-    this.storage = new LocalStorage();
     this.getDifficulty = getDifficulty;
   }
 
   addRecords(newRecord) {
-    const date = this.getDateString();
-    newRecord.date = date;
-
+    const date = BestScores.getDateString();
     const difficulty = this.getDifficulty();
 
-    let currScores = this.storage.get(`topScoresFor${difficulty}`);
+    let currScores = LocalStorage.get(`topScoresFor${difficulty}`);
 
     if (!currScores) {
       currScores = [];
-      currScores.push(newRecord);
+      currScores.push({ ...newRecord, date });
     } else {
       let inserted = false;
       for (let index = 0; index < currScores.length; index++) {
@@ -27,7 +24,7 @@ export default class BestScores {
         }
       }
       if (!inserted) {
-        currScores.push(newRecord);
+        currScores.push({ ...newRecord, date });
       }
     }
     // take only first 10 results
@@ -35,10 +32,10 @@ export default class BestScores {
       currScores = currScores.slice(0, 10);
     }
 
-    this.storage.set(`topScoresFor${difficulty}`, currScores);
+    LocalStorage.set(`topScoresFor${difficulty}`, currScores);
   }
 
-  getDateString() {
+  static getDateString() {
     const today = new Date();
     const year = today.getFullYear();
     const month = today.getMonth() + 1;

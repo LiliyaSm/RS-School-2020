@@ -45,3 +45,7 @@ export const ANIMATION_SETTINGS = {
 export const SAVE_EDGE_SPACE = 5;
 
 export const NUMBER_OF_IMAGES = 151;
+
+export const RECT_PADDING = 5;
+export const TEXT_PADDING_X = 5;
+export const TEXT_PADDING_Y = 15;
