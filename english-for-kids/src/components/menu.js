@@ -1,13 +1,16 @@
 import { cardsData } from "../utils/cardsData";
-import createElement from "../utils/createElement"; 
+import createElement from "../utils/createElement";
+// import EventObserver from "../components/observer";
 
 const Menu = {
     navMenu: null,
     menuIcon: null,
     overlay: null,
     loadPageById: null,
+    observer: null,
 
     init(loadPageById) {
+
         this.navMenu = document.querySelector(".navigation__menu");
         this.menuIcon = document.querySelector(".navigation__icon");
         this.overlay = document.querySelector(".overlay");
@@ -38,17 +41,25 @@ const Menu = {
             ["navigation__menu__item"],
             this.navMenu
         );
-        const { element: navLink } = createElement("a", null, li, [["href", "#"], ["data-id", id]]);
+        const { element: navLink } = createElement("a", null, li, [
+            ["href", "#"],
+            ["data-id", id],
+        ]);
         navLink.textContent = categoryName;
         navLink.addEventListener("click", (e) => this.loadPage(e));
     },
 
     loadPage(e) {
         let categoryId = e.target.getAttribute("data-id");
-        this.loadPageById(categoryId);
-        this.closeMenu();        
+        let navigate = new CustomEvent("navigate", {
+            detail: {
+                categoryId,
+            },
+            bubbles: true,
+        });
+        e.target.dispatchEvent(navigate);
+        this.closeMenu();
     },
-
 
     toggleMenu() {
         this.navMenu.classList.toggle("slide_menu");

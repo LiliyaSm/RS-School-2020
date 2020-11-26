@@ -1,23 +1,31 @@
-const audio  = {
-    playSound(audioName) {
-        // let audioElement = new Audio(`../assets/audio/${audioName}.mp3`);
+const audio = {
+    // playSound(audioName) {
+    //     // let audioElement = new Audio(`../assets/audio/${audioName}.mp3`);
 
-        document.querySelector(`[data-word =${audioName}]`);
-        let card = document.querySelector(`.card[data-word =${audioName}]`);
-        let audioElement = card.querySelector("audio");
-        console.log(audioElement);
+    //     document.querySelector(`[data-word =${audioName}]`);
+    //     let card = document.querySelector(`.card[data-word =${audioName}]`);
+    //     let audioElement = card.querySelector("audio");
+    //     console.log(audioElement);
 
-        // audioElement.addEventListener("loadeddata", () => {
-        //     let duration = audioElement.duration;
-        //     audioElement.play();
+    //     // audioElement.addEventListener("loadeddata", () => {
+    //     //     let duration = audioElement.duration;
+    //     //     audioElement.play();
 
-        //     // The duration variable now holds the duration (in seconds) of the audio clip
-        // });
+    //     //     // The duration variable now holds the duration (in seconds) of the audio clip
+    //     // });
 
-        if (!audio) {
-            return;
-        }
-        //prevent playing before the end of the previous same audio
+    //     if (!audio) {
+    //         return;
+    //     }
+    //     //prevent playing before the end of the previous same audio
+    //     if (!audioElement.ended && 0 < audioElement.currentTime) {
+    //         return;
+    //     }
+    //     audioElement.currentTime = 0;
+    //     audioElement.play();
+    // },
+
+    playAudioEl(audioElement) {
         if (!audioElement.ended && 0 < audioElement.currentTime) {
             return;
         }

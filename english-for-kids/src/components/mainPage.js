@@ -1,14 +1,15 @@
 import { cardsData } from "../utils/cardsData";
 import createElement from "../utils/createElement";
 import * as constants from "../data/constants";
+import Card from "./card";
 
 const mainPage = {
     categories: null,
     cards: document.querySelector(".cards"),
-    loadPageById: null,
+    // loadPageById: null,
 
-    init(loadPageById) {
-        this.loadPageById = loadPageById;
+    init() {
+        // this.loadPageById = loadPageById;
         cardsData.loadData();
         this.categories = cardsData.getCategoriesList();
         this.renderMainPage(false);
@@ -36,7 +37,13 @@ const mainPage = {
                     .closest(".card")
                     .getAttribute("data-category");
 
-                this.loadPageById(categoryId);
+                    let navigate = new CustomEvent("navigate", {
+                        detail: {
+                            categoryId,
+                        },
+                        bubbles: true,
+                    });
+                    e.target.dispatchEvent(navigate);
             });
             this.cards.appendChild(clon);
         });

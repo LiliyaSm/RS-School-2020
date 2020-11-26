@@ -1,7 +1,8 @@
 import { Menu } from "./components/menu";
 import { Game } from "./components/game";
 import { mainPage } from "./components/mainPage";
-import { Card } from "./components/card";
+import CardPage  from "./components/cardPage";
+// import EventObserver from "./components/observer";
 import * as constants from "./data/constants";
 
 
@@ -9,14 +10,21 @@ class Main {
     constructor() {
         this.isGameMode = false;
         this.pageId = "main";
-        this.card = null;
+        this.cardPage = null;
     }
 
     init() {
-        mainPage.init((categoryId) => this.loadPageById(categoryId));
-        Menu.init((categoryId) => this.loadPageById(categoryId));
-        Game.init(() => this.setGameState());
-        this.card = new Card(constants.TEMPLATES_NUMBERS.WORD_CARD);
+    document.body.addEventListener("navigate", (event) => {
+        this.loadPageById(event.detail.categoryId);
+    });
+
+        mainPage.init();
+        Menu.init();
+        Game.init();
+        document.querySelector(".toggle").addEventListener("change", (e) => {
+            this.setGameState();
+        });
+        this.cardPage = new CardPage();
     }
 
     setGameState() {
@@ -25,7 +33,7 @@ class Main {
         if (this.pageId === "main") {
             mainPage.toggleStyleMainPage(this.isGameMode);
         } else {
-           this.card.toggleStyle(this.isGameMode);
+           this.cardPage.toggleStyle(this.isGameMode);
         }
     }
 
@@ -45,7 +53,7 @@ class Main {
         if (categoryId === "main") {
             mainPage.renderMainPage(this.isGameMode);
         } else {
-            this.card.renderCards(categoryId, this.isGameMode);
+            this.cardPage.renderCards(categoryId, this.isGameMode);
         }
     }
 }

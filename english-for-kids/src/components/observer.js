@@ -1,4 +1,4 @@
-class EventObserver {
+export default class EventObserver {
     constructor() {
         this.observers = {};
     }
