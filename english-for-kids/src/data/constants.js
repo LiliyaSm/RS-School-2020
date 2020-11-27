@@ -12,8 +12,8 @@ export const EVENT_TYPE = {
 
 
 export const MAIN_PAGE = {
-    mainPageName: "Main page",
-    mainPageID: "main"
+    textContent: "Main page",
+    mainPageName: "MaidPage",
 };
 
 // export const pages = {

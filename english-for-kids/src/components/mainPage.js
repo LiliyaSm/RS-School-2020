@@ -54,8 +54,6 @@ export default class MainPage {
     }
 
     toggleStyle(isTrainMode) {
-
-
         document.querySelectorAll(".card__main-title").forEach((element) => {
             let BackgroundSrc = isTrainMode
                 ? constants.trainImage
@@ -75,6 +73,10 @@ export default class MainPage {
                 ]
             );
         });
+    }
+
+    leavePage() {
+        return;
     }
 }
 

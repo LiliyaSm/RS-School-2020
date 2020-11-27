@@ -7,7 +7,7 @@ import * as constants from "./data/constants";
 class Main {
     constructor() {
         this.isGameMode = false;
-        this.pageId = "main";
+        this.pageID = "main";
         this.cardPage = null;
         this.currPage = null;
     }
@@ -35,13 +35,13 @@ class Main {
 
         document.body.addEventListener("navigate", (event) => {
             console.log(event.detail);
-            this.pageId = event.detail.categoryId;
+            this.pageID = event.detail.categoryId;
             this.pageName = event.detail.pageName;
-            this.currentPage.leave();
-            this.currentPage = pages[pageName];
-            this.currentPage.init();
+            this.currPage.leavePage();
+            this.currPage = pages[this.pageName];
+            this.currPage.init();
+            this.currPage.renderPage(this.isGameMode, this.pageID);
 
-            this.loadPageById(this.pageId);
         });
     }
 
@@ -52,18 +52,8 @@ class Main {
             this.currentPage.toggleStyle(this.isGameMode);
     }
 
-    loadPageById(categoryId) {
-        if (document.querySelector(".active")) {
-            document.querySelector(".active").classList.remove("active");
-        }
-        document
-            .querySelector(
-                `.navigation__menu__item a[data-id = '${categoryId}']`
-            )
-            .classList.add("active");
-
-            this.currentPage.renderPage(this.isGameMode, categoryId);
-        }
+    // loadPageById(categoryId) {    
+    //     }
     
 }
 

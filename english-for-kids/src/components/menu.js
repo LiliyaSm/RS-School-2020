@@ -1,5 +1,5 @@
 import { cardsData } from "../utils/cardsData";
-import MenuItem from "../utils/createElement";
+import MenuItem from "./MenuItem";
 import * as constants from "../data/constants";
 
 // import EventObserver from "../components/observer";
@@ -11,23 +11,24 @@ export default class Menu {
         this.overlay = null;
         this.loadPageById = null;
         this.observer = null;
+        this.itemsObjects = [];
     }
 
     init() {
         this.menuIcon = document.querySelector(".navigation__icon");
         this.overlay = document.querySelector(".overlay");
-        this.input = document.querySelector("input");        
+        this.input = document.querySelector("input");
+        this.navMenu = document.querySelector(".navigation__menu");
 
         let listOfCategories = cardsData.getCategoriesList();
 
-        this.createMenuItem(
+        this.createItem(
             constants.MAIN_PAGE.mainPageName,
-            constants.MAIN_PAGE.mainPageID
+            constants.MAIN_PAGE.textContent
         );
 
         listOfCategories.forEach((category, i) => {
-            let item = new MenuItem("CardPage", category, i);
-            item.addEventListener("click", this.loadPage);
+            this.createItem("cardPage", category, i);
         });
 
         this.menuIcon.addEventListener("click", (e) => {
@@ -39,19 +40,28 @@ export default class Menu {
         });
     }
 
-    loadPage(e) {
-        let pageName = this.pageName;
-        let categoryId = this.dataId;
-        let navigate = new CustomEvent("navigate", {
-            detail: {
-                categoryId,
-                pageName,
-            },
-            bubbles: true,
+    createItem(PageName, textContent, i) {
+        let item = new MenuItem(PageName, textContent, i);
+        this.navMenu.appendChild(item.createMenuItem());
+        item.navLink.addEventListener("click", (e) => {
+            this.closeMenu();
         });
-        e.target.dispatchEvent(navigate);
-        this.closeMenu();
+        this.itemsObjects.push(item);
     }
+
+    // loadPage(e) {
+    //     let pageName = item.pageName;
+    //     let categoryId = item.dataId;
+    //     let navigate = new CustomEvent("navigate", {
+    //         detail: {
+    //             categoryId,
+    //             pageName,
+    //         },
+    //         bubbles: true,
+    //     });
+    //     e.target.dispatchEvent(navigate);
+    // }
+
 
 
     toggleMenu() {

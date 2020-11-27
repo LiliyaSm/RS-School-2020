@@ -1,26 +1,50 @@
 import createElement from "../utils/createElement";
 
 export default class MenuItem {
-    constructor() {
-        this.dataId = null;
-        this.pageName = null;
+    constructor(pageName, categoryName, pageID) {
+        this.pageID = pageID;
+        this.pageName = pageName;
         this.navMenu = document.querySelector(".navigation__menu");
-        this.pageName = null;
-
+        this.categoryName = categoryName;
+        this.navLink = null;
     }
 
-    createMenuItem(pageName, pageID, categoryName) {
+    createMenuItem() {
         const { element: li } = createElement(
             "li",
             ["navigation__menu__item"],
             this.navMenu
         );
-        this.dataId = pageID;
-        this.pageName = pageName;
-
         const { element: navLink } = createElement("a", null, li, [
             ["href", "#"],
         ]);
-        navLink.textContent = categoryName;
+        this.navLink = navLink;
+        this.navLink.textContent = this.categoryName;
+
+        this.navLink.addEventListener("click", (e) => {
+            this.clickHandler(e);
+        });
+        return li;
+    }
+
+    clickHandler(e) {
+        let pageName = this.pageName;
+        let categoryId = this.pageID;
+        let navigate = new CustomEvent("navigate", {
+            detail: {
+                categoryId,
+                pageName,
+            },
+            bubbles: true,
+        });
+        e.target.dispatchEvent(navigate);
+        this.becomeActive(e.target)
+    }
+
+    becomeActive(link) {
+        if (this.navMenu.querySelector(".active")) {
+            this.navMenu.querySelector(".active").classList.remove("active");
+        }
+        link.classList.add("active");
     }
 }
