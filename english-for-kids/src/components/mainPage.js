@@ -1,53 +1,26 @@
 import { cardsData } from "../utils/cardsData";
 import createElement from "../utils/createElement";
 import * as constants from "../data/constants";
-import Card from "./card";
+import MainCard from "./mainCard";
 
 export default class MainPage {
     constructor() {
         this.categories = null;
-        this.cards = document.querySelector(".cards");
+        this.cardsContainer = document.querySelector(".cards");
     }
-    // loadPageById: null,
 
     init() {
-        // this.loadPageById = loadPageById;
         cardsData.loadData();
         this.categories = cardsData.getCategoriesList();
         this.renderPage(false);
     }
 
     renderPage(isTrainMode) {
-        this.cards.textContent = "";
-
-        let cardTemplate = document.getElementsByTagName("template")[1];
+        this.cardsContainer.textContent = "";
 
         this.categories.forEach((category, i) => {
-            let clon = cardTemplate.content.cloneNode(true);
-            clon.querySelector(".card").setAttribute("data-category", `${i}`);
-
-            let name = cardsData.getCategoryImage(i);
-            clon.querySelector(".card__image img").setAttribute(
-                "src",
-                `../assets/${name}`
-            );
-
-            clon.querySelector(".card__main-title").textContent = category;
-
-            clon.querySelector(".card").addEventListener("click", (e) => {
-                let categoryId = e.target
-                    .closest(".card")
-                    .getAttribute("data-category");
-
-                let navigate = new CustomEvent("navigate", {
-                    detail: {
-                        categoryId,
-                    },
-                    bubbles: true,
-                });
-                e.target.dispatchEvent(navigate);
-            });
-            this.cards.appendChild(clon);
+            let mainCard = new MainCard(constants.TEMPLATES_NUMBERS.MAIN_CARD);
+            this.cardsContainer.appendChild(mainCard.createCard(category, i));
         });
 
         this.toggleStyle(isTrainMode);
@@ -79,4 +52,3 @@ export default class MainPage {
         return;
     }
 }
-

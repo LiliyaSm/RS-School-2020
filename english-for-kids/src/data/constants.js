@@ -2,7 +2,7 @@ export const trainImage = "../assets/icons/hiclipart2.com.png";
 export const gameImage = "../assets/icons/hiclipart1.com.png";
 export const TEMPLATES_NUMBERS = {
     WORD_CARD: 0,
-    GAME_CARD: 1
+    MAIN_CARD: 1
 };
 
 
@@ -13,7 +13,7 @@ export const EVENT_TYPE = {
 
 export const MAIN_PAGE = {
     textContent: "Main page",
-    mainPageName: "MaidPage",
+    mainPageName: "mainPage",
 };
 
 // export const pages = {

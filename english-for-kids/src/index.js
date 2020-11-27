@@ -1,5 +1,5 @@
 import Menu from "./components/menu";
-import MainPage  from "./components/mainPage";
+import MainPage from "./components/mainPage";
 import CardPage from "./components/cardPage";
 // import EventObserver from "./components/observer";
 import * as constants from "./data/constants";
@@ -7,18 +7,14 @@ import * as constants from "./data/constants";
 class Main {
     constructor() {
         this.isGameMode = false;
-        this.pageID = "main";
-        this.cardPage = null;
         this.currPage = null;
     }
 
     init() {
-
         const pages = {
             mainPage: new MainPage(),
             cardPage: new CardPage(),
         };
-
 
         this.currPage = pages.mainPage;
         this.currPage.init();
@@ -30,8 +26,6 @@ class Main {
             this.setGameState();
         });
 
-        this.cardPage = new CardPage();
-        this.cardPage.init();
 
         document.body.addEventListener("navigate", (event) => {
             console.log(event.detail);
@@ -41,20 +35,17 @@ class Main {
             this.currPage = pages[this.pageName];
             this.currPage.init();
             this.currPage.renderPage(this.isGameMode, this.pageID);
-
         });
     }
 
     setGameState() {
         this.isGameMode = !this.isGameMode;
         console.log(this.isGameMode);
-
-            this.currentPage.toggleStyle(this.isGameMode);
+        this.currPage.toggleStyle(this.isGameMode);
     }
 
-    // loadPageById(categoryId) {    
+    // loadPageById(categoryId) {
     //     }
-    
 }
 
 window.addEventListener("DOMContentLoaded", () => {

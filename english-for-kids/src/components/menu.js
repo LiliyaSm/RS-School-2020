@@ -22,10 +22,11 @@ export default class Menu {
 
         let listOfCategories = cardsData.getCategoriesList();
 
-        this.createItem(
+        let mainMenuItem = this.createItem(
             constants.MAIN_PAGE.mainPageName,
             constants.MAIN_PAGE.textContent
         );
+        mainMenuItem.becomeActive();
 
         listOfCategories.forEach((category, i) => {
             this.createItem("cardPage", category, i);
@@ -35,8 +36,8 @@ export default class Menu {
             this.toggleMenu();
         });
 
-        this.overlay.addEventListener("click", function (event) {
-            Menu.closeMenu();
+        this.overlay.addEventListener("click", (e) => {
+            this.closeMenu();
         });
     }
 
@@ -46,8 +47,10 @@ export default class Menu {
         item.navLink.addEventListener("click", (e) => {
             this.closeMenu();
         });
-        this.itemsObjects.push(item);
+        return item
+        // this.itemsObjects.push(item);
     }
+    
 
     // loadPage(e) {
     //     let pageName = item.pageName;

@@ -20,8 +20,8 @@ export default class CardPage {
     }
 
     renderPage(isGameMode, categoryNumber) {
-        let wordCards = cardsData.getCategoryCards(categoryNumber);
         this.cardsContainer.textContent = "";
+        let wordCards = cardsData.getCategoryCards(categoryNumber);
         wordCards.forEach((object) => {
             let card = new Card(constants.TEMPLATES_NUMBERS.WORD_CARD);
             this.cardsObjects.push(card);

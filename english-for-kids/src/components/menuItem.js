@@ -38,13 +38,11 @@ export default class MenuItem {
             bubbles: true,
         });
         e.target.dispatchEvent(navigate);
-        this.becomeActive(e.target)
+        this.becomeActive();
     }
 
-    becomeActive(link) {
-        if (this.navMenu.querySelector(".active")) {
-            this.navMenu.querySelector(".active").classList.remove("active");
-        }
-        link.classList.add("active");
+    becomeActive() {
+        this.navMenu.querySelector(".active").classList.remove("active");
+        this.navLink.classList.add("active");
     }
 }
