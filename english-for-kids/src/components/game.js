@@ -1,16 +1,11 @@
-const Game = {
-    init(setGameState) {
-        
-
-        document.querySelector(".start-btn").addEventListener("click", (e) => {
-            this.startGame();
-        });
-    },
+export default class Game {
+    init() {          
+    }
 
 
     startGame() {
+        console.log("game")
         
     }
 };
 
-export { Game };

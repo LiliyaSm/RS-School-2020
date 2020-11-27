@@ -9,3 +9,14 @@ export const TEMPLATES_NUMBERS = {
 export const EVENT_TYPE = {
     NAVIGATE: "navigate"
 }
+
+
+export const MAIN_PAGE = {
+    mainPageName: "Main page",
+    mainPageID: "main"
+};
+
+// export const pages = {
+//     mainPage: new MainPage(),
+//     cardsPage: new CardsPage(),
+// };

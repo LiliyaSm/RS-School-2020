@@ -3,19 +3,21 @@ import createElement from "../utils/createElement";
 import * as constants from "../data/constants";
 import Card from "./card";
 
-const mainPage = {
-    categories: null,
-    cards: document.querySelector(".cards"),
+export default class MainPage {
+    constructor() {
+        this.categories = null;
+        this.cards = document.querySelector(".cards");
+    }
     // loadPageById: null,
 
     init() {
         // this.loadPageById = loadPageById;
         cardsData.loadData();
         this.categories = cardsData.getCategoriesList();
-        this.renderMainPage(false);
-    },
+        this.renderPage(false);
+    }
 
-    renderMainPage(isTrainMode) {
+    renderPage(isTrainMode) {
         this.cards.textContent = "";
 
         let cardTemplate = document.getElementsByTagName("template")[1];
@@ -37,25 +39,22 @@ const mainPage = {
                     .closest(".card")
                     .getAttribute("data-category");
 
-                    let navigate = new CustomEvent("navigate", {
-                        detail: {
-                            categoryId,
-                        },
-                        bubbles: true,
-                    });
-                    e.target.dispatchEvent(navigate);
+                let navigate = new CustomEvent("navigate", {
+                    detail: {
+                        categoryId,
+                    },
+                    bubbles: true,
+                });
+                e.target.dispatchEvent(navigate);
             });
             this.cards.appendChild(clon);
         });
 
-        this.toggleStyleMainPage(isTrainMode);
-    },
+        this.toggleStyle(isTrainMode);
+    }
 
-    toggleStyleMainPage(isTrainMode) {
-        let startBtn = document.querySelector(".start-btn");
-        if (startBtn && !startBtn.classList.contains("hide")) {
-            startBtn.classList.add("hide");
-        }
+    toggleStyle(isTrainMode) {
+
 
         document.querySelectorAll(".card__main-title").forEach((element) => {
             let BackgroundSrc = isTrainMode
@@ -76,7 +75,6 @@ const mainPage = {
                 ]
             );
         });
-    },
-};
+    }
+}
 
-export { mainPage };

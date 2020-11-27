@@ -1,5 +1,6 @@
 import { cardsData } from "../utils/cardsData";
 import Card from "./card";
+import Game from "./game";
 import * as constants from "../data/constants";
 
 export default class CardPage {
@@ -7,9 +8,18 @@ export default class CardPage {
         this.cardsContainer = document.querySelector(".cards");
         this.categoryNumber = null;
         this.cardsObjects = [];
+        this.startBtn = null;
     }
-    
-    renderCards(categoryNumber, trainMode) {
+
+    init() {
+        let game = new Game();
+        this.startBtn = document.querySelector(".start-btn");
+        this.startBtn.addEventListener("click", (e) => {
+            game.startGame();
+        });
+    }
+
+    renderPage(isGameMode, categoryNumber) {
         let wordCards = cardsData.getCategoryCards(categoryNumber);
         this.cardsContainer.textContent = "";
         wordCards.forEach((object) => {
@@ -18,19 +28,28 @@ export default class CardPage {
 
             this.cardsContainer.appendChild(card.createCard(object));
         });
+
+        if (isGameMode) {
+            this.toggleStyle(isGameMode);
+        }
     }
 
     toggleStyle(gameMode) {
-         this.cardsObjects.forEach(function (card)  {
-            //  startBtn.classList.toggle("hide");
-             card.rotateIcon.classList.toggle("hide");
-             if (gameMode) {
+        this.startBtn.classList.toggle("hide");
+
+        this.cardsObjects.forEach(function (card) {
+            card.rotateIcon.classList.toggle("hide");
+            if (gameMode) {
                 card.image.classList.add("game-mode");
                 card.removeEvent();
-             } else {
-                card.image.classList.remove("game-mode");                 
+            } else {
+                card.image.classList.remove("game-mode");
                 card.addEvent();
-             }
-         });
+            }
+        });
+    }
+
+    leavePage() {
+        this.startBtn.classList.add("hide");
     }
 }
