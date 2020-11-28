@@ -8,14 +8,15 @@ export default class CardPage {
         this.cardsContainer = document.querySelector(".cards");
         this.cardsObjects = [];
         this.startBtn = null;
+        this.game = null;
     }
 
     init() {
+        this.beginGameListener = (e) => this.beginGame(e);
+        this.repeatWordListener = (e) => this.repeatWord(e);
         this.startBtn = document.querySelector(".start-btn");
-        this.startBtn.addEventListener("click", (e) => {
-            let game = new Game(this.cardsObjects);
-            game.startGame();
-        });
+        this.startBtn.addEventListener("click", this.beginGameListener);
+
     }
 
     renderPage(isGameMode, categoryName) {
@@ -50,5 +51,18 @@ export default class CardPage {
 
     leavePage() {
         this.startBtn.classList.add("hide");
+        // this.startBtn.addEventListener("click", this.beginGame);
+    }
+
+    beginGame() {
+        this.game = new Game(this.cardsObjects);
+        this.game.init();
+        this.game.startGame();
+        this.startBtn.removeEventListener("click", this.beginGameListener);
+        this.startBtn.addEventListener("click", this.repeatWordListener);
+    }
+
+    repeatWord(e) {
+        this.game.repeatWord();
     }
 }

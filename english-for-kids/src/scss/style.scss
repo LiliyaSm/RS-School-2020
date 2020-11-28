@@ -297,7 +297,7 @@ span {
     }
 }
 
-.card:hover {
+ .card:not(.fade):hover  {
     transform: scale(1.05);
 }
 
@@ -430,4 +430,11 @@ span {
 .start-btn:hover {
     // background-image: linear-gradient(to right, #fc6076, #ff9a44, #ef9d43, #e75516);
     background-position: 100% 0;
+}
+
+
+.fade{
+    transform: scale(0.95, 0.95);
+    filter: blur(1px) grayscale(30%) opacity(50%);
+    pointer-events: none;
 }

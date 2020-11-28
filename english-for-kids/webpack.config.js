@@ -35,6 +35,17 @@ module.exports = {
                     loader: "file-loader",
                 },
             },
+            {
+                test: /\.(mp3|wav|wma|ogg)$/,
+                use: {
+                    loader: "file-loader",
+                    options: {
+                        name: "[name].[contenthash].[ext]",
+                        outputPath: "assets/audio/",
+                        publicPath: "assets/audio/",
+                    },
+                },
+            },
         ],
     },
     plugins: [

@@ -2,7 +2,7 @@ import { audio } from "../utils/audio";
 
 export default class Card {
     constructor(templateNumber) {
-        this.cardTemplate = document.getElementsByTagName("template")[
+        this.template = document.getElementsByTagName("template")[
             templateNumber
         ];
         // this.categoryNumber = null;
@@ -12,24 +12,24 @@ export default class Card {
     }
 
     createCard(object) {
-        let clon = this.cardTemplate.content.cloneNode(true);
-        this.cardDiv = clon.querySelector(".card");
-        this.audioFile = clon.querySelector("audio");
-        this.image = clon.querySelector(".card__front-side img");
-        this.rotateIcon = clon.querySelector(".rotate-icon");
+        let cardTemplate = this.template.content.cloneNode(true);
+        this.cardDiv = cardTemplate.querySelector(".card");
+        this.audioFile = cardTemplate.querySelector("audio");
+        this.image = cardTemplate.querySelector(".card__front-side img");
+        this.rotateIcon = cardTemplate.querySelector(".rotate-icon");
         this.dataWord = object.word;
 
         this.image.setAttribute("src", `../assets/${object.image}`);
 
-        clon.querySelector(".card__back-side img").setAttribute(
+        cardTemplate.querySelector(".card__back-side img").setAttribute(
             "src",
             `../assets/${object.image}`
         );
 
         this.audioFile.setAttribute("src", `../assets/${object.audioSrc}`);
 
-        clon.querySelector(".card__title--eng").textContent = object.word;
-        clon.querySelector(".card__title--rus").textContent =
+        cardTemplate.querySelector(".card__title--eng").textContent = object.word;
+        cardTemplate.querySelector(".card__title--rus").textContent =
             object.translation;
 
         this.rotateIcon.addEventListener("click", (e) => {
@@ -45,7 +45,7 @@ export default class Card {
         this.gameHandlerListener = (e) => this.gameHandler(e);
         this.addEvent();
 
-        return clon;
+        return cardTemplate;
     }
     trainHandler(e) {
         let rotateIcon = e.target
@@ -59,7 +59,7 @@ export default class Card {
         this.playAudioEl();
     }
 
-    gameHandler(e){
+    gameHandler(e) {
         let dataWord = this.dataWord;
         let cardClick = new CustomEvent("cardClick", {
             detail: {
@@ -80,8 +80,8 @@ export default class Card {
         this.audioFile.play();
     }
 
-    addFade(){
-        this.cardDiv.classList.add("fade")
+    addFade() {
+        this.cardDiv.classList.add("fade");
     }
 
     removeEvent() {
@@ -89,8 +89,16 @@ export default class Card {
         this.cardDiv.addEventListener("click", this.gameHandlerListener);
     }
 
+    removeGameEvent() {
+        this.cardDiv.removeEventListener("click", this.gameHandlerListener);
+    }
+    
     addEvent() {
         this.cardDiv.addEventListener("click", this.trainHandlerListener);
-        this.cardDiv.removeEventListener("click", this.gameHandlerListener);
+        this.removeGameEvent();
+    }
+
+    addFade() {
+        this.cardDiv.classList.add("fade");
     }
 }

@@ -16,6 +16,13 @@ export const MAIN_PAGE = {
     mainPageName: "mainPage",
 };
 
+export const SOUNDS = {
+    wrongAnswer: "error.mp3",
+    rightAnswer: "correct.mp3",
+    winGame: "correct.mp3",
+    loseGame: "correct.mp3",
+}; 
+
 // export const pages = {
 //     mainPage: new MainPage(),
 //     cardsPage: new CardsPage(),
