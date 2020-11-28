@@ -29,12 +29,12 @@ class Main {
 
         document.body.addEventListener("navigate", (event) => {
             console.log(event.detail);
-            this.pageID = event.detail.categoryId;
+            let categoryName = event.detail.categoryName;
             this.pageName = event.detail.pageName;
             this.currPage.leavePage();
             this.currPage = pages[this.pageName];
             this.currPage.init();
-            this.currPage.renderPage(this.isGameMode, this.pageID);
+            this.currPage.renderPage(this.isGameMode, categoryName);
         });
     }
 

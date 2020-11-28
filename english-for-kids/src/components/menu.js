@@ -39,35 +39,28 @@ export default class Menu {
         this.overlay.addEventListener("click", (e) => {
             this.closeMenu();
         });
+
+        document.body.addEventListener("navigate", (event) => {
+            let categoryName = event.detail.categoryName;
+            let curItem = this.itemsObjects.find(
+                (item) => {return item.categoryName === categoryName}
+            );
+            curItem.becomeActive();
+        })
     }
 
-    createItem(PageName, textContent, i) {
-        let item = new MenuItem(PageName, textContent, i);
+    createItem(pageName, textContent, i) {
+        let item = new MenuItem(pageName, textContent);
         this.navMenu.appendChild(item.createMenuItem());
         item.navLink.addEventListener("click", (e) => {
             this.closeMenu();
         });
+        this.itemsObjects.push(item);
         return item
-        // this.itemsObjects.push(item);
     }
     
 
-    // loadPage(e) {
-    //     let pageName = item.pageName;
-    //     let categoryId = item.dataId;
-    //     let navigate = new CustomEvent("navigate", {
-    //         detail: {
-    //             categoryId,
-    //             pageName,
-    //         },
-    //         bubbles: true,
-    //     });
-    //     e.target.dispatchEvent(navigate);
-    // }
-
-
-
-    toggleMenu() {
+   toggleMenu() {
         this.navMenu.classList.toggle("slide_menu");
         this.navMenu.classList.toggle("hide_menu");
         this.overlay.classList.toggle("hide");

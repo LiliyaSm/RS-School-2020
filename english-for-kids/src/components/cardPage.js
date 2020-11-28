@@ -6,22 +6,21 @@ import * as constants from "../data/constants";
 export default class CardPage {
     constructor() {
         this.cardsContainer = document.querySelector(".cards");
-        this.categoryNumber = null;
         this.cardsObjects = [];
         this.startBtn = null;
     }
 
     init() {
-        let game = new Game();
         this.startBtn = document.querySelector(".start-btn");
         this.startBtn.addEventListener("click", (e) => {
+            let game = new Game(this.cardsObjects);
             game.startGame();
         });
     }
 
-    renderPage(isGameMode, categoryNumber) {
+    renderPage(isGameMode, categoryName) {
         this.cardsContainer.textContent = "";
-        let wordCards = cardsData.getCategoryCards(categoryNumber);
+        let wordCards = cardsData.getCategoryCards(categoryName);
         wordCards.forEach((object) => {
             let card = new Card(constants.TEMPLATES_NUMBERS.WORD_CARD);
             this.cardsObjects.push(card);

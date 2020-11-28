@@ -7,6 +7,7 @@ export default class MainPage {
     constructor() {
         this.categories = null;
         this.cardsContainer = document.querySelector(".cards");
+        this.cardsObjects = [];
     }
 
     init() {
@@ -21,16 +22,15 @@ export default class MainPage {
         this.categories.forEach((category, i) => {
             let mainCard = new MainCard(constants.TEMPLATES_NUMBERS.MAIN_CARD);
             this.cardsContainer.appendChild(mainCard.createCard(category, i));
+            this.cardsObjects.push(mainCard);
         });
 
         this.toggleStyle(isTrainMode);
     }
 
     toggleStyle(isTrainMode) {
-        document.querySelectorAll(".card__main-title").forEach((element) => {
-            let BackgroundSrc = isTrainMode
-                ? constants.trainImage
-                : constants.gameImage;
+        this.cardsObjects.forEach((element) => {
+            let BackgroundSrc = this.getTitleBgr(isTrainMode);
             createElement(
                 "img",
                 null,
@@ -40,12 +40,16 @@ export default class MainPage {
                     [
                         "load",
                         () => {
-                            element.style.backgroundImage = `url(${BackgroundSrc})`;
+                            element.title.style.backgroundImage = `url(${BackgroundSrc})`;
                         },
                     ],
                 ]
             );
         });
+    }
+
+    getTitleBgr(isTrainMode) {
+        return isTrainMode ? constants.trainImage : constants.gameImage;
     }
 
     leavePage() {

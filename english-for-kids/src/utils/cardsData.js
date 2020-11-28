@@ -10,8 +10,8 @@ const cardsData = {
         this.categories = cards[0];
     },
 
-    getCategoryCards(categoryNumber) {
-        return this.wordCards[categoryNumber];
+    getCategoryCards(categoryName) {
+        return this.wordCards[this.categories.indexOf(categoryName)];
     },
 
     getCategoriesList() {

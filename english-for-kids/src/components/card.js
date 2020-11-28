@@ -5,7 +5,7 @@ export default class Card {
         this.cardTemplate = document.getElementsByTagName("template")[
             templateNumber
         ];
-        this.categoryNumber = null;
+        // this.categoryNumber = null;
         this.dataWord = null;
         this.audioFile = null;
         this.cardDiv = null;
@@ -41,7 +41,8 @@ export default class Card {
                 document.querySelector(".flipped").classList.remove("flipped");
             }
         });
-        this.clickEventListener = (e) => this.trainHandler(e);
+        this.trainHandlerListener = (e) => this.trainHandler(e);
+        this.gameHandlerListener = (e) => this.gameHandler(e);
         this.addEvent();
 
         return clon;
@@ -55,15 +56,41 @@ export default class Card {
         if (e.target === rotateIcon || backSide) {
             return;
         }
-        audio.playAudioEl(this.audioFile);
+        this.playAudioEl();
+    }
+
+    gameHandler(e){
+        let dataWord = this.dataWord;
+        let cardClick = new CustomEvent("cardClick", {
+            detail: {
+                dataWord,
+            },
+            bubbles: true,
+        });
+        e.target.dispatchEvent(cardClick);
+    }
+
+    playAudioEl() {
+        const isAudioPlaying =
+            !this.audioFile.ended && 0 < this.audioFile.currentTime;
+        if (isAudioPlaying) {
+            return;
+        }
+        this.audioFile.currentTime = 0;
+        this.audioFile.play();
+    }
+
+    addFade(){
+        this.cardDiv.classList.add("fade")
     }
 
     removeEvent() {
-        this.cardDiv.removeEventListener("click", this.clickEventListener);
+        this.cardDiv.removeEventListener("click", this.trainHandlerListener);
+        this.cardDiv.addEventListener("click", this.gameHandlerListener);
     }
 
-    addEvent(){
-        this.cardDiv.addEventListener("click", this.clickEventListener);
-
-    };
+    addEvent() {
+        this.cardDiv.addEventListener("click", this.trainHandlerListener);
+        this.cardDiv.removeEventListener("click", this.gameHandlerListener);
+    }
 }

@@ -25,12 +25,18 @@ const audio = {
     //     audioElement.play();
     // },
 
+
+//     let audio;
+// function playAydio(url) {
+//   if(!audio) audio = new Audio(); // <== тоже самое что 
+//                                   // document.createElement('audio)';
+//   audio.src = url;
+//   audio.load();
+//   audio.play();
+// }
+
     playAudioEl(audioElement) {
-        if (!audioElement.ended && 0 < audioElement.currentTime) {
-            return;
-        }
-        audioElement.currentTime = 0;
-        audioElement.play();
+
     },
 };
 

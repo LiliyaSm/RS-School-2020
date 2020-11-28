@@ -1,10 +1,11 @@
 import createElement from "../utils/createElement";
 
 export default class MenuItem {
-    constructor(pageName, categoryName, pageID) {
-        this.pageID = pageID;
+    constructor(pageName, categoryName) {
+        // this.pageID = pageID;
         this.pageName = pageName;
         this.navMenu = document.querySelector(".navigation__menu");
+        this.name = name;
         this.categoryName = categoryName;
         this.navLink = null;
     }
@@ -28,21 +29,22 @@ export default class MenuItem {
     }
 
     clickHandler(e) {
+        let categoryName = this.categoryName;
         let pageName = this.pageName;
-        let categoryId = this.pageID;
         let navigate = new CustomEvent("navigate", {
             detail: {
-                categoryId,
                 pageName,
+                categoryName,
             },
             bubbles: true,
         });
         e.target.dispatchEvent(navigate);
-        this.becomeActive();
     }
 
     becomeActive() {
-        this.navMenu.querySelector(".active").classList.remove("active");
+        if (this.navMenu.querySelector(".active")) {
+            this.navMenu.querySelector(".active").classList.remove("active");
+        }
         this.navLink.classList.add("active");
     }
 }
