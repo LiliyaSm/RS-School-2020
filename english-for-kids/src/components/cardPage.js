@@ -6,6 +6,7 @@ import * as constants from "../data/constants";
 export default class CardPage {
     constructor() {
         this.cardsContainer = document.querySelector(".cards");
+        this.scoreContainer = document.querySelector(".score");
         this.cardsObjects = [];
         this.startBtn = null;
         this.game = null;
@@ -51,12 +52,13 @@ export default class CardPage {
 
     leavePage() {
         this.startBtn.classList.add("hide");
+        this.game=null;
         // this.startBtn.addEventListener("click", this.beginGame);
     }
 
     beginGame() {
-        this.game = new Game(this.cardsObjects);
-        this.game.init();
+        this.game = new Game(this.cardsObjects, this.scoreContainer);
+        // this.game.init();
         this.game.startGame();
         this.startBtn.removeEventListener("click", this.beginGameListener);
         this.startBtn.addEventListener("click", this.repeatWordListener);

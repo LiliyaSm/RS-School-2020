@@ -43,7 +43,7 @@ export default class MainCard {
             detail: {
                 // categoryId,
                 pageName,
-                categoryName,
+                "params" : [categoryName],
             },
             bubbles: true,
         });

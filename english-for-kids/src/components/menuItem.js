@@ -34,7 +34,7 @@ export default class MenuItem {
         let navigate = new CustomEvent("navigate", {
             detail: {
                 pageName,
-                categoryName,
+                'params': [categoryName],
             },
             bubbles: true,
         });

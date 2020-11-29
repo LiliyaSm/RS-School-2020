@@ -41,7 +41,8 @@ export default class Menu {
         });
 
         document.body.addEventListener("navigate", (event) => {
-            let categoryName = event.detail.categoryName;
+            let params = event.detail.params || [];
+            let categoryName = params[0];
             let curItem = this.itemsObjects.find(
                 (item) => {return item.categoryName === categoryName}
             );

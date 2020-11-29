@@ -297,7 +297,7 @@ span {
     }
 }
 
- .card:not(.fade):hover  {
+.card:not(.fade):hover {
     transform: scale(1.05);
 }
 
@@ -382,7 +382,6 @@ span {
 }
 
 .card__main-title {
-
     font-weight: 400;
     text-align: center;
     font-size: 22px;
@@ -432,9 +431,19 @@ span {
     background-position: 100% 0;
 }
 
-
-.fade{
+.fade {
     transform: scale(0.95, 0.95);
     filter: blur(1px) grayscale(30%) opacity(50%);
     pointer-events: none;
+}
+
+.score {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    // padding-top: 10px;
+    min-height: 64px;
 }
