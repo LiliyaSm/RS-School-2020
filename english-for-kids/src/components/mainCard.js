@@ -1,4 +1,6 @@
 import { cardsData } from "../utils/cardsData";
+import * as constants from "../data/constants";
+
 
 export default class MainCard {
     constructor(templateNumber) {
@@ -9,7 +11,6 @@ export default class MainCard {
         this.pageID = null;
         this.cardDiv = null;
         this.categoryName = null;
-        this.pageName = "cardPage";
         this.title = null;
     }
 
@@ -36,14 +37,15 @@ export default class MainCard {
 
     openCardPage(e) {
         // let categoryId = this.pageID;
-        let pageName = this.pageName;
+        let pageName = constants.CARD_PAGE_NAME;
         let categoryName = this.categoryName;  
 
         let navigate = new CustomEvent("navigate", {
             detail: {
                 // categoryId,
                 pageName,
-                "params" : [categoryName],
+                categoryName,
+                "params" : [],
             },
             bubbles: true,
         });

@@ -2,6 +2,8 @@ export const trainImage = "../assets/icons/hiclipart2.com.png";
 export const gameImage = "../assets/icons/hiclipart1.com.png";
 export const iconBadScore = "../assets/icons/star.svg";
 export const iconGoodScore = "../assets/icons/star-win.svg";
+export const loseImage = "../assets/img/failure.jpg";
+export const successImage = "../assets/img/success.jpg";
 
 export const TEMPLATES_NUMBERS = {
     WORD_CARD: 0,
@@ -15,9 +17,11 @@ export const EVENT_TYPE = {
 
 
 export const MAIN_PAGE = {
-    textContent: "Main page",
     mainPageName: "mainPage",
+    textContent: "Main page",
 };
+
+export const CARD_PAGE_NAME = "cardPage"; 
 
 export const SOUNDS = {
     wrongAnswer: "error.mp3",

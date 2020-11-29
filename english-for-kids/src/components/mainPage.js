@@ -1,23 +1,30 @@
+import Page from "./page";
 import { cardsData } from "../utils/cardsData";
 import createElement from "../utils/createElement";
 import * as constants from "../data/constants";
 import MainCard from "./mainCard";
 
-export default class MainPage {
+export default class MainPage extends Page {
     constructor() {
+        super();
         this.categories = null;
-        this.cardsContainer = document.querySelector(".cards");
+        this.cardsContainer = null;
         this.cardsObjects = [];
     }
 
     init() {
         cardsData.loadData();
         this.categories = cardsData.getCategoriesList();
-        this.renderPage(false);
     }
 
     renderPage(isTrainMode) {
-        this.cardsContainer.textContent = "";
+        this.cardsContainer = createElement(
+            "div",
+            ["cards"],
+            this.mainContainer,
+            null,
+            null
+        ).element;
 
         this.categories.forEach((category, i) => {
             let mainCard = new MainCard(constants.TEMPLATES_NUMBERS.MAIN_CARD);
@@ -52,7 +59,7 @@ export default class MainPage {
         return isTrainMode ? constants.trainImage : constants.gameImage;
     }
 
-    leavePage() {
-        return;
-    }
+    // leavePage() {
+    //     return;
+    // }
 }

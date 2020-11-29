@@ -1,7 +1,6 @@
 import { cardsData } from "../utils/cardsData";
 import MenuItem from "./MenuItem";
 import * as constants from "../data/constants";
-
 // import EventObserver from "../components/observer";
 
 export default class Menu {
@@ -41,12 +40,12 @@ export default class Menu {
         });
 
         document.body.addEventListener("navigate", (event) => {
-            let params = event.detail.params || [];
-            let categoryName = params[0];
+            let pageName = event.detail.pageName;
+            let categoryName = event.detail.categoryName;
             let curItem = this.itemsObjects.find(
-                (item) => {return item.categoryName === categoryName}
+                (item) => {return item.pageName === pageName && item.categoryName == categoryName}
             );
-            curItem.becomeActive();
+            if (curItem){ curItem.becomeActive()};
         })
     }
 

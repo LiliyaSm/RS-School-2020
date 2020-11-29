@@ -31,12 +31,11 @@ export default class Game {
 
     handleClick(e) {
         let cardWord = e.detail.dataWord;
-        const cardIsGuessed = (cardWord === this.cardToGuess.dataWord);
+        const cardIsGuessed = cardWord === this.cardToGuess.dataWord;
         if (cardIsGuessed) {
             this.cardToGuess.addFade();
             this.cardToGuess.removeGameEvent();
             audio.playSound(constants.SOUNDS.rightAnswer);
-            setTimeout((e) => this.playWord(e), 1000);
             createElement(
                 "img",
                 null,
@@ -44,8 +43,11 @@ export default class Game {
                 [["src", constants.iconGoodScore]],
                 null
             );
-            if(this.gameCards.length === 0){
-                //redirect
+            let gameIsOver = this.gameCards.length === 0;
+            if (gameIsOver) {
+                this.openGameOverPage(e);
+            } else {
+                setTimeout((e) => this.playWord(e), 1000);
             }
         } else {
             this.errorCounter++;
@@ -58,5 +60,16 @@ export default class Game {
                 null
             );
         }
+    }
+
+    openGameOverPage(e) {
+        let navigate = new CustomEvent("navigate", {
+            detail: {
+                pageName: "gameOverPage",
+                params: [this.errorCounter],
+            },
+            bubbles: true,
+        });
+        e.target.dispatchEvent(navigate);
     }
 }
