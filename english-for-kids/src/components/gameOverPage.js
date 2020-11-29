@@ -7,41 +7,41 @@ import { audio } from "../utils/audio";
 export default class GameOverPage extends Page {
     constructor() {
         super();
-        // this.errorCounter = errorCounter;
     }
 
-    renderPage(gameMode, errorCounter) {
+    renderPage(gameMode, categoryName, errorCounter) {
         if (errorCounter > 0) {
+            audio.playSound(constants.SOUNDS.loseGame);
             createElement(
                 "img",
-                null,
+                ["lose-image"],
                 this.mainContainer,
                 [["src", constants.loseImage]],
                 null
             );
             let errorNumber = createElement(
-                "span",
-                ["errorNumber"],
+                "h1",
+                ["error-number"],
                 this.mainContainer,
                 null,
                 null
-            );
+            ).element;
 
-            errorNumber.textContent = errorCounter;
+            errorNumber.textContent = `Number of errors ${errorCounter}`;
         } else {
+            audio.playSound(constants.SOUNDS.winGame);
             createElement(
                 "img",
-                null,
+                ["success-image"],
                 this.mainContainer,
                 [["src", constants.successImage]],
                 null
             );
-            setTimeout((e) => this.openMainPage(e), 300);
-
         }
+        setTimeout(() => this.openMainPage(), 4000);
     }
 
-    openMainPage(e) {
+    openMainPage() {
         let pageName = constants.MAIN_PAGE.mainPageName;
         let navigate = new CustomEvent("navigate", {
             detail: {
@@ -50,6 +50,6 @@ export default class GameOverPage extends Page {
             },
             bubbles: true,
         });
-        e.target.dispatchEvent(navigate);
+        document.body.dispatchEvent(navigate);
     }
 }

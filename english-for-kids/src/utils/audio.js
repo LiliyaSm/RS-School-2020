@@ -1,7 +1,8 @@
 const audio = {
-    playSound(audioName) {
+    playSound(src) {
         let audio = new Audio();
-        audio.src = `../assets/audio/${audioName}`;
+        // audio.src = `../assets/audio/${audioName}`;
+        audio.src = src;
         // audio.load();
         audio.play();}
 

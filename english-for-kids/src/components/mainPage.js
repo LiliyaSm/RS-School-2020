@@ -20,7 +20,7 @@ export default class MainPage extends Page {
     renderPage(isTrainMode) {
         this.cardsContainer = createElement(
             "div",
-            ["cards"],
+            ["cards", "indent"],
             this.mainContainer,
             null,
             null

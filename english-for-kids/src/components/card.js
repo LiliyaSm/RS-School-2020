@@ -21,14 +21,14 @@ export default class Card {
 
         this.image.setAttribute("src", `../assets/${object.image}`);
 
-        cardTemplate.querySelector(".card__back-side img").setAttribute(
-            "src",
-            `../assets/${object.image}`
-        );
+        cardTemplate
+            .querySelector(".card__back-side img")
+            .setAttribute("src", `../assets/${object.image}`);
 
         this.audioFile.setAttribute("src", `../assets/${object.audioSrc}`);
 
-        cardTemplate.querySelector(".card__title--eng").textContent = object.word;
+        cardTemplate.querySelector(".card__title--eng").textContent =
+            object.word;
         cardTemplate.querySelector(".card__title--rus").textContent =
             object.translation;
 
@@ -84,6 +84,10 @@ export default class Card {
         this.cardDiv.classList.add("fade");
     }
 
+    removeFade() {
+        this.cardDiv.classList.remove("fade");
+    }
+
     removeEvent() {
         this.cardDiv.removeEventListener("click", this.trainHandlerListener);
         this.cardDiv.addEventListener("click", this.gameHandlerListener);
@@ -92,13 +96,10 @@ export default class Card {
     removeGameEvent() {
         this.cardDiv.removeEventListener("click", this.gameHandlerListener);
     }
-    
+
     addEvent() {
         this.cardDiv.addEventListener("click", this.trainHandlerListener);
         this.removeGameEvent();
     }
 
-    addFade() {
-        this.cardDiv.classList.add("fade");
-    }
 }

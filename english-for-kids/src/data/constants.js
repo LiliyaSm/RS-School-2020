@@ -2,8 +2,14 @@ export const trainImage = "../assets/icons/hiclipart2.com.png";
 export const gameImage = "../assets/icons/hiclipart1.com.png";
 export const iconBadScore = "../assets/icons/star.svg";
 export const iconGoodScore = "../assets/icons/star-win.svg";
-export const loseImage = "../assets/img/failure.jpg";
-export const successImage = "../assets/img/success.jpg";
+export const loseImage = "../assets/img/failure.png";
+export const successImage = "../assets/img/success.png";
+export const SOUNDS = {
+    wrongAnswer: "../assets/audio/error.mp3",
+    rightAnswer: "../assets/audio/correct.mp3",
+    winGame: "../assets/audio/success.wav",
+    loseGame: "../assets/audio/failure.mp3",
+}; 
 
 export const TEMPLATES_NUMBERS = {
     WORD_CARD: 0,
@@ -22,13 +28,8 @@ export const MAIN_PAGE = {
 };
 
 export const CARD_PAGE_NAME = "cardPage"; 
+export const GAME_OVER_PAGE_NAME = "gameOverPage"; 
 
-export const SOUNDS = {
-    wrongAnswer: "error.mp3",
-    rightAnswer: "correct.mp3",
-    winGame: "correct.mp3",
-    loseGame: "correct.mp3",
-}; 
 
 // export const pages = {
 //     mainPage: new MainPage(),

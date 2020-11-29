@@ -13,6 +13,7 @@ class Main {
 
     init() {
         // todo: use constants
+        // let gameOverPage = constants.GAME_OVER_PAGE_NAME;
         const pages = {
             mainPage: new MainPage(),
             cardPage: new CardPage(),
@@ -38,7 +39,7 @@ class Main {
             this.pageName = event.detail.pageName;
             this.currPage.leavePage();
             this.currPage = pages[this.pageName];
-            this.currPage.init();
+            // this.currPage.init();
             this.currPage.renderPage(this.isGameMode, event.detail.categoryName, ...params);
         });
     }

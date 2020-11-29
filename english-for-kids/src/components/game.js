@@ -5,13 +5,15 @@ import createElement from "../utils/createElement";
 export default class Game {
     constructor(gameCards, scoreContainer) {
         this.gameCards = gameCards;
-        this.cardToGuess = null;
         this.scoreContainer = scoreContainer;
+        this.cardToGuess = null;
         this.errorCounter = 0;
+        this.handleClickListener = null;
     }
 
     startGame() {
-        document.body.addEventListener("cardClick", (e) => this.handleClick(e));
+        this.handleClickListener = (e) => this.handleClick(e);
+        document.body.addEventListener("cardClick", this.handleClickListener);
         setTimeout((e) => this.playWord(e), 300);
     }
 
@@ -45,7 +47,8 @@ export default class Game {
             );
             let gameIsOver = this.gameCards.length === 0;
             if (gameIsOver) {
-                this.openGameOverPage(e);
+                setTimeout((e) => this.openGameOverPage(e), 600);
+
             } else {
                 setTimeout((e) => this.playWord(e), 1000);
             }
@@ -65,11 +68,16 @@ export default class Game {
     openGameOverPage(e) {
         let navigate = new CustomEvent("navigate", {
             detail: {
-                pageName: "gameOverPage",
+                pageName: constants.GAME_OVER_PAGE_NAME,
                 params: [this.errorCounter],
             },
             bubbles: true,
         });
-        e.target.dispatchEvent(navigate);
+        document.body.dispatchEvent(navigate);
+    }
+    endGame(){
+        document.body.removeEventListener("cardClick", this.handleClickListener);
+
+
     }
 }
