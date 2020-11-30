@@ -5,10 +5,10 @@ export default class Card {
         this.template = document.getElementsByTagName("template")[
             templateNumber
         ];
-        // this.categoryNumber = null;
         this.dataWord = null;
         this.audioFile = null;
         this.cardDiv = null;
+        this.cardFrontSide = null;
     }
 
     createCard(object) {
@@ -16,6 +16,7 @@ export default class Card {
         this.cardDiv = cardTemplate.querySelector(".card");
         this.audioFile = cardTemplate.querySelector("audio");
         this.image = cardTemplate.querySelector(".card__front-side img");
+        this.cardFrontSide = cardTemplate.querySelector(".card__front-side");
         this.rotateIcon = cardTemplate.querySelector(".rotate-icon");
         this.dataWord = object.word;
 
@@ -47,23 +48,16 @@ export default class Card {
 
         return cardTemplate;
     }
-    trainHandler(e) {
-        let rotateIcon = e.target
-            .closest(".card")
-            .querySelector(".rotate-icon");
-        let backSide = e.target.closest(".card__back-side");
 
-        if (e.target === rotateIcon || backSide) {
-            return;
-        }
+    trainHandler(e) {
+        e.stopPropagation();
         this.playAudioEl();
     }
 
     gameHandler(e) {
-        let dataWord = this.dataWord;
         let cardClick = new CustomEvent("cardClick", {
             detail: {
-                dataWord,
+                dataWord : this.dataWord,
             },
             bubbles: true,
         });
@@ -89,7 +83,7 @@ export default class Card {
     }
 
     removeEvent() {
-        this.cardDiv.removeEventListener("click", this.trainHandlerListener);
+        this.cardFrontSide.removeEventListener("click", this.trainHandlerListener);
         this.cardDiv.addEventListener("click", this.gameHandlerListener);
     }
 
@@ -98,7 +92,7 @@ export default class Card {
     }
 
     addEvent() {
-        this.cardDiv.addEventListener("click", this.trainHandlerListener);
+        this.cardFrontSide.addEventListener("click", this.trainHandlerListener);
         this.removeGameEvent();
     }
 

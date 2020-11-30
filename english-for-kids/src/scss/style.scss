@@ -4,16 +4,17 @@
     src: url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:600,700);
 }
 
-$primary: #0B6E4F;
-$background: lighten(#f7e4ad, 2%);
+$primary: #17ab96;
+$background: lighten(#dbffdf, 2%);
 $green: #78ea85;
 $shadow: darken($background, 11%);
-$black: #073B3A;
+$black: #073b3a;
 $white: lighten(mistyrose, 5%);
 
 body {
     background-color: $background;
-    background-image: url("../assets/img/bgr.png"), url("../assets/img/bgr2.png");
+    background-image: url("../assets/img/bgr.png"),
+        url("../assets/img/bgr2.png");
     background-repeat: no-repeat;
     background-position: -50%, 150%;
     background-attachment: fixed;
@@ -34,11 +35,13 @@ body {
 
 h1 {
     font-weight: 400;
-    font-size: 50px;
+    font-size: 67px;
+    color: #17ab96;
 }
 
 .toggle {
     position: relative;
+    cursor: pointer;
     // margin: 30px 0px 20px 0px;
 
     .labels-checkbox {
@@ -111,20 +114,28 @@ h1 {
         ~ label {
             &:before {
                 content: "Train";
+                // text-shadow:2px 2px 8px #000;
+                font-weight: 600;
                 position: absolute;
-                color: $primary;
-                left: -60px;
+                color: yellow;
+                left: -90px;
                 top: 0px;
-                font-size: 18px;
+                font-size: 23px;
+                text-transform: uppercase;
+                cursor: pointer;
             }
 
             &:after {
                 content: "Play";
+                font-weight: 600;
+
                 position: absolute;
                 color: $black;
                 left: 93px;
                 top: 0px;
-                font-size: 18px;
+                font-size: 23px;
+                text-transform: uppercase;
+                cursor: pointer;
             }
         }
 
@@ -133,7 +144,7 @@ h1 {
                 color: $black;
             }
             &:after {
-                color: $primary;
+                color: yellow;
             }
         }
     }
@@ -145,7 +156,7 @@ h1 {
     height: 100vh;
     position: fixed;
     visibility: hidden;
-    background: #6BBF59;
+    background: #6bbf59;
     top: 0;
     box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
     z-index: 100;
@@ -178,7 +189,7 @@ h1 {
     font-weight: normal;
     font-size: 34px;
     line-height: 160%;
-    color: #0B6E4F;
+    color: #0b6e4f;
     text-decoration: none;
 }
 
@@ -307,7 +318,7 @@ span {
 }
 
 //rotate icon
-.card__title .rotate-icon {
+.rotate-icon {
     transform: scale(-1, 1);
     width: 50px;
     position: absolute;
@@ -319,10 +330,7 @@ span {
     border-radius: 50%;
 }
 
-.card__title {
-}
-
-.card__title .rotate-icon:hover {
+.rotate-icon:hover {
     transform: scale(-1, 1) rotate(90deg);
     transition: all 0.3s;
 }
@@ -389,17 +397,15 @@ span {
 .card__main-title {
     font-weight: 400;
     text-align: center;
-    font-size: 22px;
+    font-size: 24px;
     padding-top: 11px;
-    padding-bottom: 77px;
     background-size: 100% 92%;
     background-repeat: no-repeat;
     box-sizing: border-box;
     transition: background-image 0.3s ease-in-out;
 }
 
-
-.game-mode img{
+.game-mode img {
     height: 250px;
 }
 .game-mode:hover {
@@ -432,8 +438,6 @@ span {
     text-decoration: none;
 }
 
-         
-
 .start-btn {
     cursor: pointer;
     width: 100%;
@@ -449,12 +453,17 @@ span {
     font-size: 34px;
     border: none;
     border-radius: 5px;
-    background-image: linear-gradient(to right, #16A085 0%, #F4D03F  51%, #16A085  100%);
+    background-image: linear-gradient(
+        to right,
+        #16a085 0%,
+        #f4d03f 51%,
+        #16a085 100%
+    );
     box-shadow: 0 4px 1px 0 #287b5c;
     transition: all 0.3s ease-in-out;
     &--repeat {
         background-image: url("../assets/icons/repeat.svg"),
-            linear-gradient(to right, #16A085 0%, #F4D03F  51%, #16A085  100%);
+            linear-gradient(to right, #16a085 0%, #f4d03f 51%, #16a085 100%);
         background-repeat: no-repeat;
         width: 59px;
         height: 59px;
@@ -504,7 +513,20 @@ span {
     margin-top: 40px;
 }
 
-
 .indent {
     margin-top: 64px;
+}
+
+svg {
+    transform: scaleY(-1);
+    transition: all 0.3 ease-in-out;
+
+    // height: 30px;
+}
+svg path.path-color {
+    fill: #ffa716 !important;
+}
+
+path {
+    transition: all 0.4s ease-in-out;
 }

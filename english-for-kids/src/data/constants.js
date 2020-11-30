@@ -11,6 +11,10 @@ export const SOUNDS = {
     loseGame: "../assets/audio/failure.mp3",
 }; 
 
+export const TIME = {
+    redirectFromGameOver: 4000,
+}
+
 export const TEMPLATES_NUMBERS = {
     WORD_CARD: 0,
     MAIN_CARD: 1

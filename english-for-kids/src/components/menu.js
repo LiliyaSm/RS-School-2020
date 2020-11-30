@@ -1,15 +1,12 @@
 import { cardsData } from "../utils/cardsData";
 import MenuItem from "./MenuItem";
 import * as constants from "../data/constants";
-// import EventObserver from "../components/observer";
 
 export default class Menu {
     constructor() {
         this.navMenu = null;
         this.menuIcon = null;
         this.overlay = null;
-        this.loadPageById = null;
-        this.observer = null;
         this.itemsObjects = [];
     }
 

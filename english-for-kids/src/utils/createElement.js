@@ -40,18 +40,3 @@ export default function createElement(
     };
 }
 
-/*
-
-let clickHandler = ();
-eventListeners = [["onClick", clickHandler]];
-
-var menu = createElement(...eventListeners);
-
-{
-    element: {},
-    unsubscribe: fn(event, fn);
-}
-
-
-menu.unsubscribe("onClick", clickHandler);
-*/

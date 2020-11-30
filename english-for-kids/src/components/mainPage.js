@@ -32,34 +32,13 @@ export default class MainPage extends Page {
             this.cardsObjects.push(mainCard);
         });
 
-        this.toggleStyle(isTrainMode);
+        this.toggleStyle();
     }
 
-    toggleStyle(isTrainMode) {
+    toggleStyle() {
         this.cardsObjects.forEach((element) => {
-            let BackgroundSrc = this.getTitleBgr(isTrainMode);
-            createElement(
-                "img",
-                null,
-                null,
-                [["src", BackgroundSrc]],
-                [
-                    [
-                        "load",
-                        () => {
-                            element.title.style.backgroundImage = `url(${BackgroundSrc})`;
-                        },
-                    ],
-                ]
-            );
+            let path = element.cardDiv.querySelector("path");
+            path.classList.toggle("path-color");
         });
     }
-
-    getTitleBgr(isTrainMode) {
-        return isTrainMode ? constants.trainImage : constants.gameImage;
-    }
-
-    // leavePage() {
-    //     return;
-    // }
 }

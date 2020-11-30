@@ -17,13 +17,10 @@ export default class Game {
         setTimeout((e) => this.playWord(e), 300);
     }
 
-    // startGame() {}
-
     repeatWord() {
         this.cardToGuess.playAudioEl();
     }
     playWord() {
-        // let items = this.gameCards;
         const randomCardNumber = Math.floor(
             Math.random() * this.gameCards.length
         );

@@ -52,7 +52,6 @@ export default class CardPage extends Page {
         wordCards.forEach((object) => {
             let card = new Card(constants.TEMPLATES_NUMBERS.WORD_CARD);
             this.cardsObjects.push(card);
-
             this.cardsContainer.appendChild(card.createCard(object));
         });
         console.log(this.cardsObjects);
@@ -65,13 +64,9 @@ export default class CardPage extends Page {
         if (gameMode) {
             this.createStartBtn();
         } else {
-            if (this.game) {
-                this.game.endGame();
-                this.game = null;
-            }
+            this.deleteGame();     
             this.scoreContainer.textContent = "";
             this.startBtn.element.remove();
-            // this.startBtn = null;
         }
 
         this.cardsObjects.forEach(function (card) {
@@ -87,13 +82,16 @@ export default class CardPage extends Page {
         });
     }
 
-    leavePage() {
-        super.leavePage();
-        // to do
+    deleteGame(){
         if (this.game) {
             this.game.endGame();
             this.game = null;
         }
+    }
+
+    leavePage() {
+        super.leavePage();
+        this.deleteGame();        
         this.cardsObjects = [];
     }
 

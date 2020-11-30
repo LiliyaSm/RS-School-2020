@@ -27,7 +27,7 @@ export default class GameOverPage extends Page {
                 null
             ).element;
 
-            errorNumber.textContent = `Number of errors ${errorCounter}`;
+            errorNumber.textContent = `Number of errors: ${errorCounter}`;
         } else {
             audio.playSound(constants.SOUNDS.winGame);
             createElement(
@@ -38,7 +38,10 @@ export default class GameOverPage extends Page {
                 null
             );
         }
-        setTimeout(() => this.openMainPage(), 4000);
+        setTimeout(
+            () => this.openMainPage(),
+            constants.TIME.redirectFromGameOver
+        );
     }
 
     openMainPage() {
