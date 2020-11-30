@@ -46,9 +46,12 @@ export default class GameOverPage extends Page {
 
     openMainPage() {
         let pageName = constants.MAIN_PAGE.mainPageName;
+        let categoryName = constants.MAIN_PAGE.textContent;
+
         let navigate = new CustomEvent("navigate", {
             detail: {
                 pageName,
+                categoryName,
                 params: [constants.MAIN_PAGE.textContent],
             },
             bubbles: true,

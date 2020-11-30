@@ -29,8 +29,8 @@ class Main {
             this.setGameState();
         });
 
-        let test = new StatisticsPage();
-        test.renderPage();
+        // let test = new StatisticsPage();
+        // test.renderPage();
 
         document.body.addEventListener("navigate", (event) => {
             console.log(event.detail);

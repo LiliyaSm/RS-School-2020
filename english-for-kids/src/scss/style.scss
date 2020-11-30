@@ -9,6 +9,7 @@ $background: lighten(#dbffdf, 2%);
 $green: #78ea85;
 $shadow: darken($background, 11%);
 $black: #073b3a;
+$yellow: #ffa716;
 $white: lighten(mistyrose, 5%);
 
 body {
@@ -37,6 +38,7 @@ h1 {
     font-weight: 400;
     font-size: 67px;
     color: #17ab96;
+    transition: 0.3s ease;
 }
 
 .toggle {
@@ -117,7 +119,7 @@ h1 {
                 // text-shadow:2px 2px 8px #000;
                 font-weight: 600;
                 position: absolute;
-                color: yellow;
+                color: $yellow;
                 left: -90px;
                 top: 0px;
                 font-size: 23px;
@@ -128,7 +130,7 @@ h1 {
             &:after {
                 content: "Play";
                 font-weight: 600;
-
+                color: #29d4a8;
                 position: absolute;
                 color: $black;
                 left: 93px;
@@ -141,10 +143,10 @@ h1 {
 
         &:checked ~ label {
             &:before {
-                color: $black;
+                color: #29d4a8;
             }
             &:after {
-                color: yellow;
+                color: $yellow;
             }
         }
     }
@@ -179,7 +181,7 @@ h1 {
 }
 
 .navigation__menu a.active {
-    color: yellow;
+    color: $yellow;
 }
 
 .navigation__menu a {
@@ -230,7 +232,7 @@ span {
     width: 55px;
     height: 6px;
     margin-bottom: 10px;
-    background: #0c2461;
+    background: $yellow;
     border-radius: 4px;
     -webkit-transition: all 0.3s cubic-bezier(0.08, 0.81, 0.87, 0.71);
     -moz-transition: all 0.3s cubic-bezier(0.08, 0.81, 0.87, 0.71);
@@ -493,7 +495,7 @@ span {
 
 .fade {
     transform: scale(0.95, 0.95);
-    filter: blur(1px) grayscale(30%) opacity(50%);
+    filter: blur(1px) grayscale(30%) opacity(70%);
     pointer-events: none;
 }
 
@@ -523,8 +525,8 @@ svg {
 
     // height: 30px;
 }
-.game-color svg path{
-    fill: #ffa716 !important;
+.game-color svg path {
+    fill: $yellow !important;
 }
 
 path {
@@ -532,6 +534,7 @@ path {
 }
 
 .table {
+    background-color: #f9f9f9f5;
     width: 100%;
     margin-bottom: 1rem;
     color: #212529;
@@ -542,9 +545,14 @@ path {
     padding: 0.75rem;
     vertical-align: top;
     border-top: 1px solid #dee2e6;
+    background-repeat: no-repeat;
+    background-position: 70% 70%;
+}
+.table th{
+    cursor: pointer;
 }
 
-.table thead th {
+.table thead th {    
     vertical-align: bottom;
     border-bottom: 2px solid #dee2e6;
 }
@@ -883,4 +891,14 @@ path {
 
 .table-responsive > .table-bordered {
     border: 0;
+}
+
+
+.sorting_desc {
+    background-image: url("../assets/icons/sort_desc.png");
+
+}
+
+.sorting_asc {
+    background-image: url("../assets/icons/sort_asc.png");
 }
