@@ -32,13 +32,14 @@ export default class MainPage extends Page {
             this.cardsObjects.push(mainCard);
         });
 
-        this.toggleStyle();
+        this.toggleStyle(isTrainMode);
     }
 
-    toggleStyle() {
-        this.cardsObjects.forEach((element) => {
-            let path = element.cardDiv.querySelector("path");
-            path.classList.toggle("path-color");
-        });
+    toggleStyle(isTrainMode) {
+        if (isTrainMode) {
+            this.mainContainer.classList.add("game-color");
+        } else {
+            this.mainContainer.classList.remove("game-color");
+        }
     }
 }

@@ -15,6 +15,8 @@ export const TIME = {
     redirectFromGameOver: 4000,
 }
 
+export const DEFAULT_STAT = 0;
+
 export const TEMPLATES_NUMBERS = {
     WORD_CARD: 0,
     MAIN_CARD: 1
@@ -31,10 +33,15 @@ export const MAIN_PAGE = {
     textContent: "Main page",
 };
 
+export const STATISTICS_PAGE = {
+    name: "statisticsPage",
+    textContent: "Statistics",
+};
+
 export const CARD_PAGE_NAME = "cardPage"; 
 export const GAME_OVER_PAGE_NAME = "gameOverPage"; 
 
-
+export const TABLE_HEADERS = [ "category", "word", "translation", "train", "play", "errors"];
 // export const pages = {
 //     mainPage: new MainPage(),
 //     cardsPage: new CardsPage(),

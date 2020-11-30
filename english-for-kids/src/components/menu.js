@@ -28,6 +28,11 @@ export default class Menu {
             this.createItem("cardPage", category, i);
         });
 
+        this.createItem(
+            constants.STATISTICS_PAGE.name,
+            constants.STATISTICS_PAGE.textContent
+        );
+
         this.menuIcon.addEventListener("click", (e) => {
             this.toggleMenu();
         });
