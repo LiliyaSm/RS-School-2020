@@ -1,4 +1,4 @@
-import { audio } from "../utils/audio";
+import * as constants from "../data/constants";
 
 export default class Card {
     constructor(templateNumber) {
@@ -52,12 +52,27 @@ export default class Card {
     trainHandler(e) {
         e.stopPropagation();
         this.playAudioEl();
+        this.triggerStatEvent(constants.STATISTICS_EVENTS.train);
+    }
+
+    triggerStatEvent(statisticsField) {
+        let statistics = new CustomEvent(
+            constants.CUSTOM_EVENT_NAME.statistics,
+            {
+                detail: {
+                    word: this.dataWord,
+                    statisticsField: statisticsField,
+                },
+                bubbles: true,
+            }
+        );
+        document.body.dispatchEvent(statistics);
     }
 
     gameHandler(e) {
         let cardClick = new CustomEvent("cardClick", {
             detail: {
-                dataWord : this.dataWord,
+                dataWord: this.dataWord,
             },
             bubbles: true,
         });
@@ -83,7 +98,10 @@ export default class Card {
     }
 
     removeEvent() {
-        this.cardFrontSide.removeEventListener("click", this.trainHandlerListener);
+        this.cardFrontSide.removeEventListener(
+            "click",
+            this.trainHandlerListener
+        );
         this.cardDiv.addEventListener("click", this.gameHandlerListener);
     }
 
@@ -95,5 +113,4 @@ export default class Card {
         this.cardFrontSide.addEventListener("click", this.trainHandlerListener);
         this.removeGameEvent();
     }
-
 }

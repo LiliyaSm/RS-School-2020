@@ -42,6 +42,12 @@ export const CARD_PAGE_NAME = "cardPage";
 export const GAME_OVER_PAGE_NAME = "gameOverPage"; 
 
 export const TABLE_HEADERS = [ "category", "word", "translation", "train", "play", "errors", "% errors"];
+export const STATISTICS_EVENTS = {train: "train", play: "play", errors: "errors"};
+export const CUSTOM_EVENT_NAME = {
+    navigate: "navigate",
+    statistics: "statistics",
+    errors: "errors",
+};
 
 
 export const LOCAL_STORAGE_NAME = "statisticsEngKids"; 

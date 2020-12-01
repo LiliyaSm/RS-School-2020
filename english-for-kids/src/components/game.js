@@ -20,6 +20,7 @@ export default class Game {
     repeatWord() {
         this.cardToGuess.playAudioEl();
     }
+
     playWord() {
         const randomCardNumber = Math.floor(
             Math.random() * this.gameCards.length
@@ -29,43 +30,37 @@ export default class Game {
     }
 
     handleClick(e) {
-        // to do
         let cardWord = e.detail.dataWord;
         const cardIsGuessed = cardWord === this.cardToGuess.dataWord;
         if (cardIsGuessed) {
-            this.cardToGuess.addFade();
-            this.cardToGuess.removeGameEvent();
-            audio.playSound(constants.SOUNDS.rightAnswer);
-            createElement(
-                "img",
-                null,
-                this.scoreContainer,
-                [["src", constants.iconGoodScore]],
-                null
-            );
-            
-            let gameIsOver = this.gameCards.length === 0;
-            if (gameIsOver) {
-                setTimeout((e) => this.openGameOverPage(e), 600);
-            } else {
-                setTimeout((e) => this.playWord(e), 1000);
-            }
-            this.statisticsEvent("play");
-
+            this.rightAnswerHandler();
         } else {
             this.wrongAnswerHandler();
         }
     }
 
-    openGameOverPage(e) {
-        let navigate = new CustomEvent("navigate", {
-            detail: {
-                pageName: constants.GAME_OVER_PAGE_NAME,
-                params: [this.errorCounter],
-            },
-            bubbles: true,
-        });
-        document.body.dispatchEvent(navigate);
+    rightAnswerHandler() {
+        this.cardToGuess.addFade();
+        this.cardToGuess.removeGameEvent();
+        audio.playSound(constants.SOUNDS.rightAnswer);
+        createElement(
+            "img",
+            null,
+            this.scoreContainer,
+            [["src", constants.iconGoodScore]],
+            null
+        );
+        this.triggerStatEvent(constants.STATISTICS_EVENTS.play);
+        this.checkIfGameOver();
+    }
+
+    checkIfGameOver() {
+        let gameIsOver = this.gameCards.length === 0;
+        if (gameIsOver) {
+            setTimeout(() => this.openGameOverPage(), 1000);
+        } else {
+            setTimeout(() => this.playWord(), 1000);
+        }
     }
 
     wrongAnswerHandler() {
@@ -78,18 +73,32 @@ export default class Game {
             [["src", constants.iconBadScore]],
             null
         );
-        this.statisticsEvent("errors");
+        this.triggerStatEvent(constants.STATISTICS_EVENTS.errors);
     }
 
-    statisticsEvent(statisticsField) {
-        let statistics = new CustomEvent("statistics", {
+    triggerStatEvent(statisticsField) {
+        let statistics = new CustomEvent(
+            constants.CUSTOM_EVENT_NAME.statistics,
+            {
+                detail: {
+                    word: this.cardToGuess.dataWord,
+                    statisticsField: statisticsField,
+                },
+                bubbles: true,
+            }
+        );
+        document.body.dispatchEvent(statistics);
+    }
+
+    openGameOverPage(e) {
+        let navigate = new CustomEvent("navigate", {
             detail: {
-                word: this.cardToGuess.dataWord,
-                statisticsField: statisticsField,
+                pageName: constants.GAME_OVER_PAGE_NAME,
+                params: [this.errorCounter],
             },
             bubbles: true,
         });
-        document.body.dispatchEvent(statistics);
+        document.body.dispatchEvent(navigate);
     }
 
     endGame() {

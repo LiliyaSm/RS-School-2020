@@ -34,11 +34,7 @@ class Main {
             this.setGameState();
         });
 
-        // let test = new StatisticsPage();
-        // test.renderPage();
-
         document.body.addEventListener("navigate", (event) => {
-            console.log(event.detail);
             let params = event.detail.params || [];
             this.pageName = event.detail.pageName;
             this.currPage.leavePage();
@@ -56,6 +52,7 @@ class Main {
         this.currPage.init();
         this.currPage.renderPage(this.isGameMode);
     }
+    
     initMenu() {
         let menu = new Menu();
         menu.init();

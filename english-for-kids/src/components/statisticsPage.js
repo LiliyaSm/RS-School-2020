@@ -9,18 +9,19 @@ export default class StatisticsPage extends Page {
         this.tableRows = [];
         this.asc = true;
         this.storage = storage;
+        this.resetBtn = null;
     }
 
-    init(){
-        document.body.addEventListener("statistics", (e) =>
-            this.updateStaticsHandler(e)
+    init() {
+        document.body.addEventListener(
+            constants.CUSTOM_EVENT_NAME.statistics,
+            (e) => this.updateStaticsHandler(e)
         );
     }
 
     renderPage() {
         this.generateHTML();
         this.getStatistics();
-        console.log(this.tableRows);
         this.createTable();
         this.sorting();
     }
@@ -104,26 +105,59 @@ export default class StatisticsPage extends Page {
             return row.word === word;
         });
         updatedRow[statisticsField] += 1;
+        updatedRow["% errors"] = Math.floor(
+            (updatedRow.errors / (updatedRow.play + updatedRow.errors)) * 100
+        );
         this.storage.set(this.tableRows);
-
     }
 
-    generateHTML() {
-        document.querySelector(".toggle").classList.add("hide");
+    resetStatistics(e) {
+        this.resetTable();
+        this.writeEmptyStatistics();
+        this.mainContainer.textContent = "";
+        this.createTable();
+        this.sorting();
     }
 
-    showToggle() {
-        document.querySelector(".toggle").classList.remove("hide");
-    }
-
-    leavePage() {
-        super.leavePage();
-        this.showToggle();
+    resetTable() {
         this.tableRows = [];
         this.asc = true;
     }
 
-    generateStatistics() {
+    generateHTML() {
+        document.querySelector(".toggle").classList.add("hide");
+        let header = document.querySelector("header");
+        this.resetBtn = createElement(
+            "button",
+            ["reset-button"],
+            header,
+            null,
+            [["click", (e) => this.redirectToCardPage(e)]]
+        ).element;
+        this.resetBtn.textContent = " Repeat difficult words";
+
+        this.resetBtn = createElement(
+            "button",
+            ["reset-button"],
+            header,
+            null,
+            [["click", (e) => this.resetStatistics(e)]]
+        ).element;
+        this.resetBtn.textContent = "Reset";
+    }
+
+    clearHTML() {
+        document.querySelector(".toggle").classList.remove("hide");
+        this.resetBtn.remove();
+    }
+
+    leavePage() {
+        super.leavePage();
+        this.resetTable();
+        this.clearHTML();
+    }
+
+    writeEmptyStatistics() {
         let list = cardsData.getCategoriesList();
         list.forEach((category) => {
             let categoryObjects = cardsData.getCategoryCards(category);
@@ -139,15 +173,22 @@ export default class StatisticsPage extends Page {
                 });
             });
         });
+        this.storage.set(this.tableRows);
     }
 
     getStatistics() {
         let statistics = this.storage.get();
         if (statistics === null) {
-            this.generateStatistics();
-            this.storage.set(this.tableRows);
+            this.writeEmptyStatistics();
         } else {
-            this.tableRows = this.storage.get();
+            this.tableRows = statistics;
         }
     }
+
+    redirectToCardPage(){
+        let difficultWords = this.tableRows.filter(()=>{
+
+         });
+         
+    };
 }
