@@ -29,6 +29,7 @@ export default class Game {
     }
 
     handleClick(e) {
+        // to do
         let cardWord = e.detail.dataWord;
         const cardIsGuessed = cardWord === this.cardToGuess.dataWord;
         if (cardIsGuessed) {
@@ -42,23 +43,17 @@ export default class Game {
                 [["src", constants.iconGoodScore]],
                 null
             );
+            
             let gameIsOver = this.gameCards.length === 0;
             if (gameIsOver) {
                 setTimeout((e) => this.openGameOverPage(e), 600);
-
             } else {
                 setTimeout((e) => this.playWord(e), 1000);
             }
+            this.statisticsEvent("play");
+
         } else {
-            this.errorCounter++;
-            audio.playSound(constants.SOUNDS.wrongAnswer);
-            createElement(
-                "img",
-                null,
-                this.scoreContainer,
-                [["src", constants.iconBadScore]],
-                null
-            );
+            this.wrongAnswerHandler();
         }
     }
 
@@ -72,9 +67,35 @@ export default class Game {
         });
         document.body.dispatchEvent(navigate);
     }
-    endGame(){
-        document.body.removeEventListener("cardClick", this.handleClickListener);
 
+    wrongAnswerHandler() {
+        this.errorCounter++;
+        audio.playSound(constants.SOUNDS.wrongAnswer);
+        createElement(
+            "img",
+            null,
+            this.scoreContainer,
+            [["src", constants.iconBadScore]],
+            null
+        );
+        this.statisticsEvent("errors");
+    }
 
+    statisticsEvent(statisticsField) {
+        let statistics = new CustomEvent("statistics", {
+            detail: {
+                word: this.cardToGuess.dataWord,
+                statisticsField: statisticsField,
+            },
+            bubbles: true,
+        });
+        document.body.dispatchEvent(statistics);
+    }
+
+    endGame() {
+        document.body.removeEventListener(
+            "cardClick",
+            this.handleClickListener
+        );
     }
 }

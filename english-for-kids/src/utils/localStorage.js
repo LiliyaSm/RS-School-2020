@@ -1,13 +1,17 @@
 export default class LocalStorage {
-    static set(name, value) {
-        window.localStorage.setItem(name, JSON.stringify(value));
+    constructor(name) {
+        this.name = name ;       
     }
 
-    static get(name, subst = null) {
-        return JSON.parse(window.localStorage.getItem(name) || subst);
+    set( value) {
+        window.localStorage.setItem(this.name, JSON.stringify(value));
     }
 
-    static del(name) {
-        localStorage.removeItem(name);
+    get(subst = null) {
+        return JSON.parse(window.localStorage.getItem(this.name) || subst);
+    }
+
+    del() {
+        localStorage.removeItem(this.name);
     }
 }

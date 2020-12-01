@@ -3,13 +3,15 @@ import MainPage from "./components/mainPage";
 import CardPage from "./components/cardPage";
 import GameOverPage from "./components/gameOverPage";
 import StatisticsPage from "./components/statisticsPage";
+import LocalStorage from "./utils/localStorage"
 import * as constants from "./data/constants";
 
 class Main {
-    constructor() {
+    constructor(storage) {
         this.isGameMode = false;
         this.currPage = null;
-        this.pages = null; 
+        this.pages = null;
+        this.storage = storage;
     }
 
     init() {
@@ -19,8 +21,11 @@ class Main {
             mainPage: new MainPage(),
             cardPage: new CardPage(),
             gameOverPage: new GameOverPage(),
-            statisticsPage: new StatisticsPage(),
+            statisticsPage: new StatisticsPage(this.storage),
         };
+
+        let statisticsPage = this.pages.statisticsPage;
+        statisticsPage.init();
 
         this.initMainPage();
         this.initMenu();
@@ -63,6 +68,6 @@ class Main {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-    let main = new Main();
+    let main = new Main(new LocalStorage(constants.LOCAL_STORAGE_NAME));
     main.init();
 });

@@ -4,32 +4,27 @@ import createElement from "../utils/createElement";
 import * as constants from "../data/constants";
 
 export default class StatisticsPage extends Page {
-    constructor() {
+    constructor(storage) {
         super();
         this.tableRows = [];
         this.asc = true;
+        this.storage = storage;
+    }
+
+    init(){
+        document.body.addEventListener("statistics", (e) =>
+            this.updateStaticsHandler(e)
+        );
     }
 
     renderPage() {
-        let list = cardsData.getCategoriesList();
-        list.forEach((category) => {
-            let categoryObjects = cardsData.getCategoryCards(category);
-            categoryObjects.forEach((obj) => {
-                this.tableRows.push({
-                    category: category,
-                    word: obj.word,
-                    translation: obj.translation,
-                    train: constants.DEFAULT_STAT,
-                    play: constants.DEFAULT_STAT,
-                    errors: constants.DEFAULT_STAT,
-                });
-            });
-        });
-
+        this.generateHTML();
+        this.getStatistics();
         console.log(this.tableRows);
         this.createTable();
         this.sorting();
     }
+
     createTable() {
         let table = createElement(
             "table",
@@ -78,7 +73,6 @@ export default class StatisticsPage extends Page {
             th.addEventListener("click", (e) => {
                 const table = th.closest("table");
                 const tbody = table.querySelector("tbody");
-                let headerElements = table.querySelectorAll("tbody th");
                 const thBgr = table.querySelector('[class*="sorting"]');
 
                 if (thBgr) {
@@ -100,5 +94,60 @@ export default class StatisticsPage extends Page {
                 e.target.className = this.asc ? "sorting_asc" : "sorting_desc";
             });
         });
+    }
+
+    updateStaticsHandler(e) {
+        this.getStatistics();
+        let word = e.detail.word;
+        let statisticsField = e.detail.statisticsField;
+        let updatedRow = this.tableRows.find((row) => {
+            return row.word === word;
+        });
+        updatedRow[statisticsField] += 1;
+        this.storage.set(this.tableRows);
+
+    }
+
+    generateHTML() {
+        document.querySelector(".toggle").classList.add("hide");
+    }
+
+    showToggle() {
+        document.querySelector(".toggle").classList.remove("hide");
+    }
+
+    leavePage() {
+        super.leavePage();
+        this.showToggle();
+        this.tableRows = [];
+        this.asc = true;
+    }
+
+    generateStatistics() {
+        let list = cardsData.getCategoriesList();
+        list.forEach((category) => {
+            let categoryObjects = cardsData.getCategoryCards(category);
+            categoryObjects.forEach((obj) => {
+                this.tableRows.push({
+                    category: category,
+                    word: obj.word,
+                    translation: obj.translation,
+                    train: constants.DEFAULT_STAT,
+                    play: constants.DEFAULT_STAT,
+                    errors: constants.DEFAULT_STAT,
+                    "% errors": constants.DEFAULT_STAT,
+                });
+            });
+        });
+    }
+
+    getStatistics() {
+        let statistics = this.storage.get();
+        if (statistics === null) {
+            this.generateStatistics();
+            this.storage.set(this.tableRows);
+        } else {
+            this.tableRows = this.storage.get();
+        }
     }
 }
