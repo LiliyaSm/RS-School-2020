@@ -7,12 +7,15 @@
 $primary: #17ab96;
 $background: lighten(#dbffdf, 2%);
 $green: #78ea85;
+$dark-green: #0b6e4f;
+$light-green: #6bbf59;
 $shadow: darken($background, 11%);
 $black: #073b3a;
 $yellow: #ffa716;
-$white: lighten(mistyrose, 5%);
 
 body {
+    font-family: "Kurale", serif;
+
     background-color: $background;
     background-image: url("../assets/img/bgr.png"),
         url("../assets/img/bgr2.png");
@@ -29,16 +32,24 @@ body {
     display: flex;
     justify-content: space-between;
     min-height: 10px;
-    padding: 40px 0;
+    padding-top: 40px;
+    padding-left: 30px;
+    padding-right: 30px;
     max-width: 1400px;
     margin: 0 auto;
 }
 
 h1 {
-    font-weight: 400;
     font-size: 67px;
+    font-weight: 400;
     color: #17ab96;
     transition: 0.3s ease;
+}
+
+.logo {
+    font-size: 110px;
+
+    font-family: "Butterfly Kids", cursive;
 }
 
 .toggle {
@@ -143,7 +154,7 @@ h1 {
 
         &:checked ~ label {
             &:before {
-                color: #29d4a8;
+                color: $black;
             }
             &:after {
                 color: $yellow;
@@ -172,8 +183,6 @@ h1 {
     font-size: 32px;
     transition: all 0.7s ease;
 
-    // margin-top: 209px;
-
     li {
         list-style: none;
         white-space: nowrap;
@@ -181,18 +190,17 @@ h1 {
 }
 
 .navigation__menu a.active {
-    color: $yellow;
+    color: yellow;
 }
 
 .navigation__menu a {
-    display: block;
-    font-family: Arial;
     font-style: normal;
     font-weight: normal;
     font-size: 34px;
     line-height: 160%;
-    color: #0b6e4f;
     text-decoration: none;
+    color: #0b6e4f;
+    display: block;
 }
 
 .navigation__icon {
@@ -410,9 +418,7 @@ span {
 .game-mode img {
     height: 250px;
 }
-.game-mode:hover {
-    // box-shadow: 9px 8px 11px 8px #fc65746b;
-}
+
 .btn-grad {
     background-image: linear-gradient(
         to right,
@@ -435,12 +441,13 @@ span {
 }
 
 .btn-grad:hover {
-    background-position: right center; /* change the direction of the change here */
+    background-position: right center;
     color: #fff;
     text-decoration: none;
 }
 
 .start-btn {
+    font-family: "Kurale", serif;
     cursor: pointer;
     width: 100%;
     max-width: 278px;
@@ -489,13 +496,9 @@ span {
     background-position: right center;
 }
 
-.start-btn--repeat.start-btn:hover {
-    // transform: rotate(90deg);
-}
-
 .fade {
     transform: scale(0.95, 0.95);
-    filter: blur(1px) grayscale(30%) opacity(80%);
+    filter: blur(1px) grayscale(30%) opacity(60%);
     pointer-events: none;
 }
 
@@ -512,7 +515,7 @@ span {
 
 .success-image,
 .lose-image {
-    margin-top: 40px;
+    margin-top: 80px;
     margin-bottom: 20px;
 }
 
@@ -533,6 +536,7 @@ path {
 }
 
 .table {
+    margin-top: 30px;
     background-color: #f9f9f9f5;
     width: 100%;
     margin-bottom: 1rem;
@@ -554,6 +558,11 @@ path {
 .table thead th {
     vertical-align: bottom;
     border-bottom: 2px solid #dee2e6;
+
+    color: #000000;
+    font-size: 18px;
+    background-color: #e9ecef;
+    border-color: #dee2e6;
 }
 
 .table tbody + tbody {
@@ -565,27 +574,6 @@ path {
     padding: 0.3rem;
 }
 
-.table-bordered {
-    border: 1px solid #dee2e6;
-}
-
-.table-bordered th,
-.table-bordered td {
-    border: 1px solid #dee2e6;
-}
-
-.table-bordered thead th,
-.table-bordered thead td {
-    border-bottom-width: 2px;
-}
-
-.table-borderless th,
-.table-borderless td,
-.table-borderless thead th,
-.table-borderless tbody + tbody {
-    border: 0;
-}
-
 .table-striped tbody tr:nth-of-type(odd) {
     background-color: rgba(0, 0, 0, 0.05);
 }
@@ -595,95 +583,7 @@ path {
     background-color: rgba(0, 0, 0, 0.075);
 }
 
-.table-info,
-.table-info > th,
-.table-info > td {
-    background-color: #bee5eb;
-}
-
-.table-info th,
-.table-info td,
-.table-info thead th,
-.table-info tbody + tbody {
-    border-color: #86cfda;
-}
-
-.table-hover .table-info:hover {
-    background-color: #abdde5;
-}
-
-.table-hover .table-info:hover > td,
-.table-hover .table-info:hover > th {
-    background-color: #abdde5;
-}
-
-.table-hover .table-dark:hover {
-    background-color: #b9bbbe;
-}
-
-.table-hover .table-dark:hover > td,
-.table-hover .table-dark:hover > th {
-    background-color: #b9bbbe;
-}
-
-.table .thead-dark th {
-    color: #fff;
-    background-color: #343a40;
-    border-color: #454d55;
-}
-
 .table .thead-light th {
-    color: #495057;
-    background-color: #e9ecef;
-    border-color: #dee2e6;
-}
-
-@media (max-width: 575.98px) {
-    .table-responsive-sm {
-        display: block;
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    .table-responsive-sm > .table-bordered {
-        border: 0;
-    }
-}
-
-@media (max-width: 767.98px) {
-    .table-responsive-md {
-        display: block;
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    .table-responsive-md > .table-bordered {
-        border: 0;
-    }
-}
-
-@media (max-width: 991.98px) {
-    .table-responsive-lg {
-        display: block;
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    .table-responsive-lg > .table-bordered {
-        border: 0;
-    }
-}
-
-@media (max-width: 1199.98px) {
-    .table-responsive-xl {
-        display: block;
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    .table-responsive-xl > .table-bordered {
-        border: 0;
-    }
 }
 
 .table-responsive {
@@ -693,14 +593,53 @@ path {
     -webkit-overflow-scrolling: touch;
 }
 
-.table-responsive > .table-bordered {
-    border: 0;
-}
-
 .sorting_desc {
     background-image: url("../assets/icons/sort_desc.png");
 }
 
 .sorting_asc {
     background-image: url("../assets/icons/sort_asc.png");
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.reset-button {
+    color: white;
+    display: block;
+    border: none;
+    outline: none;
+    margin: 5px;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: $light-green;
+    font-size: 18px;
+    transition: 0.5s ease;
+}
+
+.reset-button:hover {
+    background-color: #8ec782;
+}
+
+@media (max-width: 1400px) {
+    .logo {
+        font-size: 80px;
+    }
+}
+
+@media (max-width: 990px) {
+    .header {
+        padding-top: 10px;
+    }
+    .buttons {
+        margin-top: 60px;
+    }
+    .logo {
+        display: none;
+    }
 }

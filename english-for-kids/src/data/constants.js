@@ -49,7 +49,7 @@ export const CUSTOM_EVENT_NAME = {
     errors: "errors",
 };
 
-
+export const REPEAT_WORD_NUMBER = 8;
 export const LOCAL_STORAGE_NAME = "statisticsEngKids"; 
 // export const pages = {
 //     mainPage: new MainPage(),

@@ -94,7 +94,7 @@ export default class Game {
         let navigate = new CustomEvent("navigate", {
             detail: {
                 pageName: constants.GAME_OVER_PAGE_NAME,
-                params: [this.errorCounter],
+                params: {errorCounter : this.errorCounter},
             },
             bubbles: true,
         });

@@ -46,9 +46,12 @@ export default class CardPage extends Page {
         this.startBtn.element.textContent = "Start game";
     }
 
-    renderPage(isGameMode, categoryName) {
+    renderPage(isGameMode, categoryName, params) {
         this.generateHTML();
-        let wordCards = cardsData.getCategoryCards(categoryName);
+        let wordCards = params.wordsToGenerate
+            ? params.wordsToGenerate
+            : cardsData.getCategoryCards(categoryName);
+
         wordCards.forEach((object) => {
             let card = new Card(constants.TEMPLATES_NUMBERS.WORD_CARD);
             this.cardsObjects.push(card);
@@ -64,7 +67,7 @@ export default class CardPage extends Page {
         if (gameMode) {
             this.createStartBtn();
         } else {
-            this.deleteGame();     
+            this.deleteGame();
             this.scoreContainer.textContent = "";
             this.startBtn.element.remove();
         }
@@ -82,7 +85,7 @@ export default class CardPage extends Page {
         });
     }
 
-    deleteGame(){
+    deleteGame() {
         if (this.game) {
             this.game.endGame();
             this.game = null;
@@ -91,7 +94,7 @@ export default class CardPage extends Page {
 
     leavePage() {
         super.leavePage();
-        this.deleteGame();        
+        this.deleteGame();
         this.cardsObjects = [];
     }
 

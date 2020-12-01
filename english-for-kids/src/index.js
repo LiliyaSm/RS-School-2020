@@ -42,7 +42,7 @@ class Main {
             this.currPage.renderPage(
                 this.isGameMode,
                 event.detail.categoryName,
-                ...params
+                params
             );
         });
     }
@@ -52,7 +52,7 @@ class Main {
         this.currPage.init();
         this.currPage.renderPage(this.isGameMode);
     }
-    
+
     initMenu() {
         let menu = new Menu();
         menu.init();

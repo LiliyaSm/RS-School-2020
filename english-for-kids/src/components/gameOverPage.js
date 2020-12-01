@@ -3,13 +3,13 @@ import Page from "./page";
 import * as constants from "../data/constants";
 import { audio } from "../utils/audio";
 
-
 export default class GameOverPage extends Page {
     constructor() {
         super();
     }
 
-    renderPage(gameMode, categoryName, errorCounter) {
+    renderPage(gameMode, categoryName, params) {
+        let errorCounter = params.errorCounter;
         if (errorCounter > 0) {
             audio.playSound(constants.SOUNDS.loseGame);
             createElement(

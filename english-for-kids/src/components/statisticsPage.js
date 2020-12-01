@@ -1,4 +1,6 @@
 import { cardsData } from "../utils/cardsData";
+import { comparer } from "../utils/helpers";
+
 import Page from "./page";
 import createElement from "../utils/createElement";
 import * as constants from "../data/constants";
@@ -58,18 +60,6 @@ export default class StatisticsPage extends Page {
     }
 
     sorting() {
-        const getCellValue = (tr, idx) =>
-            tr.children[idx].innerText || tr.children[idx].textContent;
-
-        const comparer = (idx, asc) => (a, b) =>
-            ((v1, v2) =>
-                v1 !== "" && v2 !== "" && !isNaN(v1) && !isNaN(v2)
-                    ? v1 - v2
-                    : v1.toString().localeCompare(v2))(
-                getCellValue(asc ? a : b, idx),
-                getCellValue(asc ? b : a, idx)
-            );
-
         document.querySelectorAll("th").forEach((th) => {
             th.addEventListener("click", (e) => {
                 const table = th.closest("table");
@@ -82,7 +72,6 @@ export default class StatisticsPage extends Page {
                         ""
                     );
                 }
-
                 Array.from(table.querySelectorAll("tbody tr"))
                     .sort(
                         comparer(
@@ -105,9 +94,8 @@ export default class StatisticsPage extends Page {
             return row.word === word;
         });
         updatedRow[statisticsField] += 1;
-        updatedRow["% errors"] = Math.floor(
-            (updatedRow.errors / (updatedRow.play + updatedRow.errors)) * 100
-        );
+        //bug
+
         this.storage.set(this.tableRows);
     }
 
@@ -126,20 +114,20 @@ export default class StatisticsPage extends Page {
 
     generateHTML() {
         document.querySelector(".toggle").classList.add("hide");
-        let header = document.querySelector("header");
-        this.resetBtn = createElement(
+        let buttons = document.querySelector(".buttons");
+        this.diffWordsBtn = createElement(
             "button",
             ["reset-button"],
-            header,
+            buttons,
             null,
             [["click", (e) => this.redirectToCardPage(e)]]
         ).element;
-        this.resetBtn.textContent = " Repeat difficult words";
+        this.diffWordsBtn.textContent = "Repeat difficult words";
 
         this.resetBtn = createElement(
             "button",
             ["reset-button"],
-            header,
+            buttons,
             null,
             [["click", (e) => this.resetStatistics(e)]]
         ).element;
@@ -149,6 +137,7 @@ export default class StatisticsPage extends Page {
     clearHTML() {
         document.querySelector(".toggle").classList.remove("hide");
         this.resetBtn.remove();
+        this.diffWordsBtn.remove();
     }
 
     leavePage() {
@@ -169,7 +158,7 @@ export default class StatisticsPage extends Page {
                     train: constants.DEFAULT_STAT,
                     play: constants.DEFAULT_STAT,
                     errors: constants.DEFAULT_STAT,
-                    "% errors": constants.DEFAULT_STAT,
+                    // "% errors": constants.DEFAULT_STAT,
                 });
             });
         });
@@ -181,14 +170,45 @@ export default class StatisticsPage extends Page {
         if (statistics === null) {
             this.writeEmptyStatistics();
         } else {
-            this.tableRows = statistics;
+            this.tableRows = this.calculatePercentage(statistics);
         }
     }
 
-    redirectToCardPage(){
-        let difficultWords = this.tableRows.filter(()=>{
+    calculatePercentage(statistics) {
+        return statistics.map((obj) => {
+            let percent = Math.floor(
+                (obj.errors / (obj.play + obj.errors)) * 100
+            );
+            obj["% errors"] = isNaN(percent) ? 0 : percent;
+            return obj;
+        });
+    }
 
-         });
-         
-    };
+    redirectToCardPage() {
+        let difficultWords = this.getDifficultWords();
+        let navigate = new CustomEvent("navigate", {
+            detail: {
+                pageName: constants.CARD_PAGE_NAME,
+                params: { wordsToGenerate: difficultWords },
+            },
+            bubbles: true,
+        });
+        document.body.dispatchEvent(navigate);
+    }
+
+    getDifficultWords() {
+        this.tableRows.sort((a, b) => (a["% errors"] < b["% errors"] ? 1 : -1));
+        let difficultWords = [];
+        let list = this.tableRows.filter((row) => row["% errors"] > 0);
+        let difficultWordsLength =
+            constants.REPEAT_WORD_NUMBER > list.length
+                ? list.length
+                : constants.REPEAT_WORD_NUMBER;
+        for (let i = 0; i < difficultWordsLength; i++) {
+            difficultWords.push(
+                cardsData.getCardObject(list[i].category, list[i].word)
+            );
+        }
+        return difficultWords;
+    }
 }

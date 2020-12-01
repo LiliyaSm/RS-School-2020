@@ -1,6 +1,5 @@
 import cards from "../data/cards";
 
-
 const cardsData = {
     wordCards: null,
     categories: null,
@@ -11,6 +10,7 @@ const cardsData = {
     },
 
     getCategoryCards(categoryName) {
+        //return array
         return this.wordCards[this.categories.indexOf(categoryName)];
     },
 
@@ -18,10 +18,15 @@ const cardsData = {
         return this.categories;
     },
 
-    getCategoryImage(i){
+    getCategoryImage(i) {
         return this.wordCards[i][0].image;
-    }
-};
+    },
 
+    getCardObject(category, word) {
+        return cardsData.getCategoryCards(category).find((obj) => {
+            return obj.word === word;
+        });
+    },
+};
 
 export { cardsData };
