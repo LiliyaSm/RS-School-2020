@@ -1,7 +1,7 @@
 export const trainImage = "../assets/icons/hiclipart2.com.png";
 export const gameImage = "../assets/icons/hiclipart1.com.png";
-export const iconBadScore = "../assets/icons/star.svg";
-export const iconGoodScore = "../assets/icons/star-win.svg";
+export const iconBadScore = "../assets/icons/star.png";
+export const iconGoodScore = "../assets/icons/star-win.png";
 export const loseImage = "../assets/img/failure.png";
 export const successImage = "../assets/img/success.png";
 export const SOUNDS = {

@@ -7,6 +7,7 @@
 $primary: #17ab96;
 $background: lighten(#dbffdf, 2%);
 $green: #78ea85;
+$pink: #ffc3c3;
 $dark-green: #0b6e4f;
 $light-green: #6bbf59;
 $shadow: darken($background, 11%);
@@ -47,9 +48,8 @@ h1 {
 }
 
 .logo {
-    font-size: 110px;
-
     font-family: "Butterfly Kids", cursive;
+    font-size: 100px;
 }
 
 .toggle {
@@ -608,8 +608,8 @@ path {
     justify-content: space-around;
 }
 
-.reset-button {
-    color: white;
+.statistics-button {
+    color: $black;
     display: block;
     border: none;
     outline: none;
@@ -622,8 +622,19 @@ path {
     transition: 0.5s ease;
 }
 
-.reset-button:hover {
-    background-color: #8ec782;
+.reset {
+    background-color: $pink;
+}
+.statistics-button:hover {
+    background-color: #99da8c;
+}
+
+.star {
+    height: 64px;
+}
+
+.reset:hover {
+    background-color: #fad8d8;
 }
 
 @media (max-width: 1400px) {
@@ -641,5 +652,15 @@ path {
     }
     .logo {
         display: none;
+    }
+    .star {
+        height: 40px;
+        margin-top: 55px;
+    }
+}
+
+@media (max-width: 400px) {
+    .card {
+        margin-right: 0px;
     }
 }

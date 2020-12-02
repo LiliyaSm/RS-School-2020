@@ -45,7 +45,7 @@ export default class Game {
         audio.playSound(constants.SOUNDS.rightAnswer);
         createElement(
             "img",
-            null,
+            ["star"],
             this.scoreContainer,
             [["src", constants.iconGoodScore]],
             null
@@ -68,7 +68,7 @@ export default class Game {
         audio.playSound(constants.SOUNDS.wrongAnswer);
         createElement(
             "img",
-            null,
+            ["star"],
             this.scoreContainer,
             [["src", constants.iconBadScore]],
             null
@@ -94,7 +94,7 @@ export default class Game {
         let navigate = new CustomEvent("navigate", {
             detail: {
                 pageName: constants.GAME_OVER_PAGE_NAME,
-                params: {errorCounter : this.errorCounter},
+                params: { errorCounter: this.errorCounter },
             },
             bubbles: true,
         });

@@ -94,8 +94,6 @@ export default class StatisticsPage extends Page {
             return row.word === word;
         });
         updatedRow[statisticsField] += 1;
-        //bug
-
         this.storage.set(this.tableRows);
     }
 
@@ -117,7 +115,7 @@ export default class StatisticsPage extends Page {
         let buttons = document.querySelector(".buttons");
         this.diffWordsBtn = createElement(
             "button",
-            ["reset-button"],
+            ["statistics-button", "repeat"],
             buttons,
             null,
             [["click", (e) => this.redirectToCardPage(e)]]
@@ -126,7 +124,7 @@ export default class StatisticsPage extends Page {
 
         this.resetBtn = createElement(
             "button",
-            ["reset-button"],
+            ["statistics-button", "reset"],
             buttons,
             null,
             [["click", (e) => this.resetStatistics(e)]]
@@ -158,11 +156,10 @@ export default class StatisticsPage extends Page {
                     train: constants.DEFAULT_STAT,
                     play: constants.DEFAULT_STAT,
                     errors: constants.DEFAULT_STAT,
-                    // "% errors": constants.DEFAULT_STAT,
                 });
             });
         });
-        this.storage.set(this.tableRows);
+        this.storage.set(this.calculatePercentage(this.tableRows));
     }
 
     getStatistics() {
