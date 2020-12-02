@@ -133,7 +133,6 @@ export default class StatisticsPage extends Page {
     }
 
     clearHTML() {
-        document.querySelector(".toggle").classList.remove("hide");
         this.resetBtn.remove();
         this.diffWordsBtn.remove();
     }

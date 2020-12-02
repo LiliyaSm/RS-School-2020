@@ -1,18 +1,15 @@
-@font-face {
-    font-family: "Source Sans Pro";
-    unicode-range: "U+1F431-U+1F63A";
-    src: url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:600,700);
-}
-
 $primary: #17ab96;
 $background: lighten(#dbffdf, 2%);
-$green: #78ea85;
 $pink: #ffc3c3;
 $dark-green: #0b6e4f;
 $light-green: #6bbf59;
-$shadow: darken($background, 11%);
 $black: #073b3a;
 $yellow: #ffa716;
+
+html,
+body {
+    height: 100%;
+}
 
 body {
     font-family: "Kurale", serif;
@@ -55,7 +52,6 @@ h1 {
 .toggle {
     position: relative;
     cursor: pointer;
-    // margin: 30px 0px 20px 0px;
 
     .labels-checkbox {
         background: white;
@@ -87,21 +83,10 @@ h1 {
         z-index: 5;
         color: tranparent;
 
-        // &:after {
-        //     content: "";
-        //     background-color: transparent;
-        //     height: 40px;
-        //     width: 80px;
-        //     position: absolute;
-        //     left: 30px;
-        //     top: -5px;
-        // }
-
         ~ div.kitty:before {
             content: "\01F431";
             position: absolute;
             right: 90px;
-            // top: -16px;
             font-size: 45px;
             z-index: 1;
             -moz-transition: all 0.25s ease-out;
@@ -113,13 +98,8 @@ h1 {
         &:checked {
             right: 0px;
 
-            // &:after {
-            //     left: -80px;
-            // }
-
             ~ div.kitty:before {
                 content: "\01F63A";
-                // top: -16px
                 right: 41px;
             }
         }
@@ -127,7 +107,6 @@ h1 {
         ~ label {
             &:before {
                 content: "Train";
-                // text-shadow:2px 2px 8px #000;
                 font-weight: 600;
                 position: absolute;
                 color: $yellow;
@@ -173,9 +152,7 @@ h1 {
     top: 0;
     box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
     z-index: 100;
-
     overflow: hidden;
-
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -190,7 +167,11 @@ h1 {
 }
 
 .navigation__menu a.active {
-    color: yellow;
+    color: rgb(255, 255, 72);
+}
+
+.navigation__menu a:not(.active):hover {
+    text-shadow: 2px 1px 3px rgb(118, 248, 125);
 }
 
 .navigation__menu a {
@@ -216,7 +197,6 @@ h1 {
     width: 0;
     visibility: hidden;
     transition: all 0.4s ease;
-    // box-shadow: inset -8px 0px 4px -2px rgba(0, 0, 0, 0.5)
 }
 
 .slide_menu {
@@ -236,11 +216,11 @@ input {
     z-index: 1; /* top of the menu */
 }
 
-span {
+.navigation__icon span {
     width: 55px;
     height: 6px;
     margin-bottom: 10px;
-    background: $yellow;
+    background: $primary;
     border-radius: 4px;
     -webkit-transition: all 0.3s cubic-bezier(0.08, 0.81, 0.87, 0.71);
     -moz-transition: all 0.3s cubic-bezier(0.08, 0.81, 0.87, 0.71);
@@ -259,15 +239,15 @@ span {
 
 .checked ~ {
     #span1 {
-        background-color: $green;
+        background-color: $dark-green;
         transform: rotate(45deg) translate(7px);
     }
     #span2 {
-        background-color: $green;
+        background-color: $dark-green;
         transform: rotate(495deg) translate(6px);
     }
     #span3 {
-        background-color: $green;
+        background-color: $dark-green;
         transform: rotate(45deg);
         opacity: 0;
     }
@@ -303,7 +283,6 @@ span {
     cursor: pointer;
     perspective: 800px;
     transition: all 0.4s ease-in-out;
-    // display: flex;
     width: 250px;
     height: 250px;
     border-radius: 10px;
@@ -312,7 +291,6 @@ span {
 
     &__inner {
         background: white;
-
         position: relative;
         width: 100%;
         height: 100%;
@@ -327,7 +305,6 @@ span {
     transform: scale(1.05);
 }
 
-//rotate icon
 .rotate-icon {
     transform: scale(-1, 1);
     width: 50px;
@@ -357,7 +334,6 @@ span {
     overflow: hidden;
     height: 100%;
     width: 100%;
-    // transition: 0.5s ease;
 }
 
 .card__image img {
@@ -386,7 +362,6 @@ span {
     transform: scale(1.05);
 }
 
-// .card__inner
 .flipped {
     transform: rotateY(180deg);
 }
@@ -452,7 +427,6 @@ span {
     width: 100%;
     max-width: 278px;
     text-transform: uppercase;
-    // font-weight: bold;
     color: #fff;
     background-size: 200% 100%;
     text-decoration: none;
@@ -476,7 +450,6 @@ span {
         background-repeat: no-repeat;
         width: 59px;
         height: 59px;
-        // background-color: #00977e;
         border-radius: 50%;
         font-size: 0;
         background-position: center;
@@ -487,7 +460,6 @@ span {
 }
 
 .start-btn:active {
-    // background-image: linear-gradient(to right, #fac18f, #f7a54d);
     transform: translate(0, 4px);
     box-shadow: 0 1px 1px 0 #287b5c;
 }
@@ -509,7 +481,6 @@ span {
     justify-content: flex-end;
     flex-wrap: nowrap;
     overflow: hidden;
-    // padding-top: 10px;
     min-height: 64px;
 }
 
@@ -558,7 +529,6 @@ path {
 .table thead th {
     vertical-align: bottom;
     border-bottom: 2px solid #dee2e6;
-
     color: #000000;
     font-size: 18px;
     background-color: #e9ecef;
@@ -569,21 +539,9 @@ path {
     border-top: 2px solid #dee2e6;
 }
 
-.table-sm th,
-.table-sm td {
-    padding: 0.3rem;
-}
-
-.table-striped tbody tr:nth-of-type(odd) {
-    background-color: rgba(0, 0, 0, 0.05);
-}
-
 .table-hover tbody tr:hover {
     color: #212529;
     background-color: rgba(0, 0, 0, 0.075);
-}
-
-.table .thead-light th {
 }
 
 .table-responsive {
@@ -638,6 +596,7 @@ path {
 }
 
 @media (max-width: 1400px) {
+    
     .logo {
         font-size: 80px;
     }
@@ -659,8 +618,62 @@ path {
     }
 }
 
+@media (max-width: 700px) {
+    .success-image,
+    .lose-image {
+        width: 100%;
+        height: auto;
+    }
+    .error-number {
+        font-size: 26px;
+    }
+}
+
 @media (max-width: 400px) {
     .card {
         margin-right: 0px;
     }
+}
+
+
+.content {
+    min-height: 100%;
+    /* equal to footer height */
+    margin-bottom: -42px;
+}
+.content:after {
+    content: "";
+    display: block;
+}
+footer,
+.content:after {
+    height: 42px;
+}
+footer {
+    padding-left: 20px;
+    padding-right: 20px;
+    background: #d5f5d8;
+}
+
+.rs-logo {
+    margin-right: 20px;
+    margin-left: 20px;
+    height: 20px;
+    background-repeat: no-repeat;
+}
+
+footer a {
+    color: $primary;
+}
+.footer-wrapper {
+    max-width: 1400px;
+    padding-top: 10px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.warning {
+    font-size: 40px;
 }

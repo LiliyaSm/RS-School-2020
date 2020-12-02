@@ -4,6 +4,7 @@ export default class Page {
     }
     renderPage() {}
     leavePage() {
+        document.querySelector(".toggle").classList.remove("hide");
         this.mainContainer.textContent = "";
     }
 }

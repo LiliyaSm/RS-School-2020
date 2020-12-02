@@ -52,12 +52,23 @@ export default class CardPage extends Page {
             ? params.wordsToGenerate
             : cardsData.getCategoryCards(categoryName);
 
+        if (wordCards.length === 0) {
+            document.querySelector(".toggle").classList.add("hide");
+            let warning = createElement(
+                "div",
+                ["warning"],
+                this.mainContainer,
+                null,
+                null
+            ).element;
+            warning.textContent = "No cards!";
+            return; 
+        }
         wordCards.forEach((object) => {
             let card = new Card(constants.TEMPLATES_NUMBERS.WORD_CARD);
             this.cardsObjects.push(card);
             this.cardsContainer.appendChild(card.createCard(object));
         });
-        console.log(this.cardsObjects);
         if (isGameMode) {
             this.toggleStyle(isGameMode);
         }
@@ -99,7 +110,7 @@ export default class CardPage extends Page {
     }
 
     beginGame() {
-        this.game = new Game([...this.cardsObjects], this.scoreContainer);
+        this.game = new Game(this.cardsObjects, this.scoreContainer);
         this.game.startGame();
 
         this.startBtn.unsubscribe("click", this.beginGameListener);
