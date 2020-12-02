@@ -110,7 +110,7 @@ h1 {
                 font-weight: 600;
                 position: absolute;
                 color: $yellow;
-                left: -90px;
+                left: -80px;
                 top: 0px;
                 font-size: 23px;
                 text-transform: uppercase;
@@ -163,6 +163,9 @@ h1 {
     li {
         list-style: none;
         white-space: nowrap;
+        text-align: center;
+        width: 100%;
+        transition: all 0.2s;
     }
 }
 
@@ -171,7 +174,8 @@ h1 {
 }
 
 .navigation__menu a:not(.active):hover {
-    text-shadow: 2px 1px 3px rgb(118, 248, 125);
+    // text-shadow: 2px 1px 3px #f1df87;
+    background-color: chartreuse;
 }
 
 .navigation__menu a {
@@ -182,6 +186,8 @@ h1 {
     text-decoration: none;
     color: #0b6e4f;
     display: block;
+        transition: all 0.2s;
+
 }
 
 .navigation__icon {
@@ -200,7 +206,7 @@ h1 {
 }
 
 .slide_menu {
-    width: 290px;
+    width: 300px;
     visibility: visible;
     transition: all 0.5s ease;
 }
@@ -596,7 +602,6 @@ path {
 }
 
 @media (max-width: 1400px) {
-    
     .logo {
         font-size: 80px;
     }
@@ -619,6 +624,16 @@ path {
 }
 
 @media (max-width: 700px) {
+    .table td {
+        padding: 0;
+    }
+    table .sorting_desc {
+        background-position: 7px 4px;
+    }
+
+    table .sorting_asc {
+        background-position: 7px 4px;
+    }
     .success-image,
     .lose-image {
         width: 100%;
@@ -630,11 +645,14 @@ path {
 }
 
 @media (max-width: 400px) {
+
+    .header {
+        display: block;
+    }
     .card {
         margin-right: 0px;
     }
 }
-
 
 .content {
     min-height: 100%;

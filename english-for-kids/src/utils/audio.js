@@ -1,12 +1,9 @@
 const audio = {
-    playSound(src) {
-        let audio = new Audio();
-        audio.src = src;
-        audio.play();}
-}
+  playSound(src) {
+    const audioEl = new Audio();
+    audioEl.src = src;
+    audioEl.play();
+  },
+};
 
-export { audio };
-
-
-
-
+export { audio as default };

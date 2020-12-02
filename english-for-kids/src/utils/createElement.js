@@ -1,42 +1,40 @@
 export default function createElement(
-    el,
-    classNames,
-    parent,
-    dataAttr,
-    eventListeners
+  el,
+  classNames,
+  parent,
+  dataAttr,
+  eventListeners,
 ) {
-    // element, classes comma separated, parent, dataAttr
-    let element = null;
-    try {
-        element = document.createElement(el);
-    } catch (error) {
-        throw new Error(`Unable to create HTMLElement with ${el} tag name`);
-    }
+  // element, classes comma separated, parent, dataAttr
+  let element = null;
+  try {
+    element = document.createElement(el);
+  } catch (error) {
+    throw new Error(`Unable to create HTMLElement with ${el} tag name`);
+  }
 
-    if (classNames) element.classList.add(...classNames);
+  if (classNames) element.classList.add(...classNames);
 
-    if (parent) {
-        parent.appendChild(element);
-    }
+  if (parent) {
+    parent.appendChild(element);
+  }
 
-    if (dataAttr) {
-        dataAttr.forEach(([attrName, attrValue]) => {
-            element.setAttribute(attrName, attrValue);
-        });
-    }
+  if (dataAttr) {
+    dataAttr.forEach(([attrName, attrValue]) => {
+      element.setAttribute(attrName, attrValue);
+    });
+  }
 
-    if (eventListeners) {
-        eventListeners.forEach(([event, fn]) => {
-            element.addEventListener(event, fn);
-        });
-    }
+  if (eventListeners) {
+    eventListeners.forEach(([event, fn]) => {
+      element.addEventListener(event, fn);
+    });
+  }
 
-
-    return {
-        element: element,
-        unsubscribe: (event, fn) => {
-            element.removeEventListener(event, fn);
-        },
-    };
+  return {
+    element,
+    unsubscribe: (event, fn) => {
+      element.removeEventListener(event, fn);
+    },
+  };
 }
-
