@@ -20,13 +20,13 @@ export default class Card {
     this.rotateIcon = cardTemplate.querySelector('.rotate-icon');
     this.dataWord = object.word;
 
-    this.image.setAttribute('src', `../assets/${object.image}`);
+    this.image.setAttribute('src', `assets/${object.image}`);
 
     cardTemplate
       .querySelector('.card__back-side img')
-      .setAttribute('src', `../assets/${object.image}`);
+      .setAttribute('src', `assets/${object.image}`);
 
-    this.audioFile.setAttribute('src', `../assets/${object.audioSrc}`);
+    this.audioFile.setAttribute('src', `assets/${object.audioSrc}`);
 
     cardTemplate.querySelector('.card__title--eng').textContent = object.word;
     cardTemplate.querySelector('.card__title--rus').textContent = object.translation;

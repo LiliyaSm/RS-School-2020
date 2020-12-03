@@ -23,7 +23,7 @@ export default class MainCard {
     const name = cardsData.getCategoryImage(pageID);
     cardTemplate
       .querySelector('.card__image img')
-      .setAttribute('src', `../assets/${name}`);
+      .setAttribute('src', `assets/${name}`);
 
     this.title.textContent = categoryName;
     this.cardDiv = cardTemplate.querySelector('.card');

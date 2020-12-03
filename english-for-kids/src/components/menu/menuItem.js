@@ -1,6 +1,5 @@
 import createElement from '../../utils/createElement';
-import * as constants from "../../data/constants";
-
+import * as constants from '../../data/constants';
 
 export default class MenuItem {
   constructor(pageName, categoryName) {

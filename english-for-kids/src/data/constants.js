@@ -1,20 +1,20 @@
-export const trainImage = '../assets/icons/hiclipart2.com.png';
-export const gameImage = '../assets/icons/hiclipart1.com.png';
-export const iconBadScore = '../assets/icons/star.png';
-export const iconGoodScore = '../assets/icons/star-win.png';
-export const loseImage = '../assets/img/failure.png';
-export const successImage = '../assets/img/success.png';
+export const trainImage = 'assets/icons/hiclipart2.com.png';
+export const gameImage = 'assets/icons/hiclipart1.com.png';
+export const iconBadScore = 'assets/icons/star.png';
+export const iconGoodScore = 'assets/icons/star-win.png';
+export const loseImage = 'assets/img/failure.png';
+export const successImage = 'assets/img/success.png';
 export const SOUNDS = {
-  wrongAnswer: '../assets/audio/error.mp3',
-  rightAnswer: '../assets/audio/correct.mp3',
-  winGame: '../assets/audio/success.wav',
-  loseGame: '../assets/audio/failure.mp3',
+  wrongAnswer: 'assets/audio/error.mp3',
+  rightAnswer: 'assets/audio/correct.mp3',
+  winGame: 'assets/audio/success.wav',
+  loseGame: 'assets/audio/failure.mp3',
 };
 
 export const TIME = {
-  redirectFromGameOver: 4000,
-  redirectToGameOver: 1000,
-  playWordDelay: 1000,
+  redirectFromGameOver: 3000,
+  redirectToGameOver: 800,
+  playWordDelay: 300,
   startPlayWordDelay: 300,
 };
 
