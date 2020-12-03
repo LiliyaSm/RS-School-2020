@@ -13,6 +13,9 @@ export const SOUNDS = {
 
 export const TIME = {
   redirectFromGameOver: 4000,
+  redirectToGameOver: 1000,
+  playWordDelay: 1000,
+  startPlayWordDelay: 300,
 };
 
 export const DEFAULT_STAT = 0;
@@ -22,9 +25,9 @@ export const TEMPLATES_NUMBERS = {
   MAIN_CARD: 1,
 };
 
-export const EVENT_TYPE = {
-  NAVIGATE: 'navigate',
-};
+// export const EVENT_TYPE = {
+//   NAVIGATE: 'navigate',
+// };
 
 export const MAIN_PAGE = {
   mainPageName: 'mainPage',
@@ -45,11 +48,8 @@ export const CUSTOM_EVENT_NAME = {
   navigate: 'navigate',
   statistics: 'statistics',
   errors: 'errors',
+  cardClick: 'cardClick',
 };
 
 export const REPEAT_WORD_NUMBER = 8;
 export const LOCAL_STORAGE_NAME = 'statisticsEngKids';
-// export const pages = {
-//     mainPage: new MainPage(),
-//     cardsPage: new CardsPage(),
-// };

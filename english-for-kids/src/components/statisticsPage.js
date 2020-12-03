@@ -1,6 +1,5 @@
 import { cardsData } from '../utils/cardsData';
 import comparer from '../utils/helpers';
-
 import Page from './page';
 import createElement from '../utils/createElement';
 import * as constants from '../data/constants';
@@ -109,7 +108,7 @@ export default class StatisticsPage extends Page {
   }
 
   generateHTML() {
-    document.querySelector('.toggle').classList.add('hide');
+    super.hideToggle();
     const buttons = document.querySelector('.buttons');
     this.diffWordsBtn = createElement(
       'button',
@@ -182,7 +181,7 @@ export default class StatisticsPage extends Page {
 
   redirectToCardPage() {
     const difficultWords = this.getDifficultWords();
-    const navigate = new CustomEvent('navigate', {
+    const navigate = new CustomEvent(constants.CUSTOM_EVENT_NAME.navigate, {
       detail: {
         pageName: constants.CARD_PAGE_NAME,
         params: { wordsToGenerate: difficultWords },

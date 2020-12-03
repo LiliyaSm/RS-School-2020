@@ -1,4 +1,4 @@
-import * as constants from '../data/constants';
+import * as constants from '../../data/constants';
 
 export default class Card {
   constructor(templateNumber) {
@@ -69,7 +69,7 @@ export default class Card {
   }
 
   gameHandler(e) {
-    const cardClick = new CustomEvent('cardClick', {
+    const cardClick = new CustomEvent(constants.CUSTOM_EVENT_NAME.cardClick, {
       detail: {
         dataWord: this.dataWord,
       },

@@ -1,6 +1,6 @@
-import { cardsData } from '../utils/cardsData';
+import { cardsData } from '../../utils/cardsData';
 import MenuItem from './menuItem';
-import * as constants from '../data/constants';
+import * as constants from '../../data/constants';
 
 export default class Menu {
   constructor() {
@@ -41,14 +41,20 @@ export default class Menu {
       this.closeMenu();
     });
 
-    document.body.addEventListener('navigate', (event) => {
-      const { pageName } = event.detail;
-      const { categoryName } = event.detail;
-      const curItem = this.itemsObjects.find(
-        (item) => item.pageName === pageName && item.categoryName === categoryName,
-      );
-      if (curItem) { curItem.becomeActive(); }
-    });
+    document.body.addEventListener(
+      constants.CUSTOM_EVENT_NAME.navigate,
+      (event) => {
+        const { pageName } = event.detail;
+        const { categoryName } = event.detail;
+        const curItem = this.itemsObjects.find(
+          (item) => item.pageName === pageName
+                    && item.categoryName === categoryName,
+        );
+        if (curItem) {
+          curItem.becomeActive();
+        }
+      },
+    );
   }
 
   createItem(pageName, textContent) {

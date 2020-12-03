@@ -1,4 +1,6 @@
-import createElement from '../utils/createElement';
+import createElement from '../../utils/createElement';
+import * as constants from "../../data/constants";
+
 
 export default class MenuItem {
   constructor(pageName, categoryName) {
@@ -29,7 +31,7 @@ export default class MenuItem {
   clickHandler(e) {
     const { categoryName } = this;
     const { pageName } = this;
-    const navigate = new CustomEvent('navigate', {
+    const navigate = new CustomEvent(constants.CUSTOM_EVENT_NAME.navigate, {
       detail: {
         pageName,
         categoryName,

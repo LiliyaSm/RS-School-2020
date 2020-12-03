@@ -1,5 +1,5 @@
-import { cardsData } from '../utils/cardsData';
-import * as constants from '../data/constants';
+import { cardsData } from '../../utils/cardsData';
+import * as constants from '../../data/constants';
 
 export default class MainCard {
   constructor(templateNumber) {
@@ -37,7 +37,7 @@ export default class MainCard {
     const pageName = constants.CARD_PAGE_NAME;
     const { categoryName } = this;
 
-    const navigate = new CustomEvent('navigate', {
+    const navigate = new CustomEvent(constants.CUSTOM_EVENT_NAME.navigate, {
       detail: {
         pageName,
         categoryName,

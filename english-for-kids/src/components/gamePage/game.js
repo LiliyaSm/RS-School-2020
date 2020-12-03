@@ -1,6 +1,6 @@
-import audio from '../utils/audio';
-import * as constants from '../data/constants';
-import createElement from '../utils/createElement';
+import audio from '../../utils/audio';
+import * as constants from '../../data/constants';
+import createElement from '../../utils/createElement';
 
 export default class Game {
   constructor(gameCards, scoreContainer) {
@@ -13,8 +13,11 @@ export default class Game {
 
   startGame() {
     this.handleClickListener = (e) => this.handleClick(e);
-    document.body.addEventListener('cardClick', this.handleClickListener);
-    setTimeout((e) => this.playWord(e), 300);
+    document.body.addEventListener(
+      constants.CUSTOM_EVENT_NAME.cardClick,
+      this.handleClickListener,
+    );
+    setTimeout((e) => this.playWord(e), constants.TIME.startPlayWordDelay);
   }
 
   repeatWord() {
@@ -57,9 +60,12 @@ export default class Game {
   checkIfGameOver() {
     const gameIsOver = this.gameCards.length === 0;
     if (gameIsOver) {
-      setTimeout(() => this.openGameOverPage(), 1000);
+      setTimeout(
+        () => this.openGameOverPage(),
+        constants.TIME.redirectToGameOver,
+      );
     } else {
-      setTimeout(() => this.playWord(), 1000);
+      setTimeout(() => this.playWord(), constants.TIME.playWordDelay);
     }
   }
 
@@ -91,7 +97,7 @@ export default class Game {
   }
 
   openGameOverPage() {
-    const navigate = new CustomEvent('navigate', {
+    const navigate = new CustomEvent(constants.CUSTOM_EVENT_NAME.navigate, {
       detail: {
         pageName: constants.GAME_OVER_PAGE_NAME,
         params: { errorCounter: this.errorCounter },

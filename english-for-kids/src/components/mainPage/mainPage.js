@@ -1,7 +1,7 @@
-import Page from './page';
-import { cardsData } from '../utils/cardsData';
-import createElement from '../utils/createElement';
-import * as constants from '../data/constants';
+import Page from '../page';
+import { cardsData } from '../../utils/cardsData';
+import createElement from '../../utils/createElement';
+import * as constants from '../../data/constants';
 import MainCard from './mainCard';
 
 export default class MainPage extends Page {

@@ -11,6 +11,12 @@ const cards = [
   ],
   [
     {
+      word: 'hug',
+      translation: 'обнимать',
+      image: 'img/hug.jpg',
+      audioSrc: 'audio/hug.mp3',
+    },
+    {
       word: 'cry',
       translation: 'плакать',
       image: 'img/cry.jpg',
@@ -46,12 +52,7 @@ const cards = [
       image: 'img/fly.jpg',
       audioSrc: 'audio/fly.mp3',
     },
-    {
-      word: 'hug',
-      translation: 'обнимать',
-      image: 'img/hug.jpg',
-      audioSrc: 'audio/hug.mp3',
-    },
+
     {
       word: 'jump',
       translation: 'прыгать',
@@ -261,6 +262,12 @@ const cards = [
   ],
   [
     {
+      word: 'smile',
+      translation: 'улыбка',
+      image: 'img/smile.jpg',
+      audioSrc: 'audio/smile.mp3',
+    },
+    {
       word: 'sad',
       translation: 'грустный',
       image: 'img/sad.jpg',
@@ -296,12 +303,7 @@ const cards = [
       image: 'img/scared.jpg',
       audioSrc: 'audio/scared.mp3',
     },
-    {
-      word: 'smile',
-      translation: 'улыбка',
-      image: 'img/smile.jpg',
-      audioSrc: 'audio/smile.mp3',
-    },
+
     {
       word: 'laugh',
       translation: 'смех',
@@ -310,6 +312,12 @@ const cards = [
     },
   ],
   [
+    {
+      word: 'frosty',
+      translation: 'морозный',
+      image: 'img/frosty.jpg',
+      audioSrc: 'audio/frosty.mp3',
+    },
     {
       word: 'windy',
       translation: 'ветреный',
@@ -340,12 +348,7 @@ const cards = [
       image: 'img/blizzard.jpg',
       audioSrc: 'audio/blizzard.mp3',
     },
-    {
-      word: 'frosty',
-      translation: 'морозный',
-      image: 'img/frosty.jpg',
-      audioSrc: 'audio/frosty.mp3',
-    },
+
     {
       word: 'sunny',
       translation: 'солнечно',

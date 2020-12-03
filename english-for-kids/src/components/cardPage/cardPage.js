@@ -1,9 +1,9 @@
-import Page from './page';
-import { cardsData } from '../utils/cardsData';
+import Page from '../page';
+import { cardsData } from '../../utils/cardsData';
 import Card from './card';
-import Game from './game';
-import * as constants from '../data/constants';
-import createElement from '../utils/createElement';
+import Game from '../gamePage/game';
+import * as constants from '../../data/constants';
+import createElement from '../../utils/createElement';
 
 export default class CardPage extends Page {
   constructor() {
@@ -53,7 +53,7 @@ export default class CardPage extends Page {
       : cardsData.getCategoryCards(categoryName);
 
     if (wordCards.length === 0) {
-      document.querySelector('.toggle').classList.add('hide');
+      super.hideToggle();
       const warning = createElement(
         'div',
         ['warning'],
@@ -110,7 +110,7 @@ export default class CardPage extends Page {
   }
 
   beginGame() {
-    this.game = new Game(this.cardsObjects, this.scoreContainer);
+    this.game = new Game([...this.cardsObjects], this.scoreContainer);
     this.game.startGame();
 
     this.startBtn.unsubscribe('click', this.beginGameListener);

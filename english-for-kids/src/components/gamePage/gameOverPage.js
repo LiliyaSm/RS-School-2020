@@ -1,15 +1,12 @@
-import createElement from '../utils/createElement';
-import Page from './page';
-import * as constants from '../data/constants';
-import audio from '../utils/audio';
+import createElement from '../../utils/createElement';
+import Page from '../page';
+import * as constants from '../../data/constants';
+import audio from '../../utils/audio';
 
 export default class GameOverPage extends Page {
-//   constructor() {
-//     super();
-//   }
-
   renderPage(gameMode, categoryName, params) {
     const { errorCounter } = params;
+    super.hideToggle();
     if (errorCounter > 0) {
       audio.playSound(constants.SOUNDS.loseGame);
       createElement(
@@ -48,14 +45,17 @@ export default class GameOverPage extends Page {
     const pageName = constants.MAIN_PAGE.mainPageName;
     const categoryName = constants.MAIN_PAGE.textContent;
 
-    const navigate = new CustomEvent('navigate', {
-      detail: {
-        pageName,
-        categoryName,
-        params: [constants.MAIN_PAGE.textContent],
+    const navigate = new CustomEvent(
+      constants.CUSTOM_EVENT_NAME.navigate,
+      {
+        detail: {
+          pageName,
+          categoryName,
+          params: [constants.MAIN_PAGE.textContent],
+        },
+        bubbles: true,
       },
-      bubbles: true,
-    });
+    );
     document.body.dispatchEvent(navigate);
   }
 }

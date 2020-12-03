@@ -206,7 +206,7 @@ h1 {
 }
 
 .slide_menu {
-    width: 300px;
+    width: 310px;
     visibility: visible;
     transition: all 0.5s ease;
 }
@@ -431,6 +431,7 @@ input {
     font-family: "Kurale", serif;
     cursor: pointer;
     width: 100%;
+    margin-bottom: 10px;
     max-width: 278px;
     text-transform: uppercase;
     color: #fff;
@@ -526,7 +527,7 @@ path {
     vertical-align: top;
     border-top: 1px solid #dee2e6;
     background-repeat: no-repeat;
-    background-position: 70% 70%;
+    background-position: 90% 40%;
 }
 .table th {
     cursor: pointer;
@@ -594,7 +595,7 @@ path {
 }
 
 .star {
-    height: 64px;
+    height: 54px;
 }
 
 .reset:hover {
@@ -626,14 +627,7 @@ path {
 @media (max-width: 700px) {
     .table td {
         padding: 0;
-    }
-    table .sorting_desc {
-        background-position: 7px 4px;
-    }
-
-    table .sorting_asc {
-        background-position: 7px 4px;
-    }
+    }  
     .success-image,
     .lose-image {
         width: 100%;

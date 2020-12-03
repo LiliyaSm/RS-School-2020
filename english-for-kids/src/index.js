@@ -1,7 +1,7 @@
-import Menu from './components/menu';
-import MainPage from './components/mainPage';
-import CardPage from './components/cardPage';
-import GameOverPage from './components/gameOverPage';
+import Menu from './components/menu/menu';
+import MainPage from './components/mainPage/mainPage';
+import CardPage from './components/cardPage/cardPage';
+import GameOverPage from './components/gamePage/gameOverPage';
 import StatisticsPage from './components/statisticsPage';
 import LocalStorage from './utils/localStorage';
 import * as constants from './data/constants';
@@ -15,8 +15,6 @@ class Main {
   }
 
   init() {
-    // todo: use constants
-    // let gameOverPage = constants.GAME_OVER_PAGE_NAME;
     this.pages = {
       mainPage: new MainPage(),
       cardPage: new CardPage(),
