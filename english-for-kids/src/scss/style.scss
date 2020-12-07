@@ -636,11 +636,18 @@ path {
     .error-number {
         font-size: 26px;
     }
+
+    .main-wrapper {
+        overflow-x: auto;
+    }
 }
 
 @media (max-width: 400px) {
     .card {
         margin-right: 0px;
+    }
+    .statistics-button {
+        font-size: 16px;
     }
 }
 
