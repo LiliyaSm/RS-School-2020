@@ -5,21 +5,30 @@ export const cardsData = {
   categories: null,
 
   loadData() {
-    this.wordCards = cards.slice(1);
-    [this.categories] = cards;
+    this.wordCards = cards;
+    this.categories = Object.keys(
+      cards.reduce(
+        (acc, { category }) => ({
+          ...acc,
+          [category]: true,
+        }),
+        {},
+      ),
+    );
   },
 
   getCategoryCards(categoryName) {
-    // return array
-    return this.wordCards[this.categories.indexOf(categoryName)];
+    return this.wordCards.filter(
+      ({ category }) => category === categoryName,
+    );
   },
 
   getCategoriesList() {
     return this.categories;
   },
 
-  getCategoryImage(i) {
-    return this.wordCards[i][0].image;
+  getCategoryImage(categoryName) {
+    return this.wordCards.find(({ category }) => category === categoryName)?.image;
   },
 
   getCardObject(category, word) {

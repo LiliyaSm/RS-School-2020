@@ -26,9 +26,9 @@ export default class MainPage extends Page {
       null,
     ).element;
 
-    this.categories.forEach((category, i) => {
+    this.categories.forEach((category) => {
       const mainCard = new MainCard(constants.TEMPLATES_NUMBERS.MAIN_CARD);
-      this.cardsContainer.appendChild(mainCard.createCard(category, i));
+      this.cardsContainer.appendChild(mainCard.createCard(category));
       this.cardsObjects.push(mainCard);
     });
 

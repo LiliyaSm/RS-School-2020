@@ -7,20 +7,18 @@ export default class MainCard {
       templateNumber
     ];
     this.categoryNumber = null;
-    this.pageID = null;
     this.cardDiv = null;
     this.categoryName = null;
     this.title = null;
   }
 
-  createCard(categoryName, pageID) {
-    this.pageID = pageID;
+  createCard(categoryName) {
     this.categoryName = categoryName;
     const cardTemplate = this.template.content.cloneNode(true);
 
     this.title = cardTemplate.querySelector('.card__main-title');
 
-    const name = cardsData.getCategoryImage(pageID);
+    const name = cardsData.getCategoryImage(categoryName);
     cardTemplate
       .querySelector('.card__image img')
       .setAttribute('src', `assets/${name}`);

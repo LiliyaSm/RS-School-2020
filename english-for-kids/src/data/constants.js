@@ -25,10 +25,6 @@ export const TEMPLATES_NUMBERS = {
   MAIN_CARD: 1,
 };
 
-// export const EVENT_TYPE = {
-//   NAVIGATE: 'navigate',
-// };
-
 export const MAIN_PAGE = {
   mainPageName: 'mainPage',
   textContent: 'Main page',
