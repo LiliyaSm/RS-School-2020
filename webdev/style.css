@@ -1,0 +1,475 @@
+html,
+body {
+    position: relative;
+    font-family: Roboto;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: normal;
+    min-width: 1600px;
+}
+
+/* h1 is hidden */
+h1 {
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    border: 0;
+    padding: 0;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    margin: -1px;
+}
+
+h2 {
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 28px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+strong {
+    font-weight: bold;
+}
+
+.btn {
+    padding: 15px 47px;
+    font-family: Roboto;
+    font-weight: bold;
+    font-style: normal;
+    line-height: 16px;
+    font-size: 14px;
+    color: white;
+    text-align: center;
+    text-transform: uppercase;
+    background: #00afdb;
+    border: none;
+    outline: none;
+}
+
+.btn:hover {
+    background: #009cc2;
+    cursor: pointer;
+}
+
+/* header */
+.site-header {
+    height: 95px;
+    padding-top: 25px;
+    background-color: #000000;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 2;
+}
+
+.navbar-header ul {
+    margin: 0px auto;
+    padding-right: 13px;
+    width: 582px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.navbar-header a {
+    display: block;
+    margin-top: 16px;
+    color: white;
+    font-weight: 300;
+    text-decoration: none;
+    opacity: 0.8;
+}
+
+header .logo {
+    margin: 0 15px;
+}
+
+.navbar-header .active a {
+    padding-bottom: 3px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid white;
+    font-weight: 500;
+}
+
+.navbar-header a:hover {
+    opacity: 1;
+}
+
+.title {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 64px;
+    line-height: 75px;
+    letter-spacing: 4.5px;
+    margin-left: 3px;
+}
+
+/* Your life section */
+
+.your-life {
+    /* 100hv for responsive */
+    height: 744px;
+    text-align: center;
+    color: white;
+    background-image: url(./assets/bg-image.jpg);
+    /* background-size: 100% 100%; */
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.your-life-text {
+    margin-bottom: 63px;
+}
+
+.your-life p {
+    font-size: 18px;
+    line-height: 140%;
+    margin-top: 22px;
+}
+
+.your-life button {
+    margin: 28px auto 0px auto;
+}
+
+.social {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 88px;
+    display: flex;
+    justify-content: space-between;
+    width: 169px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.social svg:hover circle,
+.social svg:hover path {
+    stroke: #00afdb;
+}
+
+/* Rappresent section */
+
+.rappresent {
+    background-color: white;
+}
+
+.rappresent-wrap {
+    margin: 0px auto;
+    display: flex;
+    justify-content: space-between;
+    width: 1062px;
+    align-items: center;
+    padding-top: 120px;
+    padding-bottom: 140px;
+}
+
+.rappresent-text {
+    width: 407px;
+}
+
+.rappresent h2 {
+    color: #373737;
+}
+.rappresent button {
+    margin-top: 30px;
+}
+
+.rappresent p {
+    margin-top: 25px;
+    line-height: 140%;
+    color: #4e4e4e;
+}
+
+/* Our community section*/
+
+.our-community {
+    height: 505px;
+    overflow: auto;
+    background-color: #f5f6f7;
+}
+
+.our-community-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 120px auto 0 auto;
+    width: 1600px;
+}
+
+.our-community-wrap h3 {
+    margin-top: 20px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+    color: #373737;
+}
+
+.our-community-text {
+    margin-left: 271px;
+    width: 298px;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.our-community-text img {
+    margin-right: 3px;
+}
+
+.our-community-wrap p {
+    line-height: 140%;
+    margin-top: 11px;
+    text-align: center;
+    color: #4e4e4e;
+}
+
+.slider {
+    position: relative;
+    width: 894px;
+}
+
+.slider .images {
+    overflow: hidden;
+    display: flex;
+}
+
+.slider .images img:not(:last-child) {
+    margin-right: 30px;
+}
+
+.arrows {
+    position: absolute;
+    margin-top: -41px;
+    margin-left: 542px;
+    font-size: 18px;
+    /* font-weight: bold; */
+    line-height: 140%;
+}
+
+.arrows svg:hover {
+    cursor: pointer;
+    opacity: 0.5;
+}
+
+.arrows .arrow-left {
+    margin-right: 11px;
+}
+
+.arrows .arrow-right {
+    margin-left: 9px;
+}
+
+/* implement */
+
+.implement {
+    height: 841px;
+    overflow: auto;
+}
+
+.implement-wrap {
+    display: flex;
+    align-items: center;
+    margin: 0px auto;
+    width: 1062px;
+    margin-top: 120px;
+}
+
+.implement-wrap img {
+    margin-right: 139px;
+}
+
+.implement p {
+    line-height: 140%;
+    font-size: 14px;
+    margin-top: 21px;
+    color: #4e4e4e;
+}
+
+.implement h2 {
+    color: #373737;
+}
+
+.implement button {
+    margin-top: 32px;
+}
+
+.implement-text {
+    width: 407px;
+}
+
+/* Subscribe section */
+
+.subscribe {
+    background-image: url("./assets/background-subscribe.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #000000;
+    height: 524px;
+    overflow: auto;
+}
+
+.subscribe-wrap {
+    width: 406px;
+    margin: 0px auto;
+    text-align: center;
+    margin-top: 201px;
+}
+
+.subscribe h2 {
+    color: #ffffff;
+}
+
+.submit-email {
+    display: flex;
+    height: 47px;
+    margin-top: 29px;
+}
+
+.submit-email input {
+    line-height: 140%;
+    width: 340px;
+    padding-left: 24px;
+    padding-top: 4px;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+}
+
+.submit-email button {
+    padding-top: 5px;
+    width: 66px;
+    background-color: #00afdb;
+    border: none;
+    outline: none;
+}
+
+.submit-email button:hover {
+    background-color: #009cc2;
+    cursor: pointer;
+}
+
+/* Download section */
+
+.download {
+    text-align: center;
+    width: 483px;
+    height: 344px;
+    margin: 120px auto 0 auto;
+}
+
+.buttons {
+    display: flex;
+    padding-right: 10px;
+    padding-left: 10px;
+    justify-content: space-evenly;
+    margin-top: 30px;
+}
+
+.download button {
+    display: flex;
+    height: 46px;
+    width: 186px;
+    padding: 0px;
+    font-family: Roboto;
+    font-weight: bold;
+    font-style: normal;
+    line-height: 16px;
+    font-size: 14px;
+    text-align: center;
+    text-transform: uppercase;
+    background: #00afdb;
+    color: white;
+    border: none;
+}
+
+.download button:hover {
+    background: #009cc2;
+    cursor: pointer;
+}
+
+.download h2 {
+    color: #373737;
+}
+
+.download p {
+    margin-top: 21px;
+    line-height: 140%;
+    font-size: 14px;
+    color: #4e4e4e;
+}
+
+.buttons .apple-btn {
+    width: 127px;
+    padding: 17px 20px 13px 17px;
+}
+
+.buttons .apple-icon {
+    width: 59px;
+    background-color: #009cc2;
+    padding: 14px 7px 7px 9px;
+}
+
+.buttons .android-icon {
+    width: 59px;
+    background-color: #009cc2;
+    padding: 12px 6px 7px 7px;
+}
+
+.android-btn {
+    width: 127px;
+    padding: 16px 17px 12px 15px;
+}
+
+footer {
+    background-color: #000000;
+    height: 184px;
+    overflow: auto;
+    line-height: 140%;
+}
+
+.wrap-footer {
+    margin: 60px auto 0px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1280px;
+}
+
+.navbar-footer {
+    margin-right: auto;
+}
+
+.navbar-footer ul {
+    display: flex;
+    justify-content: space-between;
+    width: 235px;
+    opacity: 0.98;
+}
+
+.navbar-footer ul a {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.navbar-footer ul a:hover {
+    color: #00afdb;
+}
+
+.copyrights {
+    width: 235px;
+    text-align: end;
+    margin-left: auto;
+    color: #818181;
+}
