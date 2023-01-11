@@ -1,0 +1,169 @@
+html {
+    font-size: 14px;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    font-family: Roboto, sans-serif;
+}
+
+body {
+    font-weight: 200;
+    padding: 0;
+    margin: 0;
+    color: white;
+    background: radial-gradient(#ceefff, #689ed1);
+}
+
+ol {
+    padding: 10px;
+}
+
+body {
+    min-height: 100vh;
+}
+
+.wrapper {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    font-weight: 200;
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    padding-top: 55px;
+    font-size: 2rem;
+}
+.wrapper span {
+    position: absolute;
+    left: 260px;
+    top: -103px;
+    font-size: 124px;
+    font-weight: 400;
+    color: red;
+    opacity: 0;
+}
+
+.wrapper span:first-child {
+    left: 35px;
+}
+
+.calculator-grid {
+    position: relative;
+    display: grid;
+    grid-gap: 1px;
+    grid-template-columns: repeat(4, 75px);
+    grid-template-rows: minmax(120px, auto) 40px repeat(5, 70px);
+    padding: 15px 20px 25px 20px;
+    color: white;
+    border: 1px solid black;
+    box-shadow: 10px 7px 11px #4b5650;
+    border-radius: 1%;
+    background-color: #151515;
+}
+
+.calculator-grid > button {
+    font-weight: 200;
+    font-size: 2rem;
+    color: white;
+    cursor: pointer;
+    outline: none;
+    background-color: #2e2e2e;
+}
+
+.calculator-grid .grey-color {
+    background-color: #454545;
+}
+
+.calculator-grid > button:hover {
+    background-color: #535353;
+}
+
+.span-two {
+    grid-column: span 2;
+}
+
+.round {
+    border-radius: 50%;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+.output {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    flex-direction: column;
+    padding: 10px;
+    word-wrap: break-word;
+    word-break: break-all;
+    border: 5px solid black;
+    background-color: #373737;
+    transition-property: border;
+    transition-duration: 1s;
+    box-sizing: border-box;
+}
+
+.output .previous-operand {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 1.5rem;
+}
+
+.output .current-operand {
+    color: white;
+    font-size: 2.3rem;
+}
+
+.instruction {
+    position: absolute;
+    font-weight: 400;
+    left: -170%;
+    top: 10%;
+}
+
+.instruction-content {
+    font-size: 16px;
+    color: #3a3a3a;
+    width: 400px;
+    padding: 10px;
+    height: 0;
+    overflow: hidden;
+    transition: height 500ms;
+}
+
+.show {
+    height: 500px;
+}
+
+.question-btn {
+    top: 3vh;
+    left: 3vh;
+    display: block;
+    font-size: 68px;
+    color: rgb(225, 231, 241);
+    text-transform: uppercase;
+    border-radius: 50%;
+    outline: none;
+    border: none;
+    background: none;
+    letter-spacing: 1px;
+    font-weight: 600;
+    text-shadow: 5px 5px 8px #4b5650;
+}
+
+.question-btn:hover {
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+}
+
+.question-btn {
+    position: absolute;
+}
