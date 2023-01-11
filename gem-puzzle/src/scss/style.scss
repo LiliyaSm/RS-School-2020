@@ -1,0 +1,281 @@
+$base-hover: #5b77f5c2;
+$base-color: #4568ffc2;
+$red-color: #d43131;
+
+html {
+    font-size: 14px;
+}
+
+body {
+    font-family: Roboto, sans-serif;
+    font-weight: 200;
+    padding: 0;
+    margin: 0;
+    color: white;
+    background: no-repeat url("../assets/bgr.jpg");
+    background-size: cover;
+    min-height: 100vh;
+}
+
+.wrapper {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+canvas {
+    border: 1px solid #d3d3d3;
+    background-color: #f1f1f1;
+    margin: auto;
+}
+
+.time {
+    font-size: 34px;
+    font-weight: 400;
+    color: #0008ff;
+
+}
+
+// buttons on main screen
+.solution,
+.open-menu,
+.quick-start {
+    padding: 8px;
+    border-radius: 6px;
+    background-color: $base-color;
+    border: none;
+    outline: none;
+    color: white;
+    font-weight: 500;
+    font-size: 18px;
+}
+
+.solution:focus,
+.open-menu:focus,
+.quick-start:focus,
+select:focus {
+    border: none;
+    outline: none;
+}
+
+.solution:hover,
+.open-menu:hover,
+.quick-start:hover
+{
+    background-color: $base-hover;
+}
+
+.select {
+    font-size: 18px;
+    border-radius: 5px;
+    background-color: $base-color;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.counter {
+    color: white;
+    font-weight: bold;
+    font-size: 34px;
+    text-align: end;
+    font-weight: 400;
+    color: #0008ff;
+}
+
+.overlay {
+    z-index: 99;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(41, 41, 41, 0.85);
+}
+
+.hide {
+    display: none !important;
+}
+
+.menu-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    margin: 150px auto 0px;
+    z-index: 102;
+}
+
+.best-scores-container,
+table {
+    margin: 30px auto 0px;
+    text-align: center;
+}
+
+header,
+footer {
+    min-height: 75px;
+    max-width: 605px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.menu-container button,
+.best-scores-container button {
+    margin: 10px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 2px 2px 5px #000;
+    cursor: pointer;
+    outline: none;
+}
+
+.menu-container button:hover,
+.back:hover  {
+    color: rgb(212, 208, 208);
+}
+
+.header-time {
+    font-size: 24px;
+}
+
+.header-time,
+.header-moves {
+    font-size: 18px;
+    text-transform: uppercase;
+    margin: 0;
+    text-align: end;
+    color: #0008ff;
+}
+
+header {
+    min-height: 100px;
+}
+
+header > div {
+    text-align: end;
+}
+
+.win-container {
+    min-height: 40px;
+    max-width: 490px;
+    margin: 0 auto;
+    font-size: 18px;
+    font-weight: 400;
+    color: $red-color;
+    font-weight: bold;
+    text-align: center;
+}
+
+.zoom {
+animation: zoom 3s;
+    color: #d43131;
+    font-weight: 500;
+    animation-fill-mode: both;
+    content: attr(data-num);
+    cursor: default;
+    font-size: 90px;
+    position: absolute;
+    top: -40%;
+    text-align: center;
+    opacity: 0;
+    // z-index: 100;
+}
+
+.open-menu {
+    text-transform: uppercase;
+}
+
+@keyframes zoom {
+    0% {
+        transform: scale(0.2);
+        opacity: 1;
+    }
+
+    70% {
+        transform: scale(1);
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+th,
+td {
+    padding: 10px;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 2px 2px 5px #000;
+    cursor: pointer;
+    outline: none;
+}
+
+.temporary {
+    font-size: 24px;
+    font-weight: bold;
+    color: $red-color;
+    text-shadow: 0px 1px 2px #000;
+    margin-bottom: 30px;
+}
+
+.select:hover {
+    background-color: $base-hover;
+}
+
+@media screen and (max-width: 640px) {
+    .solution,
+    .open-menu,
+    .quick-start,
+    .select {
+        font-size: 15px;
+    }
+
+    .counter,
+    .time {
+        font-size: 18px;
+
+    }
+
+    .select {
+        padding: 7px;
+    }
+    .solution,
+    .quick-start {
+        padding: 6px;
+    }
+    .zoom {
+        font-size: 45px;
+    }
+
+    th,
+    td {
+        font-size: 16px;
+    }
+
+    header,
+    footer {
+        max-width: 405px;
+    }
+
+    .win-container {
+        font-size: 14px;
+    }
+
+    
+.temporary {
+    font-size: 16px;}
+}
